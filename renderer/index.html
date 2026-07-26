@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';" />
   <title>자짤 생성툴</title>
   <link rel="stylesheet" href="style.css" />
@@ -344,16 +345,17 @@
         <button id="btn-undo" title="되돌리기 (Ctrl+Z)">↶</button>
         <button id="btn-redo" title="다시 실행 (Ctrl+Y)">↷</button>
         <input id="design-name" type="text" placeholder="디자인 이름" />
-        <button id="btn-save" class="primary">💾 저장</button>
-        <button id="btn-save-as">다른 이름으로</button>
+        <button id="btn-save" class="primary" title="저장">💾<span class="btn-txt"> 저장</span></button>
+        <button id="btn-save-as" title="다른 이름으로 저장">🗐<span class="btn-txt"> 다른 이름으로</span></button>
         <div class="tb-drop">
-          <button id="btn-designs">📂 저장된 디자인</button>
+          <button id="btn-designs" title="저장된 디자인">📂<span class="btn-txt"> 저장된 디자인</span></button>
           <div id="design-pop" class="hidden">
             <ul id="design-list"></ul>
           </div>
         </div>
-        <button id="btn-new">새로 만들기</button>
+        <button id="btn-new" title="새로 만들기">✨<span class="btn-txt"> 새로 만들기</span></button>
         <span class="tb-flex"></span>
+        <span class="tb-label">결과물 출력</span>
         <button id="btn-export">⬇ PNG</button>
         <button id="btn-export-webp" title="WebP (고화질·투명 배경 · 움직임 있으면 움짤로 저장)">🎞 WebP</button>
       </div>
@@ -361,10 +363,22 @@
         <div id="canvas-wrap">
           <canvas id="card"></canvas>
         </div>
+        <!-- 실제 출력 크기와 미리보기 축소 배율 -->
+        <div id="preview-info">
+          <span id="pv-size"></span><span id="pv-zoom"></span>
+          <button id="btn-zoom" title="크게 보기">🔍 크게 보기</button>
+        </div>
       </div>
       <div id="toast"></div>
+
+      <!-- 크게 보기: 화면 전체를 써서 미리보기를 최대 크기로 (세로 화면이면 가로로 눕힘) -->
+      <div id="zoom-overlay" class="hidden">
+        <canvas id="zoom-canvas"></canvas>
+        <button id="zoom-close" title="닫기">✕</button>
+        <div id="zoom-hint">화면을 누르면 닫혀요</div>
+      </div>
       <footer id="credit">
-        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.2</div>
+        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.21</div>
         <div class="credit-sub">본 툴은 클로드(Claude)를 활용한 바이브코딩으로 제작되었습니다.</div>
         <div class="credit-sub">무료 배포 및 자유 수정 가능 — 제작자 이름만 남겨주세요.</div>
       </footer>

@@ -87,6 +87,100 @@ function ensureAnim() {
 function stopAnim() {
   if (animReq) { cancelAnimationFrame(animReq); animReq = null; }
 }
+
+// 미리보기는 화면 폭에 맞춰 줄여서 보여주므로, 실제 저장 크기와 축소 배율을 표시해 준다.
+// (특히 모바일에서는 카드가 850px든 2000px든 화면 폭을 꽉 채워서 구분이 안 됨)
+function updatePreviewInfo() {
+  const sizeEl = document.getElementById('pv-size');
+  const zoomEl = document.getElementById('pv-zoom');
+  if (!sizeEl || !zoomEl) return;
+  if (RES !== SCREEN_RES) return; // 내보내기 중 임시 배율은 무시
+  const outW = Math.round(canvas.width / RES);
+  const outH = Math.round(canvas.height / RES);
+  const shown = canvas.getBoundingClientRect().width;
+  sizeEl.textContent = `${outW} × ${outH} px`;
+  zoomEl.textContent = outW > 0 ? `${Math.round((shown / outW) * 100)}%` : '';
+}
+function initPreviewInfo() {
+  updatePreviewInfo();
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => updatePreviewInfo()).observe(canvas);
+  } else {
+    window.addEventListener('resize', updatePreviewInfo);
+  }
+}
+
+// ---------------- 크게 보기 (모바일) ----------------
+// 화면 전체를 써서 미리보기를 최대 크기로 보여준다.
+// 가로로 긴 카드를 세로 화면에서 보면 너무 작으므로 90도 눕혀서 화면 긴 변을 활용한다.
+let zoomReq = null;
+
+function layoutZoom() {
+  const zc = document.getElementById('zoom-canvas');
+  if (!zc) return;
+  const cw = canvas.width / RES, ch = canvas.height / RES; // 논리(출력) 크기
+  if (!(cw > 0 && ch > 0)) return;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const rotate = cw > ch && vw < vh; // 가로 카드 + 세로 화면 → 눕히기
+  const availW = (rotate ? vh : vw) - 20;
+  const availH = (rotate ? vw : vh) - 20;
+  const s = Math.max(0.01, Math.min(availW / cw, availH / ch));
+  zc.style.width = Math.round(cw * s) + 'px';
+  zc.style.height = Math.round(ch * s) + 'px';
+  zc.style.transform = rotate ? 'rotate(90deg)' : 'none';
+  const hint = document.getElementById('zoom-hint');
+  if (hint) {
+    hint.textContent = rotate
+      ? '화면을 눌러 닫기 · 폰을 가로로 돌리면 더 크게 볼 수 있어요'
+      : '화면을 눌러 닫기';
+  }
+}
+
+function zoomTick() {
+  const zc = document.getElementById('zoom-canvas');
+  if (!zc) return;
+  if (zc.width !== canvas.width || zc.height !== canvas.height) {
+    zc.width = canvas.width; zc.height = canvas.height;
+    layoutZoom();
+  }
+  const g = zc.getContext('2d');
+  g.clearRect(0, 0, zc.width, zc.height);
+  g.drawImage(canvas, 0, 0); // 원본을 그대로 복사 — 움직임 효과도 그대로 따라감
+  zoomReq = requestAnimationFrame(zoomTick);
+}
+
+function openZoom() {
+  const ov = document.getElementById('zoom-overlay');
+  if (!ov) return;
+  ov.classList.remove('hidden');
+  layoutZoom();
+  if (!zoomReq) zoomTick();
+  // 브라우저 주소창까지 숨겨 더 넓게 (지원 안 하는 기기는 그냥 무시)
+  if (ov.requestFullscreen) { try { ov.requestFullscreen().catch(() => {}); } catch (_) { /* 무시 */ } }
+}
+
+function closeZoom() {
+  const ov = document.getElementById('zoom-overlay');
+  if (!ov || ov.classList.contains('hidden')) return;
+  ov.classList.add('hidden');
+  if (zoomReq) { cancelAnimationFrame(zoomReq); zoomReq = null; }
+  if (document.fullscreenElement && document.exitFullscreen) {
+    try { document.exitFullscreen().catch(() => {}); } catch (_) { /* 무시 */ }
+  }
+}
+
+function initZoom() {
+  const btn = document.getElementById('btn-zoom');
+  const ov = document.getElementById('zoom-overlay');
+  const close = document.getElementById('zoom-close');
+  if (!btn || !ov) return;
+  btn.onclick = openZoom;
+  if (close) close.onclick = (e) => { e.stopPropagation(); closeZoom(); };
+  ov.addEventListener('click', closeZoom);
+  window.addEventListener('resize', () => { if (!ov.classList.contains('hidden')) layoutZoom(); });
+  window.addEventListener('orientationchange', () => setTimeout(layoutZoom, 250));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+}
 function fxLoopOf(f) {
   return Math.round(2000 / ((f && f.speed) || 1));
 }
@@ -1899,7 +1993,9 @@ function toCard(e) {
 function inRect(p, box) {
   return box && p.x >= box.x && p.x <= box.x + box.w && p.y >= box.y && p.y <= box.y + box.h;
 }
-canvas.addEventListener('mousedown', (e) => {
+// 포인터 이벤트 — 마우스·터치·펜을 한 코드로 처리 (모바일에서도 드래그 동작)
+canvas.addEventListener('pointerdown', (e) => {
+  if (e.pointerType !== 'mouse' && e.isPrimary === false) return; // 멀티터치 2번째 손가락 무시
   const p = toCard(e);
   // 스티커가 맨 위 → 스티커부터 검사
   for (let i = (state.stickers || []).length - 1; i >= 0; i--) {
@@ -1933,8 +2029,9 @@ canvas.addEventListener('mousedown', (e) => {
   }
   if (drag) canvas.classList.add('dragging');
 });
-window.addEventListener('mousemove', (e) => {
+window.addEventListener('pointermove', (e) => {
   if (!drag) return;
+  e.preventDefault(); // 드래그 중 페이지가 같이 스크롤되지 않게
   const p = toCard(e);
   const nx = drag.ox + (p.x - drag.sx);
   const ny = drag.oy + (p.y - drag.sy);
@@ -1957,7 +2054,9 @@ window.addEventListener('mousemove', (e) => {
   }
   render();
 });
-window.addEventListener('mouseup', () => { drag = null; canvas.classList.remove('dragging'); });
+const endDrag = () => { drag = null; canvas.classList.remove('dragging'); };
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
 
 // ---------------- 사양 행 편집기 ----------------
 let rowDragIdx = null; // 드래그 정렬 중인 행 인덱스
@@ -2444,15 +2543,19 @@ function dragCanvas(cv, cb) {
     const y = Math.max(0, Math.min(r.height, e.clientY - r.top));
     cb(x / r.width, y / r.height);
   };
-  cv.addEventListener('mousedown', (e) => {
+  cv.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    cv.setPointerCapture(e.pointerId); // 손가락이 캔버스 밖으로 나가도 계속 추적
     pick(e);
-    const mv = (ev) => pick(ev);
+    const mv = (ev) => { ev.preventDefault(); pick(ev); };
     const up = () => {
-      window.removeEventListener('mousemove', mv);
-      window.removeEventListener('mouseup', up);
+      cv.removeEventListener('pointermove', mv);
+      cv.removeEventListener('pointerup', up);
+      cv.removeEventListener('pointercancel', up);
     };
-    window.addEventListener('mousemove', mv);
-    window.addEventListener('mouseup', up);
+    cv.addEventListener('pointermove', mv);
+    cv.addEventListener('pointerup', up);
+    cv.addEventListener('pointercancel', up);
   });
 }
 
@@ -3510,3 +3613,5 @@ initRangeNums();
 render();
 pushHist(); // 초기 상태를 히스토리 기준점으로
 refreshList();
+initPreviewInfo();
+initZoom();
