@@ -69,7 +69,7 @@
           <select id="border-style">
             <option value="solid">단색</option>
             <option value="gradient">그라디언트</option>
-            <option value="glow">글로우</option>
+            <option value="glow">글로우 ✨</option>
             <option value="double">이중선(투톤)</option>
             <option value="dashed">파선</option>
             <option value="dotted">점선</option>
@@ -95,7 +95,7 @@
         <label>배경 패턴 <select id="bg-pattern"></select></label>
         <label>패턴 색 <input id="pattern-color" type="color" value="#ffffff" /></label>
         <label>패턴 진하기 <input id="pattern-alpha" type="range" min="0" max="0.6" step="0.02" value="0.15" /></label>
-        <h3>카드 그림자</h3>
+        <h3>카드 그림자 <span class="glow-mark" title="카드 밖으로 번져서 저장 크기가 커집니다">✨</span></h3>
         <label class="chk"><input id="sh-on" type="checkbox" /> 카드 그림자 켜기</label>
         <label>그림자 색 <input id="sh-color" type="color" value="#000000" /></label>
         <label>진하기 <input id="sh-alpha" type="range" min="0" max="1" step="0.02" value="0.35" /></label>
@@ -119,8 +119,9 @@
         <label>안쪽 간격 <input id="deco-inset" type="range" min="4" max="46" step="1" value="12" /></label>
         <label>굵기 <input id="deco-width" type="range" min="1" max="10" step="1" value="2" /></label>
         <h3>저장 파일</h3>
+        <p class="hint note-glow"><b>✨ 표시가 있는 항목</b>은 빛이 카드 <b>밖으로 번져서</b> 저장 크기가 카드보다 커집니다. 늘어난 여백은 투명이라, 디시인사이드처럼 투명을 제대로 처리하지 않는 곳에서는 <b>검은 테두리</b>로 보일 수 있어요.</p>
         <label class="chk"><input id="clip-glow" type="checkbox" checked /> 빛번짐을 카드 안쪽으로 제한</label>
-        <p class="hint">테두리 글로우·테두리 효과가 카드 밖으로 번지면 그만큼 투명 여백이 생기고, 그 여백이 일부 사이트·뷰어에서 <b>검은 테두리</b>로 보여요. 켜두면 저장 크기가 항상 카드 크기와 같아집니다.</p>
+        <p class="hint">켜두면 ✨ 효과가 카드 밖으로 나가지 않아 <b>저장 크기가 항상 카드 크기와 같아집니다.</b> 빛이 가장자리에서 살짝 잘리는 대신 효과는 그대로 쓸 수 있어요. (카드 그림자는 그리는 게 목적이라 제한하지 않습니다 — 그림자를 켰다면 아래 '저장 배경'을 지정해 주세요.)</p>
         <label>저장 배경
           <select id="export-bg">
             <option value="transparent">투명</option>
@@ -346,6 +347,7 @@
         <div id="fx-list"></div>
         <button id="btn-add-fx" class="ghost">+ 효과 추가</button>
         <p class="hint">움직임(움짤·효과)은 PNG에선 정지 장면으로, WebP 내보내기에선 그대로 저장돼요.</p>
+        <p class="hint note-glow"><b>✨</b> 표시된 테두리 효과는 빛이 카드 밖으로 번져 저장 크기가 커집니다. ② 카드 프레임·배경 → <b>저장 파일</b>에서 조절할 수 있어요.</p>
       </section>
     </aside>
 
@@ -389,7 +391,7 @@
         <div id="zoom-hint">화면을 누르면 닫혀요</div>
       </div>
       <footer id="credit">
-        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.3</div>
+        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.31</div>
         <div class="credit-sub">본 툴은 클로드(Claude)를 활용한 바이브코딩으로 제작되었습니다.</div>
         <div class="credit-sub">무료 배포 및 자유 수정 가능 — 제작자 이름만 남겨주세요.</div>
       </footer>

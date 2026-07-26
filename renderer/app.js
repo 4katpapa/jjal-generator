@@ -2363,11 +2363,13 @@ const FX_BG = [
   ['scanline', '스캔 라인'], ['fog', '안개 흐름'], ['matrix', '매트릭스 문자'],
   ['rays', '회전 광선'], ['wave', '물결'], ['glitch', '글리치'],
 ];
+// ✨ = 빛이 카드 밖으로 번지는 효과 (FX_GLOW_PAD에 등록된 것들).
+// 저장 시 그만큼 여백이 생기므로 '빛번짐을 카드 안쪽으로 제한' 옵션의 대상이다.
 const FX_BORDER = [
-  ['neon', '네온 순환'], ['pulse', '글로우 펄스'], ['spin', '회전 그라디언트'],
-  ['chase', '달리는 빛'], ['marquee', '점선 행진'], ['rainbowspin', '무지개 회전'],
-  ['twochase', '교차 달리는 빛'], ['corners', '모서리 펄스'],
-  ['electric', '전기 스파크'], ['breath', '두께 숨쉬기'],
+  ['neon', '네온 순환 ✨'], ['pulse', '글로우 펄스 ✨'], ['spin', '회전 그라디언트 ✨'],
+  ['chase', '달리는 빛 ✨'], ['marquee', '점선 행진'], ['rainbowspin', '무지개 회전 ✨'],
+  ['twochase', '교차 달리는 빛 ✨'], ['corners', '모서리 펄스'],
+  ['electric', '전기 스파크 ✨'], ['breath', '두께 숨쉬기'],
 ];
 function renderFxs() {
   const wrap = document.getElementById('fx-list');
