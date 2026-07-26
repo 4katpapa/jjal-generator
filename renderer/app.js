@@ -160,7 +160,10 @@ const ctx = canvas.getContext('2d');
 // 화면 미리보기는 2배(부드러운 실시간 렌더), 내보내기 때만 EXPORT_RES로 올려 슈퍼샘플링.
 let RES = 2;
 const SCREEN_RES = 2;
-const EXPORT_RES = 3;
+// 내보내기 배율. 1 = 슈퍼샘플링 없이 1:1로 바로 그림(사진이 리샘플링을 한 번만 거침).
+// 2 이상으로 올리면 글자·곡선이 매끄러워지는 대신 사진은 확대→축소를 거쳐 살짝 무뎌진다.
+// 1이 아닌 값은 반드시 2의 거듭제곱으로 — 2:1 반감만으로 1배까지 내려가야 계단현상이 없음.
+const EXPORT_RES = 1;
 
 // 내보내기용: 렌더 배율을 올린 뒤 콜백 실행, 끝나면 화면 배율로 복구
 async function withExportRes(fn) {
@@ -172,12 +175,69 @@ async function withExportRes(fn) {
   }
 }
 
-// 현재 캔버스(RES배)를 원래 픽셀 크기로 고품질 축소해 tctx에 그림
+// ---------------- 이미지 축소 품질 ----------------
+// 큰 사진을 작은 칸에 한 번에 밀어넣으면(예: 4000px → 500px) 브라우저 필터가 원본 픽셀을
+// 띄엄띄엄 샘플링해서 디테일이 뭉개지고 줄무늬·격자에 모아레가 생긴다.
+// 절반씩 여러 번 줄여가며(밉맵 방식) 목표 크기 2배 이내로 맞춘 뒤 그리면 훨씬 깨끗하다.
+// 매 프레임 다시 계산하면 느리므로 결과를 캐시한다.
+const dsCache = new Map();
+const DS_CACHE_MAX = 48;
+let dsIdSeq = 0;
+
+function downscaleSource(src, sw, sh, dw) {
+  if (!(sw > 0 && sh > 0 && dw > 0)) return src;
+  if (sw / dw < 2) return src; // 2배 미만 축소는 브라우저 고품질 필터로 충분
+  if (!src._dsId) src._dsId = ++dsIdSeq;
+  // 목표 폭을 8px 단위로 묶어서, 슬라이더를 미세 조정할 때 캐시가 폭증하지 않게 함
+  const bucket = Math.max(1, Math.round(dw / 8) * 8);
+  const key = src._dsId + '@' + bucket;
+  const hitc = dsCache.get(key);
+  if (hitc) return hitc;
+
+  let cur = src, cw = sw, ch = sh;
+  while (cw / 2 >= bucket) {
+    const t = document.createElement('canvas');
+    t.width = Math.max(1, Math.round(cw / 2));
+    t.height = Math.max(1, Math.round(ch / 2));
+    const g = t.getContext('2d');
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(cur, 0, 0, t.width, t.height);
+    cur = t; cw = t.width; ch = t.height;
+  }
+  if (cur === src) return src;
+  dsCache.set(key, cur);
+  if (dsCache.size > DS_CACHE_MAX) dsCache.delete(dsCache.keys().next().value);
+  return cur;
+}
+function clearDownscaleCache() { dsCache.clear(); }
+
+// 현재 캔버스(RES배)를 원래 픽셀 크기로 축소해 tctx에 그림.
+// 3:1처럼 어중간한 비율을 한 번에 줄이면 픽셀을 건너뛰며 샘플링해 글자·가는 선이 지글거린다.
+// 정확히 2:1 반감을 반복하면 인접 4픽셀 평균에 가까워져 계단현상이 거의 없어진다.
+// (EXPORT_RES를 2의 거듭제곱으로 두는 이유)
+const dsScratch = [];
+function scratchCanvas(i, w, h) {
+  if (!dsScratch[i]) dsScratch[i] = document.createElement('canvas');
+  const c = dsScratch[i];
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, w, h); // 크기가 그대로면 이전 프레임 잔상이 남으므로 반드시 지움
+  g.imageSmoothingEnabled = true;
+  g.imageSmoothingQuality = 'high';
+  return [c, g];
+}
 function drawDownscaled(tctx, w, h) {
+  let cur = canvas, cw = canvas.width, ch = canvas.height, i = 0;
+  while (cw >= w * 2 && ch >= h * 2) {
+    const [c, g] = scratchCanvas(i++, Math.max(w, Math.round(cw / 2)), Math.max(h, Math.round(ch / 2)));
+    g.drawImage(cur, 0, 0, c.width, c.height);
+    cur = c; cw = c.width; ch = c.height;
+  }
   tctx.clearRect(0, 0, w, h);
   tctx.imageSmoothingEnabled = true;
   tctx.imageSmoothingQuality = 'high';
-  tctx.drawImage(canvas, 0, 0, w, h);
+  tctx.drawImage(cur, 0, 0, w, h);
 }
 
 // ---------------- 렌더링 ----------------
@@ -585,7 +645,12 @@ function render(tMs) {
   canvas.height = (H + M * 2) * RES;
   canvas.style.width = (W + M * 2) + 'px';
   ctx.scale(RES, RES);
+  ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
+  // 힌팅이 글자 간격을 정수 픽셀로 반올림하면, 확대 렌더 후 축소할 때 자간이 들쭉날쭉해진다.
+  // geometricPrecision은 글리프 위치를 소수점까지 정확히 잡아 슈퍼샘플링과 궁합이 좋다.
+  ctx.textRendering = 'geometricPrecision';
+  ctx.fontKerning = 'normal';
 
   ctx.save();
   ctx.translate(M, M);
@@ -1065,7 +1130,8 @@ function render(tMs) {
     }
     const ix = bx + (bw - dw) / 2 + image.x;
     const iy = by + (bh - dh) / 2 + image.y;
-    ctx.drawImage(imgFrame, ix, iy, dw, dh);
+    // 큰 사진은 단계적으로 줄인 뒤 그려야 디테일이 살고 모아레가 안 생김
+    ctx.drawImage(downscaleSource(imgFrame, iw, ih, dw * RES), ix, iy, dw, dh);
     ctx.restore();
 
     if (image.frame && image.frame !== 'none') {
@@ -1132,7 +1198,8 @@ function render(tMs) {
       const im = stickerImg(st.dataUrl);
       if (im && im.complete && im.naturalWidth) {
         const h2 = size * (im.naturalHeight / im.naturalWidth);
-        ctx.drawImage(im, -size / 2, -h2 / 2, size, h2);
+        const sd = downscaleSource(im, im.naturalWidth, im.naturalHeight, size * RES);
+        ctx.drawImage(sd, -size / 2, -h2 / 2, size, h2);
         hit.stickers.push({ x: sx - size / 2, y: sy - h2 / 2, w: size, h: h2 });
       } else {
         hit.stickers.push({ x: sx - size / 2, y: sy - size / 2, w: size, h: size });
@@ -1775,6 +1842,7 @@ function render(tMs) {
 
 async function loadImage(dataUrl) {
   imgEl = null;
+  clearDownscaleCache();
   if (gifAnim) {
     for (const f of gifAnim.frames) { try { f.bmp.close(); } catch (_) {} }
     gifAnim = null;
@@ -3155,6 +3223,9 @@ function u8ToB64(u8) {
 // ---------------- WebP(움짤) 내보내기 ----------------
 const WEBP_FPS = 30;      // GIF(20fps)와 달리 플리커·팔레트 제약이 없어 프레임을 높임
 const WEBP_QUALITY = 0.92;
+// 정지 한 장은 무손실로 저장 — 크로미움은 quality가 정확히 1이면 VP8L(무손실)로 인코딩한다.
+// 단색 배경 + 글자가 많은 카드에선 글자 주변 번짐(링잉)이 사라지고 용량 차이도 크지 않음.
+const WEBP_QUALITY_STILL = 1.0;
 // 크로미움 내장 인코더로 프레임을 1장씩 WebP로 만든 뒤,
 // 애니메이션 WebP(RIFF: VP8X+ANIM+ANMF…) 컨테이너로 직접 묶는다.
 // GIF와 달리 256색 제한·디더링이 없어 그라디언트가 원본 그대로 보존됨.
@@ -3225,15 +3296,31 @@ function buildAnimWebp(frames, W, H, opaque) {
 }
 
 async function exportWebp() {
-  if (!needsAnim()) {
-    toast('움짤 이미지나 움직임 효과가 있어야 WebP 움짤로 내보낼 수 있어요');
-    return;
-  }
   const btn = document.getElementById('btn-export-webp');
   btn.disabled = true;
   const origLabel = btn.textContent;
   stopAnim();
   try {
+    // 움직임이 없으면 애니메이션 컨테이너로 묶지 않고 정지 WebP 한 장으로 저장
+    if (!needsAnim()) {
+      btn.textContent = 'WebP 생성 중…';
+      const tmp = document.createElement('canvas');
+      const tctx = tmp.getContext('2d');
+      const bytes = await withExportRes(async () => {
+        render();
+        tmp.width = Math.round(canvas.width / RES);
+        tmp.height = Math.round(canvas.height / RES);
+        drawDownscaled(tctx, tmp.width, tmp.height);
+        const blob = await new Promise((r) => tmp.toBlob(r, 'image/webp', WEBP_QUALITY_STILL));
+        if (!blob) throw new Error('WebP 인코딩을 지원하지 않는 환경이에요');
+        return new Uint8Array(await blob.arrayBuffer());
+      });
+      const p = await window.api.exportWebp({
+        dataBase64: u8ToB64(bytes), suggestedName: state.name || 'speccard',
+      });
+      if (p) toast(`WebP로 내보냈어요 (정지 이미지 · ${(bytes.length / 1024).toFixed(0)}KB)`);
+      return;
+    }
     const dur = Math.min(6000, gifAnim ? gifAnim.total : fxLoopMs());
     const frameCount = Math.max(2, Math.round(dur / (1000 / WEBP_FPS)));
     // 프레임 시각·지속시간을 정수 ms로 정확히 분배 → 지속시간 합 = dur (루프 드리프트 없음)

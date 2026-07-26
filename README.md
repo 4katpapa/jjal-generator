@@ -7,7 +7,7 @@ PC 사양을 자동으로 읽어 견적 자짤(사양 카드) 이미지를 만�
 
 ## 다운로드
 
-**[⬇ 자짤생성툴v1.1-portable.exe 받기](https://github.com/4katpapa/jjal-generator/releases/latest)**
+**[⬇ 자짤생성툴v1.2-portable.exe 받기](https://github.com/4katpapa/jjal-generator/releases/latest)**
 
 설치 필요 없이 exe 하나만 받아서 바로 실행하면 됩니다. (Windows 64bit)
 
@@ -21,7 +21,7 @@ PC 사양을 자동으로 읽어 견적 자짤(사양 카드) 이미지를 만�
 - 이미지 패널(모양 6종·프레임·그림자), 스티커(이모지 48종 + 내 이미지), 텍스트(세로쓰기 지원)
 - 밴드 7종(가로 띠·팝업·포스트잇·말풍선·타원·하트·별, 최대 5개)
 - 움직임 효과 29종(배경 19 + 테두리 10, 최대 6개 동시)
-- PNG(투명 배경) / WebP(움짤, 30fps·풀컬러·투명 배경) 내보내기 — 3배 슈퍼샘플링
+- PNG(투명 배경) / WebP 내보내기 — 정지는 무손실, 움직임이 있으면 30fps 움짤로 자동 저장
 - 디자인 저장/불러오기, 실행 취소/다시 실행(Ctrl+Z/Y)
 
 ## 실행 방법 (소스에서)
@@ -40,7 +40,7 @@ npm start       # 앱 실행
 npm run dist
 ```
 
-`dist\자짤생성툴v1.1-portable.exe` 가 생성됩니다.
+`dist\자짤생성툴v1.2-portable.exe` 가 생성됩니다.
 
 > 참고: 빌드 중 `winCodeSign` 압축 해제 오류(심볼릭 링크 권한)가 나면,
 > Windows 설정에서 개발자 모드를 켜거나 관리자 권한 터미널로 한 번 빌드하면 됩니다.

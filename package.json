@@ -1,6 +1,6 @@
 {
   "name": "speccard",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "자짤 생성툴 - PC 사양 카드 생성기",
   "main": "main.js",
   "author": "정신안차려?",
@@ -39,7 +39,7 @@
       "icon": "build/icon.png"
     },
     "portable": {
-      "artifactName": "자짤생성툴v1.1-portable.exe"
+      "artifactName": "자짤생성툴v1.2-portable.exe"
     }
   }
 }
