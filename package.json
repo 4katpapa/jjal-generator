@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "자짤 생성툴 - PC 사양 카드 생성기",
   "main": "main.js",
-  "author": "jjal-generator",
+  "author": "정신안차려?",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
