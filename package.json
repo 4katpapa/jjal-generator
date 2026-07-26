@@ -1,0 +1,45 @@
+{
+  "name": "speccard",
+  "version": "1.1.0",
+  "description": "자짤 생성툴 - PC 사양 카드 생성기",
+  "main": "main.js",
+  "author": "정신안차려?",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "kr.dcinside.desktop.speccard",
+    "productName": "자짤 생성툴",
+    "compression": "maximum",
+    "electronLanguages": [
+      "ko",
+      "en-US"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "specReader.js",
+      "renderer/**",
+      "build/icon.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "build/icon.png"
+    },
+    "portable": {
+      "artifactName": "자짤생성툴v1.1-portable.exe"
+    }
+  }
+}

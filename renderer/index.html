@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';" />
+  <title>자짤 생성툴</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 좌측 컨트롤 패널 -->
+    <aside id="panel">
+      <header class="brand">
+        <div>
+          <h1>자짤 생성툴</h1>
+          <span class="sub">PC 사양 자짤 생성기</span>
+        </div>
+        <button id="btn-ui-theme" title="라이트/다크 테마 전환">🌙</button>
+      </header>
+
+      <!-- ① 사양 입력 -->
+      <section class="group" id="grp-spec">
+        <h2>① 사양 입력</h2>
+        <div class="row-btns">
+          <button id="btn-auto" class="primary">⚙ 사양 자동 채우기</button>
+        </div>
+        <div id="rows"></div>
+        <button id="btn-add-row" class="ghost">+ 항목 추가</button>
+        <div class="row-btns" style="margin-top:8px">
+          <button id="btn-spec-save">💾 내 사양 저장</button>
+          <button id="btn-spec-load">📥 내 사양 불러오기</button>
+        </div>
+        <p class="hint">디자인과 별개로 사양 내용(항목·값)만 저장해두고 언제든 다시 채울 수 있어요.</p>
+      </section>
+
+      <!-- ② 카드 프레임 · 배경 -->
+      <section class="group" id="grp-card">
+        <h2>② 카드 프레임 · 배경</h2>
+        <h3>색상 테마</h3>
+        <div class="theme-grid">
+          <button data-theme="pink" class="theme">핑크</button>
+          <button data-theme="sky" class="theme">하늘</button>
+          <button data-theme="mint" class="theme">민트</button>
+          <button data-theme="lavender" class="theme">라벤더</button>
+          <button data-theme="lemon" class="theme">레몬</button>
+          <button data-theme="peach" class="theme">피치</button>
+          <button data-theme="mono" class="theme">모노</button>
+          <button data-theme="coffee" class="theme">커피</button>
+          <button data-theme="dark" class="theme">다크</button>
+          <button data-theme="forest" class="theme">포레스트</button>
+          <button data-theme="ocean" class="theme">오션</button>
+          <button data-theme="neon" class="theme">네온</button>
+        </div>
+        <h3>크기 · 모서리</h3>
+        <label>가로 폭 <input id="card-w-num" class="num" type="number" min="300" max="2400" step="10" value="850" /></label>
+        <input id="card-w" type="range" min="300" max="2400" step="10" value="850" class="wide" />
+        <label>세로 높이 <input id="card-h-num" class="num" type="number" min="120" max="1200" step="10" value="300" /></label>
+        <input id="card-h" type="range" min="120" max="1200" step="10" value="300" class="wide" />
+        <label>모서리 모양
+          <select id="corner">
+            <option value="round">둥글게</option>
+            <option value="sharp">각지게</option>
+          </select>
+        </label>
+        <label>모서리 둥글기 <input id="radius" type="range" min="0" max="90" step="1" value="18" /></label>
+        <h3>테두리</h3>
+        <label>테두리 스타일
+          <select id="border-style">
+            <option value="solid">단색</option>
+            <option value="gradient">그라디언트</option>
+            <option value="glow">글로우</option>
+            <option value="double">이중선(투톤)</option>
+            <option value="dashed">파선</option>
+            <option value="dotted">점선</option>
+          </select>
+        </label>
+        <label>테두리 굵기 <input id="border-w" type="range" min="0" max="24" step="1" value="6" /></label>
+        <label>테두리색 <input id="c-border" type="color" value="#e9a8ff" /></label>
+        <label>테두리색2(그라데·이중) <input id="c-border2" type="color" value="#7c3aed" /></label>
+        <h3>배경</h3>
+        <label>배경 스타일
+          <select id="bg-style">
+            <option value="gradient">그라디언트</option>
+            <option value="solid">단색</option>
+            <option value="radial">원형 그라디언트</option>
+            <option value="split-h">좌우 반반</option>
+            <option value="split-v">상하 반반</option>
+            <option value="diag">대각 반반</option>
+          </select>
+        </label>
+        <label>배경 시작 <input id="c-bg1" type="color" value="#fbe4ff" /></label>
+        <label>배경 끝 <input id="c-bg2" type="color" value="#f3d0ff" /></label>
+        <label>배경 각도 <input id="bg-angle" type="range" min="0" max="360" step="1" value="90" /></label>
+        <label>배경 패턴 <select id="bg-pattern"></select></label>
+        <label>패턴 색 <input id="pattern-color" type="color" value="#ffffff" /></label>
+        <label>패턴 진하기 <input id="pattern-alpha" type="range" min="0" max="0.6" step="0.02" value="0.15" /></label>
+        <h3>카드 그림자</h3>
+        <label class="chk"><input id="sh-on" type="checkbox" /> 카드 그림자 켜기</label>
+        <label>그림자 색 <input id="sh-color" type="color" value="#000000" /></label>
+        <label>진하기 <input id="sh-alpha" type="range" min="0" max="1" step="0.02" value="0.35" /></label>
+        <label>흐림 <input id="sh-blur" type="range" min="0" max="80" step="1" value="28" /></label>
+        <label>세로 위치 <input id="sh-y" type="range" min="-40" max="60" step="1" value="14" /></label>
+        <h3>장식 테두리</h3>
+        <label class="chk"><input id="deco-on" type="checkbox" /> 장식 테두리 켜기</label>
+        <label>선 스타일
+          <select id="deco-style">
+            <option value="solid">실선</option>
+            <option value="dashed">파선</option>
+            <option value="longdash">긴 파선</option>
+            <option value="dotted">점선</option>
+            <option value="dashdot">일점쇄선(선+점)</option>
+            <option value="double">이중선</option>
+            <option value="triple">삼중선</option>
+            <option value="wave">물결선</option>
+          </select>
+        </label>
+        <label>장식 색 <input id="deco-color" type="color" value="#ffffff" /></label>
+        <label>안쪽 간격 <input id="deco-inset" type="range" min="4" max="46" step="1" value="12" /></label>
+        <label>굵기 <input id="deco-width" type="range" min="1" max="10" step="1" value="2" /></label>
+      </section>
+
+      <!-- ③ 이미지 -->
+      <section class="group" id="grp-image">
+        <h2>③ 이미지</h2>
+        <div class="row-btns">
+          <button id="btn-image">🖼 이미지 넣기</button>
+          <button id="btn-image-clear" class="ghost">제거</button>
+        </div>
+        <h3>패널 배치 · 모양</h3>
+        <label>배치
+          <select id="img-side">
+            <option value="right">오른쪽</option>
+            <option value="left">왼쪽</option>
+          </select>
+        </label>
+        <label>겹칠 때 위로
+          <select id="layer-top">
+            <option value="spec">사양 패널</option>
+            <option value="image">이미지 패널</option>
+          </select>
+        </label>
+        <label>패널 모양
+          <select id="img-shape">
+            <option value="rect">사각 프레임</option>
+            <option value="diag">대각선 분할</option>
+            <option value="trape">사다리꼴</option>
+            <option value="tri">삼각형</option>
+            <option value="para">평행사변형</option>
+            <option value="circle">원형</option>
+          </select>
+        </label>
+        <label class="chk"><input id="img-flip" type="checkbox" /> 모양 상하 뒤집기</label>
+        <label>기울기 <input id="img-slant" type="range" min="0" max="220" step="2" value="70" /></label>
+        <label>모서리 둥글기 <input id="img-radius" type="range" min="0" max="140" step="1" value="0" /></label>
+        <h3>패널 크기 · 위치</h3>
+        <label>패널 너비 <input id="img-width" type="range" min="0.2" max="0.6" step="0.01" value="0.4" /></label>
+        <label>패널 높이 <input id="img-h" type="range" min="0.3" max="1" step="0.01" value="1" /></label>
+        <label>가로 위치 <input id="img-px-num" class="num" type="number" min="-250" max="250" value="0" /></label>
+        <input id="img-px" type="range" min="-250" max="250" step="1" value="0" class="wide" />
+        <label>세로 위치 <input id="img-py-num" class="num" type="number" min="-250" max="250" value="0" /></label>
+        <input id="img-py" type="range" min="-250" max="250" step="1" value="0" class="wide" />
+        <h3>이미지 채우기 · 크기</h3>
+        <label>칸에 맞춤
+          <select id="img-fit">
+            <option value="free">자유 배치</option>
+            <option value="width">가로 맞춤</option>
+            <option value="height">세로 맞춤</option>
+            <option value="stretch">늘려 채우기</option>
+          </select>
+        </label>
+        <label>크기 <input id="img-scale" type="range" min="0.3" max="3" step="0.01" value="1" /></label>
+        <p class="hint">자유 배치는 드래그·크기 조절이 자유롭고, 가로/세로 맞춤은 반대 축으로만 움직여요. GIF 움짤도 넣을 수 있어요.</p>
+        <h3>프레임(테두리)</h3>
+        <label>프레임 스타일
+          <select id="img-frame">
+            <option value="none">없음</option>
+            <option value="solid">단색 테두리</option>
+            <option value="gradient">그라디언트 테두리</option>
+            <option value="glow">글로우</option>
+            <option value="double">이중선(투톤)</option>
+            <option value="dashed">파선</option>
+            <option value="dotted">점선</option>
+          </select>
+        </label>
+        <label>프레임 색 <input id="img-frame-c" type="color" value="#ffffff" /></label>
+        <label>프레임 색2(그라데) <input id="img-frame-c2" type="color" value="#c026d3" /></label>
+        <label>프레임 굵기 <input id="img-frame-w" type="range" min="1" max="30" step="1" value="6" /></label>
+        <h3>프레임 그림자</h3>
+        <label class="chk"><input id="img-shadow" type="checkbox" /> 프레임 그림자 켜기</label>
+        <label>그림자 색 <input id="img-sh-c" type="color" value="#000000" /></label>
+        <label>진하기 <input id="img-sh-a" type="range" min="0" max="1" step="0.02" value="0.45" /></label>
+        <label>흐림 <input id="img-sh-blur" type="range" min="0" max="60" step="1" value="22" /></label>
+        <label>그림자 위치 <input id="img-sh-y" type="range" min="-40" max="50" step="1" value="10" /></label>
+        <button id="img-reset" class="ghost">↺ 이미지 위치·크기 초기화</button>
+      </section>
+
+      <!-- ④ 사양 텍스트 · 패널 -->
+      <section class="group" id="grp-spectext">
+        <h2>④ 사양 텍스트 · 패널</h2>
+        <h3>폰트</h3>
+        <label>폰트 <select id="font-family"></select></label>
+        <button id="btn-load-fonts" class="ghost">🔤 내 컴퓨터 폰트 불러오기</button>
+        <h3>글자 색</h3>
+        <label>라벨색 <input id="c-label" type="color" value="#c026d3" /></label>
+        <label>값 글자색 <input id="c-value" type="color" value="#6b21a8" /></label>
+        <label class="chk"><input id="c-uniform" type="checkbox" checked /> 값 글자색 일괄 적용</label>
+        <p class="hint">끄면 사양 목록의 줄별 색상칩이 활성화돼요.</p>
+        <h3>글자 효과</h3>
+        <label class="chk"><input id="lbl-bold" type="checkbox" checked /> 라벨 굵게</label>
+        <label class="chk"><input id="val-bold" type="checkbox" checked /> 값 굵게</label>
+        <label class="chk"><input id="lbl-grad" type="checkbox" /> 라벨 그라디언트</label>
+        <label>라벨 색2 <input id="c-label2" type="color" value="#7c3aed" /></label>
+        <label class="chk"><input id="lbl-shadow" type="checkbox" /> 라벨 그림자</label>
+        <label>라벨 그림자 색 <input id="lbl-sh-c" type="color" value="#000000" /></label>
+        <label class="chk"><input id="val-grad" type="checkbox" /> 값 그라디언트</label>
+        <label>값 색2 <input id="c-value2" type="color" value="#7c3aed" /></label>
+        <label class="chk"><input id="val-shadow" type="checkbox" /> 값 그림자</label>
+        <label>값 그림자 색 <input id="val-sh-c" type="color" value="#000000" /></label>
+        <h3>배치 · 크기</h3>
+        <label>사양 배치
+          <select id="columns">
+            <option value="1">한 줄</option>
+            <option value="2">두 줄(반씩 나눔)</option>
+          </select>
+        </label>
+        <label class="chk"><input id="autofit" type="checkbox" checked /> 세로 자동 맞춤</label>
+        <label>글자 크기 <input id="font-size" type="range" min="12" max="44" step="1" value="24" /></label>
+        <label>줄 간격 <input id="row-gap" type="range" min="-8" max="34" step="1" value="4" /></label>
+        <label>자간 <input id="spec-spacing" type="range" min="-3" max="16" step="0.5" value="0" /></label>
+        <label>라벨 칸 너비 <input id="label-w" type="range" min="40" max="150" step="2" value="66" /></label>
+        <h3>위치</h3>
+        <label>좌우 위치 <input id="spec-x-num" class="num" type="number" min="-100" max="250" value="34" /></label>
+        <input id="spec-x" type="range" min="-100" max="250" step="2" value="34" class="wide" />
+        <label>상하 위치 <input id="spec-y-num" class="num" type="number" min="-150" max="150" value="0" /></label>
+        <input id="spec-y" type="range" min="-150" max="150" step="2" value="0" class="wide" />
+        <button id="spec-reset" class="ghost">↺ 사양 위치 초기화</button>
+        <h3>사양 패널(내용 뒤 배경층)</h3>
+        <label class="chk"><input id="sp-on" type="checkbox" /> 사양 패널 켜기</label>
+        <label>패널 모양
+          <select id="sp-shape">
+            <option value="rect">둥근 사각형</option>
+            <option value="para">평행사변형</option>
+            <option value="ellipse">타원</option>
+          </select>
+        </label>
+        <label>기울기 <input id="sp-slant" type="range" min="0" max="80" step="1" value="40" /></label>
+        <label>가로 여백 <input id="sp-pad-x" type="range" min="0" max="120" step="1" value="16" /></label>
+        <label>세로 여백 <input id="sp-pad-y" type="range" min="0" max="120" step="1" value="16" /></label>
+        <label>패널 색 <input id="sp-fill" type="color" value="#ffffff" /></label>
+        <label>패널 투명도 <input id="sp-alpha" type="range" min="0" max="1" step="0.02" value="0.3" /></label>
+        <label>패널 둥글기 <input id="sp-radius" type="range" min="0" max="60" step="1" value="16" /></label>
+        <label>패널 패턴 <select id="sp-pattern"></select></label>
+        <label>패턴 색 <input id="sp-pattern-c" type="color" value="#ffffff" /></label>
+        <label>패턴 진하기 <input id="sp-pattern-a" type="range" min="0" max="0.6" step="0.02" value="0.15" /></label>
+        <label class="chk"><input id="sp-border" type="checkbox" /> 패널 테두리</label>
+        <label>테두리 색 <input id="sp-border-c" type="color" value="#ffffff" /></label>
+        <label class="chk"><input id="sp-shadow" type="checkbox" /> 패널 그림자</label>
+      </section>
+
+      <!-- ⑤ 텍스트 -->
+      <section class="group" id="grp-texts">
+        <h2>⑤ 텍스트 <span class="hint2">닉네임·문구 (최대 5개)</span></h2>
+        <div id="texts-list"></div>
+        <button id="btn-add-text" class="ghost">+ 텍스트 추가</button>
+        <p class="hint">텍스트는 미리보기에서 드래그해 자유롭게 배치해요.</p>
+      </section>
+
+      <!-- ⑥ 스티커 -->
+      <section class="group" id="grp-stickers">
+        <h2>⑥ 스티커 <span class="hint2">최대 10개</span></h2>
+        <h3>샘플 스티커</h3>
+        <div id="emoji-grid" class="emoji-grid"></div>
+        <h3>내 이미지 스티커</h3>
+        <button id="btn-sticker-image">🖼 이미지 스티커 추가</button>
+        <div id="stickers-list"></div>
+        <p class="hint">스티커는 미리보기에서 드래그로 옮겨요.</p>
+      </section>
+
+      <!-- ⑦ 밴드 -->
+      <section class="group" id="grp-band">
+        <h2>⑦ 밴드 <span class="hint2">최대 5개</span></h2>
+        <div class="row-btns" id="band-tabs"></div>
+        <label class="chk"><input id="band-on" type="checkbox" /> 밴드 켜기</label>
+        <label>형태
+          <select id="band-style">
+            <option value="strip">가로 띠 (위/아래 고정)</option>
+            <option value="float">떠 있는 팝업</option>
+            <option value="postit">포스트잇</option>
+            <option value="bubble">말풍선</option>
+            <option value="ellipse">타원</option>
+            <option value="heart">하트</option>
+            <option value="star">별</option>
+          </select>
+        </label>
+        <h3>크기 · 위치</h3>
+        <label>밴드 위치
+          <select id="band-pos">
+            <option value="bottom">아래</option>
+            <option value="top">위</option>
+          </select>
+        </label>
+        <label>높이 <input id="band-h" type="range" min="30" max="200" step="2" value="70" /></label>
+        <label>너비 <input id="band-w" type="range" min="80" max="700" step="5" value="280" /></label>
+        <label>둥글기 <input id="band-radius" type="range" min="0" max="40" step="1" value="14" /></label>
+        <label>기울기 <input id="band-rotate" type="range" min="-15" max="15" step="1" value="-3" /></label>
+        <label>꼬리 위치
+          <select id="band-tail">
+            <option value="bl">왼쪽 아래</option>
+            <option value="br">오른쪽 아래</option>
+            <option value="tl">왼쪽 위</option>
+            <option value="tr">오른쪽 위</option>
+          </select>
+        </label>
+        <p class="hint">띠가 아닌 형태는 미리보기에서 드래그로 위치를 옮겨요.</p>
+        <h3>색 · 패턴 · 테두리</h3>
+        <label>밴드 색 <input id="band-fill" type="color" value="#ffffff" /></label>
+        <label>밴드 투명도 <input id="band-alpha" type="range" min="0" max="1" step="0.02" value="0.5" /></label>
+        <label>밴드 패턴 <select id="band-pattern"></select></label>
+        <label>패턴 색 <input id="band-pattern-c" type="color" value="#ffffff" /></label>
+        <label>패턴 진하기 <input id="band-pattern-a" type="range" min="0" max="0.6" step="0.02" value="0.15" /></label>
+        <label>밴드 테두리
+          <select id="band-border">
+            <option value="none">없음</option>
+            <option value="edge">경계선/윤곽선</option>
+          </select>
+        </label>
+        <label>테두리 색 <input id="band-border-c" type="color" value="#ffffff" /></label>
+        <label>테두리 굵기 <input id="band-border-w" type="range" min="1" max="10" step="1" value="2" /></label>
+      </section>
+
+      <!-- ⑧ 움직임 효과 -->
+      <section class="group" id="grp-fx">
+        <h2>⑧ 움직임 효과 <span class="hint2">배경/테두리 · 여러 개 가능</span></h2>
+        <div id="fx-list"></div>
+        <button id="btn-add-fx" class="ghost">+ 효과 추가</button>
+        <p class="hint">움직임(움짤·효과)은 PNG에선 정지 장면으로, WebP 내보내기에선 그대로 저장돼요.</p>
+      </section>
+    </aside>
+
+    <!-- 우측 미리보기 -->
+    <main id="stage">
+      <!-- 상단 툴바: 저장 · 내보내기 · 불러오기 -->
+      <div id="topbar">
+        <button id="btn-undo" title="되돌리기 (Ctrl+Z)">↶</button>
+        <button id="btn-redo" title="다시 실행 (Ctrl+Y)">↷</button>
+        <input id="design-name" type="text" placeholder="디자인 이름" />
+        <button id="btn-save" class="primary">💾 저장</button>
+        <button id="btn-save-as">다른 이름으로</button>
+        <div class="tb-drop">
+          <button id="btn-designs">📂 저장된 디자인</button>
+          <div id="design-pop" class="hidden">
+            <ul id="design-list"></ul>
+          </div>
+        </div>
+        <button id="btn-new">새로 만들기</button>
+        <span class="tb-flex"></span>
+        <button id="btn-export">⬇ PNG</button>
+        <button id="btn-export-webp" title="움짤 WebP (고화질·투명 배경)">🎞 WebP</button>
+      </div>
+      <div id="stage-center">
+        <div id="canvas-wrap">
+          <canvas id="card"></canvas>
+        </div>
+      </div>
+      <div id="toast"></div>
+      <footer id="credit">
+        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.1</div>
+        <div class="credit-sub">본 툴은 클로드(Claude)를 활용한 바이브코딩으로 제작되었습니다.</div>
+        <div class="credit-sub">무료 배포 및 자유 수정 가능 — 제작자 이름만 남겨주세요.</div>
+      </footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
