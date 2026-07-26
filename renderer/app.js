@@ -15,7 +15,11 @@ function defaultState() {
     card: { width: 850, height: 300, radius: 18, corner: 'round',
             borderColor: '#e9a8ff', borderWidth: 6, borderStyle: 'solid', borderColor2: '#7c3aed',
             bg1: '#fbe4ff', bg2: '#f3d0ff', bgAngle: 90, bgStyle: 'gradient',
-            pattern: 'none', patternColor: '#ffffff', patternAlpha: 0.15 },
+            pattern: 'none', patternColor: '#ffffff', patternAlpha: 0.15,
+            // 테두리 글로우·테두리 효과가 카드 밖으로 번지면 그만큼 여백이 생기고,
+            // 그 여백은 투명이라 알파를 무시하는 뷰어(디시 등)에서 검게 보인다.
+            clipGlow: true,
+            exportBg: 'transparent' }, // 'transparent' | 'white' | 'card'
     text: { labelColor: '#c026d3', valueColor: '#6b21a8', uniform: true, fontSize: 24,
             offX: 34, offY: 0, rowGap: 4, spacing: 0, labelWidth: 66, columns: 1, autofit: true,
             fontFamily: '"Malgun Gothic","Segoe UI",sans-serif',
@@ -321,6 +325,16 @@ function scratchCanvas(i, w, h) {
   g.imageSmoothingQuality = 'high';
   return [c, g];
 }
+// 저장 파일의 배경. 투명이면 null.
+// 투명 픽셀은 색상값이 검정(0,0,0)이라, 알파를 무시하는 뷰어에서는 검게 보인다.
+// 그런 곳(디시 등)에 올릴 때는 흰색이나 카드 배경색으로 채워서 내보낸다.
+function exportBgColor() {
+  const mode = (state.card && state.card.exportBg) || 'transparent';
+  if (mode === 'white') return '#ffffff';
+  if (mode === 'card') return state.card.bg1 || '#ffffff';
+  return null;
+}
+
 function drawDownscaled(tctx, w, h) {
   let cur = canvas, cw = canvas.width, ch = canvas.height, i = 0;
   while (cw >= w * 2 && ch >= h * 2) {
@@ -329,6 +343,8 @@ function drawDownscaled(tctx, w, h) {
     cur = c; cw = c.width; ch = c.height;
   }
   tctx.clearRect(0, 0, w, h);
+  const bg = exportBgColor();
+  if (bg) { tctx.fillStyle = bg; tctx.fillRect(0, 0, w, h); }
   tctx.imageSmoothingEnabled = true;
   tctx.imageSmoothingQuality = 'high';
   tctx.drawImage(cur, 0, 0, w, h);
@@ -727,9 +743,11 @@ function render(tMs) {
 
   // 그림자·글로우가 잘리지 않도록 캔버스에 여백(M)을 두고 카드 원점을 이동
   // (블러 끝자락 ~2%는 안 보이므로 0.75배까지만 확보 — 여백 최소화)
-  const glowPad = card.borderStyle === 'glow' && card.borderWidth > 0 ? 24 : 0;
+  // 빛번짐을 카드 안쪽으로 제한하면 여백이 아예 필요 없어짐 (출력 크기 = 카드 크기)
+  const clipGlow = card.clipGlow !== false;
+  const glowPad = !clipGlow && card.borderStyle === 'glow' && card.borderWidth > 0 ? 24 : 0;
   // 테두리 효과의 글로우도 캔버스 밖으로 잘리지 않게 여백 확보
-  const fxPad = fxs.reduce((m, f) => Math.max(m, FX_GLOW_PAD[f.type] || 0), 0);
+  const fxPad = clipGlow ? 0 : fxs.reduce((m, f) => Math.max(m, FX_GLOW_PAD[f.type] || 0), 0);
   const M = Math.max(glowPad, fxPad, shadow.on
     ? Math.ceil(shadow.blur * 0.75 + Math.max(Math.abs(shadow.x), Math.abs(shadow.y)) + 4)
     : 0);
@@ -1666,6 +1684,13 @@ function render(tMs) {
 
   ctx.restore(); // 카드 클립 해제
 
+  // 빛번짐 제한: 테두리·테두리 효과를 카드 모양 안에서만 그림 → 바깥 여백 0
+  if (clipGlow) {
+    ctx.save();
+    roundRectPath(ctx, 0, 0, W, H, rr);
+    ctx.clip();
+  }
+
   // 외곽 테두리 (단색/그라디언트/글로우/이중/파선/점선)
   if (card.borderWidth > 0) {
     const bs = card.borderStyle || 'solid';
@@ -1870,6 +1895,8 @@ function render(tMs) {
       ctx.restore();
     }
   });
+
+  if (clipGlow) ctx.restore(); // 빛번짐 제한 클립 해제
 
   // 장식 테두리 (선 스타일: 실선/파선/긴 파선/점선/일점쇄선/이중/삼중/물결)
   if (deco.on) {
@@ -2908,6 +2935,8 @@ function bindControls() {
   $('deco-color').oninput = (e) => { state.deco.color = e.target.value; render(); };
   $('deco-inset').oninput = (e) => { state.deco.inset = +e.target.value; render(); };
   $('deco-width').oninput = (e) => { state.deco.width = +e.target.value; render(); };
+  $('clip-glow').onchange = (e) => { state.card.clipGlow = e.target.checked; render(); updatePreviewInfo(); };
+  $('export-bg').onchange = (e) => { state.card.exportBg = e.target.value; render(); };
 
   $('font-family').onchange = (e) => { state.text.fontFamily = e.target.value; render(); };
   $('btn-load-fonts').onclick = loadSystemFonts;
@@ -3185,6 +3214,8 @@ function syncControls() {
   $('deco-color').value = s.deco.color;
   $('deco-inset').value = s.deco.inset;
   $('deco-width').value = s.deco.width;
+  $('clip-glow').checked = s.card.clipGlow !== false;
+  $('export-bg').value = s.card.exportBg || 'transparent';
   $('c-label').value = s.text.labelColor;
   $('c-value').value = s.text.valueColor;
   $('lbl-bold').checked = s.text.labelBold !== false;
@@ -3366,7 +3397,7 @@ function wpSubChunks(u8) {
   }
   return out;
 }
-function buildAnimWebp(frames, W, H, opaque) {
+function buildAnimWebp(frames, W, H, bgHex) {
   let hasAlpha = false;
   const anmfs = [];
   for (const f of frames) {
@@ -3386,7 +3417,12 @@ function buildAnimWebp(frames, W, H, opaque) {
   vp8x[0] = 0x02 | (hasAlpha ? 0x10 : 0); // 애니메이션 플래그 (+ 알파)
   wp24(vp8x, 4, W - 1); wp24(vp8x, 7, H - 1);
   const anim = new Uint8Array(6);
-  if (opaque) { anim[0] = 0xff; anim[1] = 0xff; anim[2] = 0xff; anim[3] = 0xff; } // 배경 BGRA(흰색)
+  if (bgHex) {
+    // 캔버스 배경색 BGRA — 알파를 무시하고 이 색으로 채우는 디코더 대비
+    const h = String(bgHex).replace('#', '');
+    const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16) || 0;
+    anim[0] = n & 255; anim[1] = (n >> 8) & 255; anim[2] = (n >> 16) & 255; anim[3] = 0xff;
+  }
   anim[4] = 0; anim[5] = 0; // 무한 반복
   const body = wpConcat([wpChunk('VP8X', vp8x), wpChunk('ANIM', anim), wpConcat(anmfs)]);
   const head = new Uint8Array(12);
@@ -3450,7 +3486,7 @@ async function exportWebp() {
       return out;
     });
     btn.textContent = 'WebP 묶는 중…';
-    const bytes = buildAnimWebp(frames, tmp.width, tmp.height, false);
+    const bytes = buildAnimWebp(frames, tmp.width, tmp.height, exportBgColor());
     const path = await window.api.exportWebp({
       dataBase64: u8ToB64(bytes), suggestedName: state.name || 'speccard',
     });

@@ -118,6 +118,17 @@
         <label>장식 색 <input id="deco-color" type="color" value="#ffffff" /></label>
         <label>안쪽 간격 <input id="deco-inset" type="range" min="4" max="46" step="1" value="12" /></label>
         <label>굵기 <input id="deco-width" type="range" min="1" max="10" step="1" value="2" /></label>
+        <h3>저장 파일</h3>
+        <label class="chk"><input id="clip-glow" type="checkbox" checked /> 빛번짐을 카드 안쪽으로 제한</label>
+        <p class="hint">테두리 글로우·테두리 효과가 카드 밖으로 번지면 그만큼 투명 여백이 생기고, 그 여백이 일부 사이트·뷰어에서 <b>검은 테두리</b>로 보여요. 켜두면 저장 크기가 항상 카드 크기와 같아집니다.</p>
+        <label>저장 배경
+          <select id="export-bg">
+            <option value="transparent">투명</option>
+            <option value="white">흰색</option>
+            <option value="card">카드 배경색</option>
+          </select>
+        </label>
+        <p class="hint">둥근 모서리 바깥까지 채워요. 다크 모드가 있는 곳에 올린다면 '카드 배경색'이 가장 자연스러워요.</p>
       </section>
 
       <!-- ③ 이미지 -->
@@ -378,7 +389,7 @@
         <div id="zoom-hint">화면을 누르면 닫혀요</div>
       </div>
       <footer id="credit">
-        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.21</div>
+        <div class="credit-main">디시인사이드 데스크탑 갤러리 &nbsp;·&nbsp; 제작자: 정신안차려? &nbsp;·&nbsp; 버전 v1.3</div>
         <div class="credit-sub">본 툴은 클로드(Claude)를 활용한 바이브코딩으로 제작되었습니다.</div>
         <div class="credit-sub">무료 배포 및 자유 수정 가능 — 제작자 이름만 남겨주세요.</div>
       </footer>
