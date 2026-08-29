@@ -1,12 +1,34 @@
 'use strict';
-const { app, BrowserWindow, ipcMain, dialog, session } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, session, shell, clipboard, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { readSpecs } = require('./specReader');
 
 // 개발 실행(name: speccard)과 포터블 빌드(productName: 자짤 생성툴)가
 // 같은 저장 폴더를 쓰도록 userData 경로 고정
-app.setPath('userData', path.join(app.getPath('appData'), 'speccard'));
+// 자동 QA는 실제 사용자 데이터를 절대 건드리지 않도록 명시적 격리 경로를 받을 수 있다.
+const isolatedUserData = process.env.SPECCARD_USER_DATA;
+app.setPath('userData', isolatedUserData
+  ? path.resolve(isolatedUserData)
+  : path.join(app.getPath('appData'), 'speccard'));
+
+const MAX_IMAGE_BYTES = 64 * 1024 * 1024;
+const RECOVERY_FILE = 'recovery-v2.json';
+let mainWindow = null;
+
+function writeJsonAtomic(fullPath, payload) {
+  const dir = path.dirname(fullPath);
+  fs.mkdirSync(dir, { recursive: true });
+  const temp = path.join(dir, `.${path.basename(fullPath)}.${process.pid}.${Date.now()}.tmp`);
+  const backup = `${fullPath}.bak`;
+  fs.writeFileSync(temp, JSON.stringify(payload, null, 2), 'utf8');
+  try {
+    if (fs.existsSync(fullPath)) fs.copyFileSync(fullPath, backup);
+    fs.copyFileSync(temp, fullPath);
+  } finally {
+    if (fs.existsSync(temp)) fs.unlinkSync(temp);
+  }
+}
 
 function designsDir() {
   const dir = path.join(app.getPath('userData'), 'designs');
@@ -33,8 +55,25 @@ function createWindow() {
       nodeIntegration: false,
     },
   });
+  win.__speccardDirty = false;
+  win.on('close', (event) => {
+    if (!win.__speccardDirty) return;
+    const choice = dialog.showMessageBoxSync(win, {
+      type: 'warning',
+      title: '저장하지 않은 변경사항',
+      message: '저장하지 않은 변경사항이 있습니다.',
+      detail: '창을 닫으면 마지막 자동 복구본은 남지만, 먼저 디자인을 저장하는 편이 안전합니다.',
+      buttons: ['닫기', '취소'],
+      defaultId: 1,
+      cancelId: 1,
+      noLink: true,
+    });
+    if (choice === 1) event.preventDefault();
+  });
   win.setMenuBarVisibility(false);
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+  mainWindow = win;
+  win.on('closed', () => { if (mainWindow === win) mainWindow = null; });
 }
 
 // ---- IPC ----
@@ -51,6 +90,10 @@ ipcMain.handle('image:pick', async () => {
   });
   if (res.canceled || !res.filePaths.length) return null;
   const file = res.filePaths[0];
+  const stat = fs.statSync(file);
+  if (stat.size > MAX_IMAGE_BYTES) {
+    throw new Error(`이미지는 64MB 이하만 불러올 수 있습니다. 현재 ${(stat.size / 1024 / 1024).toFixed(1)}MB`);
+  }
   const ext = path.extname(file).slice(1).toLowerCase();
   const mime = ext === 'jpg' ? 'jpeg' : ext;
   const data = fs.readFileSync(file).toString('base64');
@@ -65,11 +108,15 @@ ipcMain.handle('store:list', async () => {
     .map((f) => {
       const full = path.join(dir, f);
       let name = f.replace(/\.json$/, '');
+      let thumbnail = null;
       try {
         const j = JSON.parse(fs.readFileSync(full, 'utf8'));
         if (j && j.name) name = j.name;
+        if (j && typeof j._thumbnail === 'string' && j._thumbnail.startsWith('data:image/')) {
+          thumbnail = j._thumbnail;
+        }
       } catch (_) {}
-      return { file: f, name, mtime: fs.statSync(full).mtimeMs };
+      return { file: f, name, thumbnail, mtime: fs.statSync(full).mtimeMs };
     })
     .sort((a, b) => b.mtime - a.mtime);
 });
@@ -83,62 +130,17 @@ ipcMain.handle('store:save', async (_e, payload) => {
   const dir = designsDir();
   const name = safeName(payload.name || 'untitled');
   const file = payload.file ? path.basename(payload.file) : `${name}-${Date.now()}.json`;
-  fs.writeFileSync(path.join(dir, file), JSON.stringify(payload, null, 2), 'utf8');
+  writeJsonAtomic(path.join(dir, file), payload);
   return { file, name };
 });
 
 ipcMain.handle('store:delete', async (_e, file) => {
   const full = path.join(designsDir(), path.basename(file));
-  if (fs.existsSync(full)) fs.unlinkSync(full);
+  if (fs.existsSync(full)) await shell.trashItem(full);
   return true;
 });
 
-// ---- PNG 메타데이터(tEXt 청크) 헬퍼 ----
-const META_KEYWORD = 'speccard';
-function crc32(buf) {
-  let table = crc32.table;
-  if (!table) {
-    table = crc32.table = new Int32Array(256);
-    for (let n = 0; n < 256; n++) {
-      let c = n;
-      for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
-      table[n] = c;
-    }
-  }
-  let crc = -1;
-  for (let i = 0; i < buf.length; i++) crc = (crc >>> 8) ^ table[(crc ^ buf[i]) & 0xFF];
-  return (crc ^ -1) >>> 0;
-}
-// IEND 직전에 tEXt 청크로 디자인 JSON(base64) 삽입
-function pngWithMeta(pngBuf, jsonStr) {
-  const data = Buffer.from(Buffer.from(jsonStr, 'utf8').toString('base64'), 'latin1');
-  const content = Buffer.concat([Buffer.from(META_KEYWORD, 'latin1'), Buffer.from([0]), data]);
-  const typed = Buffer.concat([Buffer.from('tEXt', 'latin1'), content]);
-  const chunk = Buffer.alloc(12 + content.length);
-  chunk.writeUInt32BE(content.length, 0);
-  typed.copy(chunk, 4);
-  chunk.writeUInt32BE(crc32(typed), 8 + content.length);
-  const iendStart = pngBuf.length - 12; // 표준 PNG의 IEND 청크(12바이트)는 항상 마지막
-  return Buffer.concat([pngBuf.slice(0, iendStart), chunk, pngBuf.slice(iendStart)]);
-}
-function readPngMeta(buf) {
-  let pos = 8; // PNG 시그니처 스킵
-  while (pos + 12 <= buf.length) {
-    const len = buf.readUInt32BE(pos);
-    const type = buf.toString('latin1', pos + 4, pos + 8);
-    if (type === 'tEXt') {
-      const content = buf.slice(pos + 8, pos + 8 + len);
-      const nul = content.indexOf(0);
-      if (nul > 0 && content.toString('latin1', 0, nul) === META_KEYWORD) {
-        return Buffer.from(content.toString('latin1', nul + 1), 'base64').toString('utf8');
-      }
-    }
-    pos += 12 + len;
-  }
-  return null;
-}
-
-ipcMain.handle('export:png', async (_e, { dataUrl, suggestedName, meta }) => {
+ipcMain.handle('export:png', async (_e, { dataUrl, suggestedName }) => {
   const res = await dialog.showSaveDialog({
     title: 'PNG로 내보내기',
     defaultPath: `${safeName(suggestedName || 'speccard')}.png`,
@@ -146,11 +148,7 @@ ipcMain.handle('export:png', async (_e, { dataUrl, suggestedName, meta }) => {
   });
   if (res.canceled || !res.filePath) return null;
   const base64 = dataUrl.replace(/^data:image\/png;base64,/, '');
-  let buf = Buffer.from(base64, 'base64');
-  if (meta) {
-    try { buf = pngWithMeta(buf, meta); } catch (_) { /* 메타 실패해도 이미지 저장은 진행 */ }
-  }
-  fs.writeFileSync(res.filePath, buf);
+  fs.writeFileSync(res.filePath, Buffer.from(base64, 'base64'));
   return res.filePath;
 });
 
@@ -165,16 +163,68 @@ ipcMain.handle('export:webp', async (_e, { dataBase64, suggestedName }) => {
   return res.filePath;
 });
 
-ipcMain.handle('import:png', async () => {
+ipcMain.handle('project:export', async (_e, payload) => {
+  const res = await dialog.showSaveDialog({
+    title: '편집 가능한 프로젝트 저장',
+    defaultPath: `${safeName(payload.name || 'speccard')}.speccard`,
+    filters: [{ name: 'SpecCard 프로젝트', extensions: ['speccard'] }],
+  });
+  if (res.canceled || !res.filePath) return null;
+  writeJsonAtomic(res.filePath, payload);
+  return res.filePath;
+});
+
+ipcMain.handle('project:import', async () => {
   const res = await dialog.showOpenDialog({
-    title: '내보냈던 PNG에서 디자인 불러오기',
+    title: 'SpecCard 프로젝트 열기',
     properties: ['openFile'],
-    filters: [{ name: 'PNG', extensions: ['png'] }],
+    filters: [{ name: 'SpecCard 프로젝트', extensions: ['speccard', 'json'] }],
   });
   if (res.canceled || !res.filePaths.length) return null;
-  const meta = readPngMeta(fs.readFileSync(res.filePaths[0]));
-  if (!meta) throw new Error('no-meta');
-  return JSON.parse(meta);
+  const file = res.filePaths[0];
+  const stat = fs.statSync(file);
+  if (stat.size > MAX_IMAGE_BYTES) throw new Error('프로젝트 파일이 64MB를 초과합니다.');
+  return { file, state: JSON.parse(fs.readFileSync(file, 'utf8')) };
+});
+
+ipcMain.handle('autosave:write', async (_e, payload) => {
+  const full = path.join(app.getPath('userData'), RECOVERY_FILE);
+  writeJsonAtomic(full, { savedAt: Date.now(), state: payload });
+  return true;
+});
+
+ipcMain.handle('autosave:read', async () => {
+  const full = path.join(app.getPath('userData'), RECOVERY_FILE);
+  if (!fs.existsSync(full)) return null;
+  try {
+    const parsed = JSON.parse(fs.readFileSync(full, 'utf8'));
+    return parsed && parsed.state ? parsed : null;
+  } catch (_) {
+    return null;
+  }
+});
+
+ipcMain.handle('autosave:clear', async () => {
+  const full = path.join(app.getPath('userData'), RECOVERY_FILE);
+  writeJsonAtomic(full, { clearedAt: Date.now(), state: null });
+  return true;
+});
+
+ipcMain.handle('clipboard:write-image', async (_e, dataUrl) => {
+  const image = nativeImage.createFromDataURL(String(dataUrl || ''));
+  if (image.isEmpty()) throw new Error('클립보드에 복사할 이미지가 없습니다.');
+  clipboard.writeImage(image);
+  return true;
+});
+
+ipcMain.handle('clipboard:read-image', async () => {
+  const image = clipboard.readImage();
+  return image.isEmpty() ? null : image.toDataURL();
+});
+
+ipcMain.on('state:dirty', (event, dirty) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win) win.__speccardDirty = !!dirty;
 });
 
 app.whenReady().then(() => {
