@@ -66,7 +66,10 @@
     return {
       enabled: input.enabled === true,
       series: seriesIds.has(input.series) ? input.series : 'color',
-      size: [0.9, 1.15, 1.4].includes(ratio) ? ratio : 1.15,
+      size: Number.isFinite(ratio) ? Math.min(2.5, Math.max(0.5, ratio)) : 1.15,
+      sizeMode: input.sizeMode === 'fixed' ? 'fixed' : 'text',
+      pixels: Number.isFinite(Number(input.pixels)) && input.pixels != null
+        ? Math.min(96, Math.max(8, Number(input.pixels))) : 28,
     };
   }
 
@@ -86,7 +89,8 @@
 
   function metrics(settings, fontSize, columnWidth) {
     const input = normalizeSettings(settings);
-    const size = input.enabled ? Math.min(Math.max(0, fontSize) * input.size, Math.max(0, columnWidth - 16)) : 0;
+    const requested = input.sizeMode === 'fixed' ? input.pixels : Math.max(0, fontSize) * input.size;
+    const size = input.enabled ? Math.min(requested, Math.max(0, columnWidth - 16)) : 0;
     const gap = size ? Math.min(6, Math.max(2, fontSize * 0.2)) : 0;
     return { size, gap, width: size + gap, textOffset: Math.max(0, (size - fontSize) / 2) };
   }

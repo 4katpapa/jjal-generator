@@ -216,6 +216,8 @@
     out.text.columnVAlign = ['top', 'center', 'bottom', 'independent'].includes(out.text.columnVAlign)
       ? out.text.columnVAlign : 'center';
     out.text.fontFamily = text(out.text.fontFamily).slice(0, 200);
+    out.text.labelEffects = normalizeTextEffects(out.text.labelEffects);
+    out.text.valueEffects = normalizeTextEffects(out.text.valueEffects);
 
     out.image.width = clamp(out.image.width, 0.05, 1, 0.4);
     out.image.scale = clamp(out.image.scale, 0.05, 10, 1);
@@ -279,7 +281,7 @@
 
     out.rows = Array.isArray(out.rows) ? out.rows.map(normalizeRow) : [];
     out.texts = clampObjectList(out.texts, 'text', MAX.texts, (item) => ({
-      ...item,
+      ...item, ...normalizeTextEffects(item),
       text: text(item.text).slice(0, 4000),
       size: clamp(item.size, 10, 240, 34),
       x: item.x == null ? null : clamp(item.x, -4800, 4800, 0),
@@ -421,6 +423,17 @@
     return { width: w, height: h, frames, rawBytes: w * h * 4 * Math.min(frames, 3) };
   }
 
+  function normalizeTextEffects(value) {
+    const item = value && typeof value === 'object' ? value : {};
+    return {
+      outline: item.outline === true, outlineColor: color(item.outlineColor, '#ffffff'),
+      outlineWidth: clamp(item.outlineWidth, 1, 16, 4),
+      glow: oneOf(item.glow, ['none', 'soft', 'neon'], 'none'),
+      glowColor: color(item.glowColor, '#00e5ff'), glowBlur: clamp(item.glowBlur, 1, 60, 12),
+      glowStrength: clamp(item.glowStrength, 0, 1, 0.8),
+    };
+  }
+
   function relativeLuminance(hex) {
     const value = color(hex, '#000000').slice(1);
     const parts = [0, 2, 4].map((i) => parseInt(value.slice(i, i + 2), 16) / 255)
@@ -435,7 +448,7 @@
   }
 
   return Object.freeze({
-    SCHEMA_VERSION, MAX, clamp, clone, mergePlain, normalizeRow, normalizeState,
+    SCHEMA_VERSION, MAX, clamp, clone, mergePlain, normalizeRow, normalizeState, normalizeTextEffects,
     mergeAutoSpecs, splitRows, wrapText, exportEstimate, contrastRatio, rowFamily,
     SIGNAL_TRAVEL_LOOP_MS, signalWavePhases, signalWaveSample,
   });

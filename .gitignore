@@ -4,8 +4,11 @@ node_modules/
 # 빌드 산출물 (Releases로 배포)
 dist/
 
-# 개발 실행에서 추가한 개인 배경 (내장 원본은 assets/backgrounds)
+# 기존 개인 이미지 (사용자 파일은 계속 Git 제외)
 /Backgrounds/
+
+# 프로젝트 내부의 소스 백업·격리 검증 결과
+/work/
 
 # 로그·임시
 *.log

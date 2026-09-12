@@ -1,6 +1,6 @@
 {
   "name": "speccard",
-  "version": "3.0.0",
+  "version": "3.2.0",
   "description": "자짤 생성툴 - PC 사양 카드 생성기",
   "main": "main.js",
   "author": "정신안차려?",
@@ -46,7 +46,7 @@
       "icon": "build/icon.png"
     },
     "portable": {
-      "artifactName": "jjal-generator-v3.0-portable.exe"
+      "artifactName": "jjal-generator-v3.2-portable.exe"
     }
   }
 }

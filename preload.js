@@ -7,14 +7,6 @@ contextBridge.exposeInMainWorld('api', {
   listBackgrounds: () => ipcRenderer.invoke('backgrounds:list'),
   backgroundThumbnail: (request) => ipcRenderer.invoke('backgrounds:thumbnail', request),
   backgroundImage: (request) => ipcRenderer.invoke('backgrounds:image', request),
-  chooseBackgroundFolder: () => ipcRenderer.invoke('backgrounds:choose'),
-  defaultBackgroundFolder: () => ipcRenderer.invoke('backgrounds:default'),
-  openBackgroundFolder: () => ipcRenderer.invoke('backgrounds:open'),
-  onBackgroundsChanged: (callback) => {
-    const listener = () => callback();
-    ipcRenderer.on('backgrounds:changed', listener);
-    return () => ipcRenderer.removeListener('backgrounds:changed', listener);
-  },
   listDesigns: () => ipcRenderer.invoke('store:list'),
   loadDesign: (file) => ipcRenderer.invoke('store:load', file),
   saveDesign: (payload) => ipcRenderer.invoke('store:save', payload),

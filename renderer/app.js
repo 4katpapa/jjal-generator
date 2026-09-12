@@ -88,7 +88,7 @@ function newTextEl() {
     text: '새 텍스트', size: 34, color: '#a12ea1',
     x: null, y: null, align: 'center', fontFamily: '',
     fillType: 'solid', color2: '#7c3aed', gradAngle: 0,
-    outline: false, outlineColor: '#ffffff', outlineWidth: 4,
+    ...V2.normalizeTextEffects(),
     shadow: false, shadowColor: '#000000', shadowAlpha: 0.55,
     shadowBlur: 6, shadowX: 0, shadowY: 2, opacity: 1, rotate: 0,
     // 굵게는 꺼진 상태로 시작 — 켜져 있으면 B를 눌러도 굵어지지 않고 얇아져서 안 먹는 것처럼 보임
@@ -905,6 +905,27 @@ function rotatedAabb(box, cx, cy, degrees) {
   return { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) };
 }
 
+// Canvas filters use device pixels; scale the halo with the same RES as preview/export.
+// The outline is drawn first and covered by the fill, leaving the edge around the glyph.
+function paintTextWithEffects(value, x, y, options) {
+  const effect = V2.normalizeTextEffects(options);
+  ctx.save();
+  if (effect.glow !== 'none' && effect.glowStrength > 0) {
+    const color = hexToRgba(effect.glowColor, effect.glowStrength);
+    const blur = effect.glowBlur * RES;
+    const halos = effect.glow === 'neon' ? [Math.max(0.5 * RES, blur * 0.22), blur] : [blur];
+    ctx.filter = halos.map((radius) => `drop-shadow(0px 0px ${radius}px ${color})`).join(' ');
+  }
+  if (effect.outline) {
+    ctx.lineWidth = effect.outlineWidth; ctx.strokeStyle = effect.outlineColor; ctx.lineJoin = 'round';
+    ctx.strokeText(value, x, y);
+    ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0; ctx.filter = 'none';
+  }
+  ctx.fillText(value, x, y);
+  ctx.restore();
+}
+
 function drawTextEl(t) {
   const fam = t.fontFamily || state.text.fontFamily;
   const weight = t.bold === false ? 400 : (t.weight || 800);
@@ -937,15 +958,10 @@ function drawTextEl(t) {
       ctx.shadowBlur = (t.shadowBlur == null ? Math.max(2, t.size * 0.18) : t.shadowBlur) * RES;
       ctx.shadowOffsetX = (t.shadowX || 0) * RES; ctx.shadowOffsetY = (t.shadowY == null ? 2 : t.shadowY) * RES;
     }
-    if (t.outline) {
-      ctx.lineWidth = t.outlineWidth || 4; ctx.strokeStyle = t.outlineColor || '#ffffff'; ctx.lineJoin = 'round';
-      chars.forEach((ch, i) => ctx.strokeText(ch, t.x, t.y + i * lh));
-      ctx.shadowColor = 'transparent';
-    }
     ctx.fillStyle = t.fillType === 'gradient'
       ? makeGradient(t.x - t.size / 2, t.y, t.size, totalH, t.color, t.color2 || t.color, 90)
       : t.color;
-    chars.forEach((ch, i) => ctx.fillText(ch, t.x, t.y + i * lh));
+    chars.forEach((ch, i) => paintTextWithEffects(ch, t.x, t.y + i * lh, t));
     ctx.restore();
     return rotatedAabb(box, t.x, t.y, rotation);
   }
@@ -982,15 +998,10 @@ function drawTextEl(t) {
     let bx = t.x;
     if (t.align === 'right') bx -= m.width;
     else if (t.align === 'center') bx -= m.width / 2;
-    if (t.outline) {
-      ctx.lineWidth = t.outlineWidth || 4; ctx.strokeStyle = t.outlineColor || '#ffffff'; ctx.lineJoin = 'round';
-      ctx.strokeText(line, t.x, y);
-      ctx.shadowColor = 'transparent';
-    }
     ctx.fillStyle = t.fillType === 'gradient'
       ? makeGradient(bx, y, m.width || 1, t.size, t.color, t.color2 || t.color, t.gradAngle || 0)
       : t.color;
-    ctx.fillText(line, t.x, y);
+    paintTextWithEffects(line, t.x, y, t);
     if (t.underline || t.strike) {
       ctx.strokeStyle = t.color; ctx.lineWidth = Math.max(1, t.size / 15);
       for (const yy of [t.underline ? y + t.size * 1.08 : null, t.strike ? y + t.size * 0.55 : null]) {
@@ -1153,6 +1164,7 @@ function render(tMs) {
   canvas.width = (W + M * 2) * RES;
   canvas.height = (H + M * 2) * RES;
   canvas.style.width = (W + M * 2) + 'px';
+  canvas.parentElement.style.setProperty('--card-aspect', String((W + M * 2) / (H + M * 2)));
   ctx.scale(RES, RES);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
@@ -1470,8 +1482,12 @@ function render(tMs) {
     const overflows = () => specM.maxH > availableSpecH
       || specM.colData.some((cd) => cd.maxLabelW > specM.labelW + 0.5);
     while (fsTry > minFs && overflows()) {
+      const next = measureSpec(fsTry - 1);
+      // 고정 픽셀 아이콘이 높이를 결정하면 글자만 줄여도 더 들어가지 않는다.
+      if (state.specIcons.sizeMode === 'fixed' && next.maxH >= specM.maxH
+        && specM.colData.every((cd) => cd.maxLabelW <= specM.labelW + 0.5)) break;
       fsTry -= 1;
-      specM = measureSpec(fsTry);
+      specM = next;
     }
   } else {
     specM = measureSpec(text.fontSize);
@@ -1653,7 +1669,7 @@ function render(tMs) {
           ? makeGradient(lblLeft, textY, ctx.measureText(row.label).width || 1, fs,
               text.labelColor, text.labelColor2 || text.labelColor, 90)
           : text.labelColor;
-        ctx.fillText(row.label, lblX, textY);
+        paintTextWithEffects(row.label, lblX, textY, text.labelEffects);
         ctx.restore();
         // 값 — 일괄 지정 켜짐 → 값 글자색으로 통일. 그라디언트/그림자 선택 가능
         ctx.font = `${text.valueBold === false ? 400 : 700} ${fs}px ${font}`;
@@ -1671,7 +1687,7 @@ function render(tMs) {
             ? makeGradient(valLeft, textY + li * lineH, ctx.measureText(ln).width || 1, fs,
                 baseCol, text.valueColor2 || baseCol, 90)
             : baseCol;
-          ctx.fillText(ln, valX, textY + li * lineH);
+          paintTextWithEffects(ln, valX, textY + li * lineH, text.valueEffects);
         });
         ctx.restore();
         y += sc.rowHeights[ri] + specM.itemGap;
@@ -1819,7 +1835,7 @@ function render(tMs) {
     hit.texts.push(drawTextEl({
       text: t.text, x: t.x, y: t.y, size: t.size, color: t.color, align: t.align || 'left',
       fontFamily: t.fontFamily, fillType: t.fillType, color2: t.color2, gradAngle: t.gradAngle,
-      outline: t.outline, outlineColor: t.outlineColor, outlineWidth: t.outlineWidth,
+      ...V2.normalizeTextEffects(t),
       shadow: t.shadow, shadowColor: t.shadowColor,
       shadowAlpha: t.shadowAlpha, shadowBlur: t.shadowBlur, shadowX: t.shadowX, shadowY: t.shadowY,
       bold: t.bold, italic: t.italic, underline: t.underline, strike: t.strike, spacing: t.spacing,
@@ -3455,6 +3471,17 @@ function syncSpecIconControls() {
   enabled.checked = state.specIcons.enabled;
   document.getElementById('spec-icons-size').value = String(state.specIcons.size);
   document.getElementById('spec-icons-size').disabled = !state.specIcons.enabled;
+  const fixed = state.specIcons.sizeMode === 'fixed';
+  document.getElementById('spec-icons-size-mode').value = fixed ? 'fixed' : 'text';
+  document.getElementById('spec-icons-size-mode').disabled = !state.specIcons.enabled;
+  document.getElementById('spec-icons-pixels').value = String(state.specIcons.pixels || 28);
+  document.getElementById('spec-icons-pixels').disabled = !state.specIcons.enabled;
+  document.getElementById('spec-icons-ratio-control').hidden = fixed;
+  document.getElementById('spec-icons-pixels-control').hidden = !fixed;
+  for (const id of ['spec-icons-size', 'spec-icons-pixels']) {
+    const range = document.getElementById(id);
+    if (range._numEl) { range._numEl.value = range.value; range._numEl.disabled = range.disabled; }
+  }
   document.querySelectorAll('#spec-icon-series button').forEach((button) => {
     button.setAttribute('aria-pressed', String(button.dataset.series === state.specIcons.series));
     button.disabled = !state.specIcons.enabled;
@@ -3478,8 +3505,14 @@ function bindSpecIconControls() {
     state.specIcons.enabled = event.target.checked;
     syncSpecIconControls(); renderRows(); render();
   };
-  document.getElementById('spec-icons-size').onchange = (event) => {
+  document.getElementById('spec-icons-size').oninput = (event) => {
     state.specIcons.size = Number(event.target.value); render();
+  };
+  document.getElementById('spec-icons-size-mode').onchange = (event) => {
+    state.specIcons.sizeMode = event.target.value; syncSpecIconControls(); render();
+  };
+  document.getElementById('spec-icons-pixels').oninput = (event) => {
+    state.specIcons.pixels = Number(event.target.value); render();
   };
 }
 
@@ -3807,6 +3840,49 @@ function mkRange(min, max, step, val, cb) {
   r.oninput = () => cb(+r.value);
   return r;
 }
+const specTextEffectEditors = [];
+function createTextEffectEditor(getValue, title, key) {
+  const box = document.createElement('fieldset'); box.className = 'text-effects'; box.dataset.textEffects = key;
+  const legend = document.createElement('legend'); legend.textContent = `${title} 효과`; box.append(legend);
+  const controls = new Map();
+  const add = (field, caption, type, min, max, step) => {
+    const label = document.createElement('label');
+    const captionEl = document.createElement('span'); captionEl.textContent = caption;
+    let input;
+    if (type === 'select') {
+      input = document.createElement('select');
+      for (const [value, text] of [['none', '끄기'], ['soft', '부드러운 발광'], ['neon', '네온 발광']]) input.add(new Option(text, value));
+    } else {
+      input = document.createElement('input'); input.type = type;
+      if (type === 'range') { input.min = min; input.max = max; input.step = step; }
+    }
+    input.dataset.effectField = field; input.setAttribute('aria-label', `${title} ${caption}`);
+    if (type === 'checkbox') { label.className = 'chk'; label.append(input, captionEl); }
+    else label.append(captionEl, input);
+    const change = () => {
+      getValue()[field] = type === 'checkbox' ? input.checked : type === 'range' ? Number(input.value) : input.value;
+      sync(); render();
+    };
+    input.addEventListener(type === 'checkbox' || type === 'select' ? 'change' : 'input', change);
+    controls.set(field, input); box.append(label);
+  };
+  const sync = () => {
+    const effects = V2.normalizeTextEffects(getValue());
+    for (const [field, input] of controls) {
+      if (input.type === 'checkbox') input.checked = effects[field]; else input.value = effects[field];
+      input.disabled = field.startsWith('outline') && field !== 'outline' ? !effects.outline
+        : field.startsWith('glow') && field !== 'glow' ? effects.glow === 'none' : false;
+      if (input._numEl) { input._numEl.value = input.value; input._numEl.disabled = input.disabled; }
+    }
+  };
+  add('outline', '글자 테두리', 'checkbox');
+  add('outlineColor', '테두리 색', 'color'); add('outlineWidth', '테두리 두께', 'range', 1, 16, 1);
+  add('glow', '발광', 'select'); add('glowColor', '발광 색', 'color');
+  add('glowBlur', '발광 범위', 'range', 1, 60, 1); add('glowStrength', '발광 강도', 'range', 0, 1, 0.05);
+  sync();
+  return { box, sync };
+}
+
 function renderTexts() {
   const wrap = document.getElementById('texts-list');
   wrap.innerHTML = '';
@@ -3906,15 +3982,7 @@ function renderTexts() {
     const spLab = document.createElement('span'); spLab.textContent = '자간'; spLab.className = 'tc-lab';
     r5b.append(spLab, mkRange(-3, 20, 0.5, t.spacing || 0, (v) => { t.spacing = v; render(); }));
 
-    // 6) 외곽선 + 색 + 굵기
-    const r6 = tcRow();
-    const ol = document.createElement('input');
-    ol.type = 'checkbox'; ol.checked = !!t.outline;
-    ol.onchange = () => { t.outline = ol.checked; render(); };
-    const olLab = document.createElement('span'); olLab.textContent = '외곽선'; olLab.className = 'tc-lab';
-    r6.append(ol, olLab,
-      mkColor(t.outlineColor, '외곽선 색', (v) => { t.outlineColor = v; render(); }),
-      mkRange(1, 16, 1, t.outlineWidth || 4, (v) => { t.outlineWidth = v; render(); }));
+    const effects = createTextEffectEditor(() => t, '추가 텍스트', t.id);
 
     // 7) 바깥쪽 그림자
     const r7 = tcRow();
@@ -3949,7 +4017,7 @@ function renderTexts() {
     const bgPadLab = document.createElement('span'); bgPadLab.className = 'tc-lab'; bgPadLab.textContent = '배경 여백';
     bgPadRow.append(bgPadLab, mkRange(0, 40, 1, t.backgroundPad == null ? 8 : t.backgroundPad, (v) => { t.backgroundPad = v; render(); }));
 
-    card.append(r1, r2, r3, r3b, rPos, rTransform, rFlow, r4, r4b, r5, r5b, r6, r7, ...shadowRows, rBg, bgAlphaRow, bgPadRow);
+    card.append(r1, r2, r3, r3b, rPos, rTransform, rFlow, r4, r4b, r5, r5b, effects.box, r7, ...shadowRows, rBg, bgAlphaRow, bgPadRow);
     wrap.appendChild(card);
   });
   const btn = document.getElementById('btn-add-text');
@@ -4894,6 +4962,12 @@ function bindControls() {
   $('c-label').oninput = (e) => { state.text.labelColor = e.target.value; colorsDirty = true; render(); };
   $('c-value').oninput = (e) => { state.text.valueColor = e.target.value; colorsDirty = true; render(); };
 
+  for (const [key, title] of [['label', '항목명'], ['value', '사양값']]) {
+    const editor = createTextEffectEditor(() => state.text[`${key}Effects`], title, key);
+    $(`${key}-text-effects`).replaceChildren(editor.box);
+    specTextEffectEditors.push(editor);
+  }
+
   // 사양 글자 효과 (라벨/값 각각 그라디언트·그림자)
   $('lbl-bold').onchange = (e) => { state.text.labelBold = e.target.checked; render(); };
   $('val-bold').onchange = (e) => { state.text.valueBold = e.target.checked; render(); };
@@ -5064,43 +5138,62 @@ function bindControls() {
 
   const bgPick = $('btn-image-bg');
   const bgPresets = $('btn-background-presets');
-  if (bgPresets) bgPresets.onclick = () => {
+  const bgRandom = $('btn-background-random');
+  let backgroundRequest = 0;
+  function backgroundApplication() {
     const target = state;
     const revision = documentRevision;
-    window.BackgroundPresetUI.open({ onApply: async (url, isCurrent) => {
-      const image = await new Promise((resolve, reject) => {
-        const im = new Image();
-        im.onload = () => resolve(im);
-        im.onerror = () => reject(new Error('배경 이미지를 읽지 못했습니다.'));
-        im.src = url;
-      });
-      if (!isCurrent() || state !== target || documentRevision !== revision) return false;
+    const request = ++backgroundRequest;
+    const isCurrent = () => state === target && documentRevision === revision && request === backgroundRequest;
+    return { isCurrent, currentUrl: state.card.bgImageDataUrl, onApply: async (url, isActive, item) => {
+      const image = new Image(); image.src = url; await image.decode();
+      if (!isCurrent() || !isActive()) return false;
       pushHist();
       state.card.bgImageDataUrl = url;
       state.card.bgImageX = 0; state.card.bgImageY = 0; state.card.bgImageScale = 1;
       bgImgEl = image;
       clearDownscaleCache();
       syncControls(); setBackgroundDragMode(false); render();
-      toast('배경을 적용했습니다. 위치·확대·어둡게 조절로 사양 글자에 맞춰 보세요.');
+      $('background-preset-status').textContent = `적용한 배경: ${item.name}`;
       return true;
-    } });
+    } };
+  }
+  if (bgPresets) bgPresets.onclick = () => window.BackgroundPresetUI.open(backgroundApplication());
+  if (bgRandom) bgRandom.onclick = async () => {
+    if (bgRandom.disabled) return;
+    const request = backgroundApplication();
+    bgRandom.disabled = true; bgRandom.textContent = '적용 중…'; bgRandom.setAttribute('aria-busy', 'true');
+    try {
+      await window.BackgroundPresetUI.random(request);
+    } catch (error) {
+      if (request.isCurrent()) $('background-preset-status').textContent = `랜덤 배경 실패: ${error.message}`;
+    } finally {
+      bgRandom.disabled = false; bgRandom.textContent = '랜덤 배경'; bgRandom.removeAttribute('aria-busy');
+    }
   };
   if (bgPick) bgPick.onclick = async () => {
+    const request = backgroundApplication();
     try {
+      if (state.card.bgImageDataUrl && !await confirmBox('개인 이미지를 넣으면 현재 배경이 새 이미지로 바뀝니다. 계속하시겠습니까?')) return;
+      if (!request.isCurrent()) return;
       const url = await window.api.pickImage();
-      if (!url) return;
-      state.card.bgImageDataUrl = url;
-      await loadBackgroundImage(url);
-      setBackgroundDragMode(true);
-      render();
-      toast('배경 이미지를 넣었습니다. 미리보기에서 바로 끌어 위치를 맞추세요.');
-    } catch (error) { toast(`배경 이미지 실패: ${error.message}`); }
+      if (!url || !request.isCurrent()) return;
+      if (await request.onApply(url, request.isCurrent, { name: '개인 이미지' })) {
+        setBackgroundDragMode(true);
+        toast('배경 이미지를 넣었습니다. 미리보기에서 바로 끌어 위치를 맞추세요.');
+      }
+    } catch (error) { if (request.isCurrent()) toast(`배경 이미지 실패: ${error.message}`); }
   };
   const bgClear = $('btn-image-bg-clear');
   if (bgClear) bgClear.onclick = async () => {
+    const request = backgroundApplication();
+    if (!state.card.bgImageDataUrl) return;
+    if (!await confirmBox('현재 배경 이미지를 제거하면 카드의 배경색과 패턴이 표시됩니다. 계속하시겠습니까?')) return;
+    if (!request.isCurrent()) return;
+    pushHist();
     state.card.bgImageDataUrl = null;
     setBackgroundDragMode(false);
-    await loadBackgroundImage(null); render();
+    await loadBackgroundImage(null); syncControls(); render();
   };
   const bgDrag = $('btn-bg-drag');
   if (bgDrag) bgDrag.onclick = () => setBackgroundDragMode(!bgImageDragMode);
@@ -5469,8 +5562,12 @@ function syncControls() {
   $('deco-width').value = s.deco.width;
   $('clip-glow').checked = s.card.clipGlow !== false;
   $('export-bg').value = s.card.exportBg || 'transparent';
+  $('background-preset-status').textContent = s.card.bgImageDataUrl
+    ? '배경이 적용되어 있습니다. 랜덤 버튼으로 다른 내장 배경을 골라 보세요.'
+    : '내장 배경 100장 중 골라 쓰거나, 랜덤 버튼을 눌러 바로 바꿔 보세요.';
   $('c-label').value = s.text.labelColor;
   $('c-value').value = s.text.valueColor;
+  specTextEffectEditors.forEach((editor) => editor.sync());
   $('lbl-bold').checked = s.text.labelBold !== false;
   $('val-bold').checked = s.text.valueBold !== false;
   $('lbl-grad').checked = !!s.text.labelGrad;

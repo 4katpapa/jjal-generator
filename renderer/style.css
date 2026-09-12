@@ -974,6 +974,9 @@ button.toggle-active:hover {
   #topbar { min-height: 52px; padding-block: 7px; }
   #topbar #design-name { width: clamp(100px, 26vw, 210px); }
   #stage-center { padding: 8px 12px 14px; gap: 6px; }
+  #canvas-wrap {
+    max-width: min(100%, calc((46vh - 108px) * var(--card-aspect, 2.833333)));
+  }
   #card { max-height: calc(46vh - 108px); }
   .canvas-toolbar { min-height: 25px; }
   #credit { display: none; }
@@ -1005,3 +1008,16 @@ button.toggle-active:hover {
   button.primary:hover { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
   button:active { filter: brightness(.92); }
 }
+
+/* v3.1: 텍스트 입력 종류별로 동일한 외곽선·발광 조절 제공 */
+.text-effects { min-width: 0; margin: 12px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }
+.text-effects legend { padding: 0 5px; color: var(--label); font-size: 12px; font-weight: 700; }
+.text-effects label { gap: 9px; }
+.text-effects label > span { flex-shrink: 0; }
+.text-effects input[type="range"] { min-width: 35px; }
+.text-effects select { min-width: 0; max-width: 155px; }
+.text-effects input:disabled, .text-effects select:disabled { opacity: .45; }
+.background-preset-actions > #btn-background-presets { flex: 1.8; }
+.background-preset-actions > #btn-background-random { flex: 1; white-space: nowrap; }
+.bgl-head-actions { flex-shrink: 0; }
+#spec-icons-ratio-control[hidden], #spec-icons-pixels-control[hidden] { display: none; }

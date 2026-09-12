@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { readSpecs } = require('./specReader');
 const { readJsonWithBackup, writeJsonAtomic } = require('./jsonStore');
-const { BackgroundLibrary, defaultBackgroundRoot, bundledBackgroundRoot } = require('./backgroundLibrary');
+const { BackgroundLibrary, bundledBackgroundRoot } = require('./backgroundLibrary');
 
 // 개발 실행(name: speccard)과 포터블 빌드(productName: 자짤 생성툴)가
 // 같은 저장 폴더를 쓰도록 userData 경로 고정
@@ -19,11 +19,6 @@ const RECOVERY_FILE = 'recovery-v2.json';
 let mainWindow = null;
 const backgrounds = new BackgroundLibrary({
   bundledRoot: bundledBackgroundRoot({ packaged: app.isPackaged, resourcesPath: process.resourcesPath, appPath: app.getAppPath() }),
-  defaultRoot: defaultBackgroundRoot({
-    packaged: app.isPackaged, portableDir: process.env.PORTABLE_EXECUTABLE_DIR,
-    executable: app.getPath('exe'), appPath: app.getAppPath(),
-  }),
-  settingsFile: path.join(app.getPath('userData'), 'background-library.json'),
   thumbnail: (buffer) => {
     const image = nativeImage.createFromBuffer(buffer);
     if (image.isEmpty()) throw new Error('이미지를 읽을 수 없습니다.');
@@ -33,9 +28,6 @@ const backgrounds = new BackgroundLibrary({
     const cropHeight = Math.max(1, Math.min(height, Math.round(width * 6 / 17)));
     return image.crop({ x: Math.floor((width - cropWidth) / 2), y: Math.floor((height - cropHeight) / 2), width: cropWidth, height: cropHeight })
       .resize({ width: 340, height: 120, quality: 'good' }).toDataURL();
-  },
-  onChange: () => {
-    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('backgrounds:changed');
   },
 });
 
@@ -90,15 +82,6 @@ function createWindow() {
 ipcMain.handle('backgrounds:list', () => backgrounds.list());
 ipcMain.handle('backgrounds:thumbnail', (_event, request) => backgrounds.getThumbnail(request));
 ipcMain.handle('backgrounds:image', (_event, request) => backgrounds.getImage(request));
-ipcMain.handle('backgrounds:choose', async () => {
-  const result = await dialog.showOpenDialog(mainWindow, {
-    title: '배경 이미지 폴더 선택', defaultPath: backgrounds.root, properties: ['openDirectory'],
-  });
-  return result.canceled || !result.filePaths.length ? null : backgrounds.selectRoot(result.filePaths[0]);
-});
-ipcMain.handle('backgrounds:default', () => backgrounds.selectRoot(null));
-ipcMain.handle('backgrounds:open', () => backgrounds.openFolder((root) => shell.openPath(root)));
-
 ipcMain.handle('specs:read', async () => {
   return readSpecs();
 });
@@ -262,5 +245,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
-
-app.on('before-quit', () => backgrounds.stopWatch());

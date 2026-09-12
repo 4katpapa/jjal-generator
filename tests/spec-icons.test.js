@@ -46,7 +46,7 @@ test('design and profile row round trips retain overrides, none, colors and long
   const saved = { rows: [row], specIcons: { enabled: true, series: 'mono', size: 1.4 } };
   const reopened = core.normalizeState(JSON.parse(JSON.stringify(core.normalizeState(saved, defaults))), defaults);
   assert.deepEqual(reopened.rows, [row]);
-  assert.deepEqual(reopened.specIcons, saved.specIcons);
+  assert.deepEqual(reopened.specIcons, icons.normalizeSettings(saved.specIcons));
 });
 
 test('automatic specification merge retains chosen icons and manual peripheral rows', () => {
@@ -78,4 +78,24 @@ test('sprite lookup preserves artwork crossing an approximate quarter-cell divid
   assert.equal(rects[12].y, 117);
   assert.equal(rects[12].h, 27);
   assert.throws(() => icons.spriteRects(new Uint8ClampedArray(width * height * 4), width, height), /비어/);
+});
+
+test('continuous icon ratios and explicit pixel sizes survive normalization and saving', () => {
+  assert.equal(icons.normalizeSettings({ size: 1.65 }).size, 1.65);
+  for (const size of [0.9, 1.15, 1.4]) assert.equal(icons.normalizeSettings({ size }).size, size);
+  const settings = { enabled: true, series: 'pixel', size: 1.65, sizeMode: 'fixed', pixels: 47 };
+  const saved = core.normalizeState({ specIcons: settings }, { card: {}, text: {}, image: {} });
+  const loaded = core.normalizeState(JSON.parse(JSON.stringify(saved)), {});
+  assert.deepEqual(loaded.specIcons, settings);
+});
+
+test('fixed pixel icons stay the same size when text changes and remain inside the column', () => {
+  const settings = { enabled: true, sizeMode: 'fixed', pixels: 48 };
+  assert.equal(icons.metrics(settings, 12, 300).size, 48);
+  assert.equal(icons.metrics(settings, 36, 300).size, 48);
+  assert.equal(icons.metrics(settings, 24, 300).textOffset, 12);
+  assert.ok(icons.metrics(settings, 24, 35).width < 35);
+  assert.equal(icons.metrics({ ...settings, enabled: false }, 24, 300).width, 0);
+  assert.equal(icons.normalizeSettings({ pixels: Infinity }).pixels, 28);
+  assert.equal(icons.normalizeSettings({ size: 900, pixels: 900 }).pixels, 96);
 });

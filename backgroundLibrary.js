@@ -2,17 +2,11 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { readJsonWithBackup, writeJsonAtomic } = require('./jsonStore');
 
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
 const MAX_BYTES = 64 * 1024 * 1024;
 const MAX_FILES = 2000;
 const MAX_ENTRIES = 20000;
-
-function defaultBackgroundRoot({ packaged, portableDir, executable, appPath }) {
-  const base = packaged ? (portableDir || path.dirname(executable)) : appPath;
-  return path.resolve(base, 'Backgrounds');
-}
 
 function bundledBackgroundRoot({ packaged, resourcesPath, appPath }) {
   return packaged ? path.resolve(resourcesPath, 'backgrounds') : path.resolve(appPath, 'assets', 'backgrounds');
@@ -31,49 +25,28 @@ function imageMime(buffer) {
 }
 
 class BackgroundLibrary {
-  constructor({ defaultRoot, bundledRoot = null, settingsFile, thumbnail, onChange = () => {} }) {
-    this.defaultRoot = path.resolve(defaultRoot);
-    this.bundledRoot = bundledRoot ? path.resolve(bundledRoot) : null;
-    this.settingsFile = settingsFile;
+  constructor({ bundledRoot, thumbnail }) {
+    this.bundledRoot = path.resolve(bundledRoot);
     this.thumbnail = thumbnail;
-    this.onChange = onChange;
-    this.customRoot = null;
     this.revision = 0;
     this.entries = new Map();
     this.cache = new Map();
-    this.watcher = null;
-    this.watchRoot = null;
-    try {
-      const value = readJsonWithBackup(settingsFile, (v) => v && (v.root === null || (typeof v.root === 'string' && path.isAbsolute(v.root)))).value;
-      this.customRoot = value.root;
-    } catch (_) { /* 첫 실행 또는 읽을 수 없는 설정은 기본 폴더로 시작한다. */ }
+    this.pendingList = null;
   }
 
-  get root() { return this.customRoot || this.defaultRoot; }
-
-  async selectRoot(root) {
-    let canonical = null;
-    if (root !== null) {
-      canonical = await fs.promises.realpath(root);
-      if (!(await fs.promises.stat(canonical)).isDirectory()) throw new Error('이미지 폴더를 선택해 주세요.');
+  list() {
+    if (!this.pendingList) {
+      this.pendingList = this.scan().finally(() => { this.pendingList = null; });
     }
-    writeJsonAtomic(this.settingsFile, { root: canonical });
-    this.customRoot = canonical;
-    this.revision++;
-    this.entries.clear();
-    this.cache.clear();
-    this.stopWatch();
-    return this.list();
+    return this.pendingList;
   }
 
-  async list() {
-    const root = this.root;
-    const startingRevision = this.revision;
+  async scan() {
     const entries = new Map();
     let visited = 0;
     let skipped = 0;
     let limited = false;
-    const scan = async (folder, source) => {
+    const scan = async (folder) => {
       let canonical;
       try {
         canonical = await fs.promises.realpath(folder);
@@ -95,12 +68,12 @@ class BackgroundLibrary {
                 const real = await fs.promises.realpath(full);
                 if (!inside(canonical, real)) { skipped++; continue; }
                 const file = path.relative(canonical, full).split(path.sep).join('/');
-                const id = source === 'builtin' ? `builtin:${file}` : file;
+                const id = `builtin:${file}`;
                 const parent = path.posix.dirname(file);
                 entries.set(id, {
                   id, name: path.basename(child.name, path.extname(child.name)).replace(/_/g, ' '),
                   category: parent === '.' ? '분류 없음' : parent.replace(/_/g, ' '),
-                  file, source, bytes: stat.size, mtime: stat.mtimeMs, full, real, ino: stat.ino, root: canonical,
+                  file, source: 'builtin', bytes: stat.size, mtime: stat.mtimeMs, full, real, ino: stat.ino, root: canonical,
                 });
               } catch (_) { skipped++; }
             }
@@ -112,29 +85,15 @@ class BackgroundLibrary {
         return { canonical, status: error.code === 'ENOENT' ? 'missing' : 'error' };
       }
     };
-    const bundled = this.bundledRoot ? await scan(this.bundledRoot, 'builtin') : null;
-    const bundledCount = entries.size;
-    const external = await scan(root, 'external');
-    let status = bundledCount ? 'ready' : external.status;
-    let message = '';
-    if (external.status === 'missing') {
-      message = bundledCount ? '' : '아직 개인 배경 폴더가 없거나 이동되었습니다.';
-    } else if (external.status === 'error') {
-      message = '개인 배경 폴더를 읽을 수 없습니다. 접근 가능한 폴더를 선택해 주세요.';
-    }
-    if (bundled && bundled.status !== 'ready') {
-      message = `내장 배경을 읽을 수 없습니다. 앱 파일을 확인해 주세요. ${message}`.trim();
-      if (!entries.size) status = 'error';
-    }
-    if (root !== this.root || startingRevision !== this.revision) return this.list();
+    const bundled = await scan(this.bundledRoot);
     this.entries = entries;
     const token = ++this.revision;
-    this.watch(external.status === 'ready' ? external.canonical : null);
+    let message = bundled.status === 'ready' ? '' : '내장 배경을 읽을 수 없습니다. 앱 파일을 확인해 주세요.';
     if (limited) message += ` 최대 ${MAX_FILES.toLocaleString()}장, 하위 5단계까지 표시합니다.`;
     if (skipped) message += ` 읽을 수 없거나 용량 제한(64MB)을 넘는 파일·연결 폴더 ${skipped}개를 건너뛰었습니다.`;
     return {
-      root, defaultRoot: this.defaultRoot, isDefault: !this.customRoot, token, status, message: message.trim(),
-      bundledCount, externalStatus: external.status,
+      token, status: bundled.status === 'ready' ? 'ready' : 'error', message: message.trim(),
+      bundledCount: entries.size,
       items: Array.from(entries.values(), ({ full, real, ino, root: _root, ...item }) => item),
     };
   }
@@ -171,37 +130,6 @@ class BackgroundLibrary {
     return value;
   }
 
-  async openFolder(openPath) {
-    if (!this.customRoot) await fs.promises.mkdir(this.defaultRoot, { recursive: true });
-    const root = await fs.promises.realpath(this.root);
-    if (!(await fs.promises.stat(root)).isDirectory()) throw new Error('폴더를 다시 선택해 주세요.');
-    const error = await openPath(root);
-    if (error) throw new Error(error);
-    return this.list();
-  }
-
-  watch(root) {
-    if (this.watchRoot === root) return;
-    this.stopWatch();
-    if (!root) return;
-    try {
-      this.watcher = fs.watch(root, { recursive: true }, () => {
-        clearTimeout(this.changeTimer);
-        this.changeTimer = setTimeout(() => this.onChange(), 400);
-        this.changeTimer.unref();
-      });
-      this.watchRoot = root;
-      this.watcher.on('error', () => { this.stopWatch(); this.onChange(); });
-      this.watcher.unref();
-    } catch (_) { /* 감시를 지원하지 않는 드라이브는 창을 다시 열거나 새로고침하면 갱신된다. */ }
-  }
-
-  stopWatch() {
-    clearTimeout(this.changeTimer);
-    this.watcher?.close();
-    this.watcher = null;
-    this.watchRoot = null;
-  }
 }
 
-module.exports = { BackgroundLibrary, defaultBackgroundRoot, bundledBackgroundRoot, imageMime };
+module.exports = { BackgroundLibrary, bundledBackgroundRoot, imageMime };
