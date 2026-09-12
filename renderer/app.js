@@ -26,6 +26,7 @@ function defaultState() {
     schemaVersion: V2.SCHEMA_VERSION,
     name: '',
     file: null, // 저장 파일명 (있으면 덮어쓰기)
+    preset: null, // Saved linkage only; the editor mode is a separate UI preference.
     card: { width: 850, height: 300, radius: 18, corner: 'round',
             borderColor: '#e9a8ff', borderWidth: 6, borderStyle: 'solid', borderColor2: '#7c3aed',
             bg1: '#fbe4ff', bg2: '#f3d0ff', bgAngle: 90, bgStyle: 'gradient',
@@ -101,6 +102,8 @@ function newTextEl() {
 }
 
 let state = V2.normalizeState(defaultState(), defaultState());
+let presetEditor = null;
+let previewingPreset = false;
 let imgEl = null;          // 로드된 Image 객체 캐시 (정지 이미지)
 let bgImgEl = null;        // 카드 전체 배경 이미지
 let gifAnim = null;        // GIF 움짤: { frames: [{bmp, delay}], total }
@@ -361,8 +364,8 @@ function hueShiftHex(hex, deg) {
   return `#${to2(rr)}${to2(gg)}${to2(bb)}`;
 }
 
-const canvas = document.getElementById('card');
-const ctx = canvas.getContext('2d');
+let canvas = document.getElementById('card');
+let ctx = canvas.getContext('2d');
 // 내부 렌더 배율 — 높은 해상도로 그려서(폰트·이미지 선명) 화면과 저장은 원래 크기로 축소.
 // 화면 미리보기는 2배(부드러운 실시간 렌더), 내보내기 때만 EXPORT_RES로 올려 슈퍼샘플링.
 let RES = 2;
@@ -940,6 +943,16 @@ function drawTextEl(t) {
   if (rotation) ctx.rotate(rotation * Math.PI / 180);
   ctx.translate(-t.x, -t.y);
   ctx.font = `${styleP}${weight} ${t.size}px ${fam}`;
+  if (t.fitWidth > 0) {
+    // Fit the linked nickname on one line without changing its saved size/content.
+    t = { ...t, text: String(t.text).replace(/\r?\n/g, ' '), boxWidth: 0 };
+    const width = ctx.measureText(t.text).width;
+    if (width > t.fitWidth) {
+      t.size = Math.max(16, t.size * t.fitWidth / width);
+      ctx.font = `${styleP}${weight} ${t.size}px ${fam}`;
+      if (ctx.measureText(t.text).width > t.fitWidth + 1) layout.issues.push('닉네임이 길어 이미지 영역과 겹칠 수 있습니다. 이름을 줄이거나 직접 만들기에서 위치를 조절하세요.');
+    }
+  }
   ctx.letterSpacing = `${t.spacing || 0}px`;
   ctx.textBaseline = 'top';
 
@@ -1145,6 +1158,7 @@ const FX_GLOW_PAD = {
 const SCREEN_EDIT_PAD = 24;
 
 function render(tMs) {
+  const refreshPresetControls = tMs == null && !previewingPreset && !exportRendering;
   // 선택 표시를 다시 그리는 것과 실제 디자인 변경을 구분한다.
   if (tMs == null) trackChanges();
   if (tMs == null) tMs = performance.now();
@@ -1423,13 +1437,17 @@ function render(tMs) {
   const contentPadY = explicitSpecSize ? Math.min(PADY, Math.max(0, (spp.height - 12) / 2)) : PADY;
   const naturalContentX = Math.max(areaX + PADX, areaX + (text.offX || 0));
   const specContentX = explicitSpecSize ? panelX + contentPadX : naturalContentX;
-  const specContentTop = explicitSpecSize ? panelY + contentPadY : cTop;
+  const heading = state.texts.find((t) => t.id === text.headerTextId && t.text.trim() && !t.hidden && t.presetVisible !== false);
+  const headingSpace = heading ? Math.max(44, heading.size * 1.15 + 12) : 0;
+  const footer = state.texts.find((t) => t.id === text.footerTextId && t.text.trim() && !t.hidden && t.presetVisible !== false);
+  const footerSpace = footer ? Math.max(40, footer.size * 1.15 + 12) : 0;
+  const specContentTop = (explicitSpecSize ? panelY + contentPadY : cTop) + headingSpace;
   const specContentW = explicitSpecSize
     ? Math.max(8, spp.width - contentPadX * 2)
     : Math.max(40, areaX + areaW - naturalContentX - PADX);
   const specContentH = explicitSpecSize
-    ? Math.max(0, spp.height - contentPadY * 2)
-    : cH;
+    ? Math.max(0, spp.height - contentPadY * 2 - headingSpace - footerSpace)
+    : Math.max(0, cH - headingSpace - footerSpace);
   const cols = text.columns === 2 ? 2 : 1;
   const requestedColumnGap = cols === 2 ? (text.columnGap == null ? 36 : text.columnGap) : 0;
   const columnGap = cols === 2
@@ -1437,7 +1455,8 @@ function render(tMs) {
     : 0;
   const colW = Math.max(4, (specContentW - columnGap) / cols);
   const minValueW = Math.min(20, Math.max(4, colW * 0.3));
-  const rowGroups = V2.splitRows(state.rows, cols, text.columnBreak);
+  const visibleRows = text.hideEmptyRows ? state.rows.filter((r) => String(r.value || '').trim()) : state.rows;
+  const rowGroups = V2.splitRows(visibleRows, cols, text.columnBreak);
   const AUTOFIT_MARGIN = explicitSpecSize ? 0 : Math.max(14, PADY);
   const availableSpecH = Math.max(0, specContentH - AUTOFIT_MARGIN * 2);
   layout.issues = [];
@@ -1478,7 +1497,7 @@ function render(tMs) {
   let specM;
   if (text.autofit) {
     // 패널의 세로 높이와 축소된 라벨 칸에 모두 들어갈 때까지 글자 크기를 줄인다.
-    const minFs = explicitSpecSize ? 6 : 8;
+    const minFs = text.minFontSize || (explicitSpecSize ? 6 : 8);
     let fsTry = Math.max(minFs, text.fontSize || 24);
     specM = measureSpec(fsTry);
     const overflows = () => specM.maxH > availableSpecH
@@ -1534,7 +1553,7 @@ function render(tMs) {
   };
   // 목록의 자연 바운딩 박스와 사용자가 직접 조절한 패널 컨테이너를 분리한다.
   let naturalSpecBox = null;
-  let specBox = null;
+  let specBox = explicitSpecSize ? { x: panelX, y: panelY, w: spp.width, h: spp.height } : null;
   let specDx = 0;
   let specDy = 0;
   hit.specContent = null;
@@ -1701,8 +1720,12 @@ function render(tMs) {
 
   // ---- 이미지 레이어 (크기·위치·모양) ----
   const drawImageLayer = () => {
-    if (!hasImg) { hit.panel = null; hit.panelBase = null; return; }
-    const bw = Math.max(10, panelW);
+    const placeholder = !hasImg && !image.hidden && state.preset && (previewingPreset || (!exportRendering && presetEditor?.isPresetMode()));
+    if (!hasImg && !placeholder) {
+      hit.panel = null; hit.panelBase = null;
+      return;
+    }
+    const bw = Math.max(10, placeholder ? Math.round(W * image.width) : panelW);
     const bh = Math.max(10, Math.round(H * (image.hFrac || 1)));
     const legacyX = (image.side === 'left' ? 0 : W - bw) + (image.pX || 0);
     const legacyY = (H - bh) / 2 + (image.pY || 0);
@@ -1765,6 +1788,12 @@ function render(tMs) {
     ctx.save();
     clipPath();
     ctx.clip();
+    if (placeholder) {
+      ctx.fillStyle = hexToRgba(image.frameColor, .08); ctx.fillRect(bx, by, bw, bh);
+      ctx.fillStyle = image.frameColor; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `400 28px ${window.SpecCardPresets.FONT}`; ctx.fillText('+', bx + bw / 2, by + bh / 2 - 14);
+      ctx.font = `400 15px ${window.SpecCardPresets.FONT}`; ctx.fillText('이미지 넣기', bx + bw / 2, by + bh / 2 + 18);
+    } else {
     const iw = imgFrame.naturalWidth || imgFrame.width;
     const ih = imgFrame.naturalHeight || imgFrame.height;
     let dw, dh;
@@ -1777,7 +1806,7 @@ function render(tMs) {
       else if (image.fit === 'contain') base = Math.min(bw / iw, bh / ih);
       else base = Math.max(bw / iw, bh / ih); // free/cover: 칸을 채우는 크기가 기준
       // 자유 크롭에서만 사용자 확대율을 추가 적용
-      const sc = image.fit === 'free' ? base * image.scale : base;
+      const sc = image.fit === 'free' || image.fitScale ? base * image.scale : base;
       dw = iw * sc; dh = ih * sc;
     }
     const ix = bx + (bw - dw) / 2 + image.x;
@@ -1790,6 +1819,7 @@ function render(tMs) {
     if (image.rotate) ctx.rotate(image.rotate * Math.PI / 180);
     if (image.mirrorX) ctx.scale(-1, 1);
     ctx.drawImage(downscaleSource(imgFrame, iw, ih, dw * RES), ix - centerX, iy - centerY, dw, dh);
+    }
     ctx.restore();
 
     if (image.frame && image.frame !== 'none') {
@@ -1800,7 +1830,7 @@ function render(tMs) {
         : image.frameColor;
       if (image.frame === 'glow') {
         ctx.shadowColor = hexToRgba(image.frameColor, 0.9);
-        ctx.shadowBlur = 18 * RES;
+        ctx.shadowBlur = (image.frameGlow == null ? 18 : image.frameGlow) * RES;
       } else if (image.frame === 'dashed') {
         ctx.setLineDash([image.frameWidth * 2.5, image.frameWidth * 1.6]);
       } else if (image.frame === 'dotted') {
@@ -1812,10 +1842,16 @@ function render(tMs) {
       ctx.stroke();
       // 이중선은 같은 기본색을 사용하고, 색 2는 그라디언트에서만 의미를 갖는다.
       if (image.frame === 'double') {
+        ctx.save();
+        const inset = image.frameWidth + 3;
+        ctx.translate(panelCx, panelCy);
+        ctx.scale(Math.max(0.1, (bw - inset * 2) / bw), Math.max(0.1, (bh - inset * 2) / bh));
+        ctx.translate(-panelCx, -panelCy);
         ctx.lineWidth = Math.max(1, image.frameWidth * 0.35);
         ctx.strokeStyle = image.frameColor;
         clipPath();
         ctx.stroke();
+        ctx.restore();
       }
       ctx.restore();
     }
@@ -1829,7 +1865,7 @@ function render(tMs) {
   // 텍스트 요소들 (0~5개, 전부 자유 배치 — 드래그로 이동)
   hit.texts = [];
   state.texts.forEach((t) => {
-    if (!t.text || t.hidden) { hit.texts.push(null); return; }
+    if (!t.text || t.hidden || t.presetVisible === false) { hit.texts.push(null); return; }
     if (t.x == null || t.y == null) {
       t.x = W / 2; t.y = H / 2;
       t.align = t.align || 'center';
@@ -1842,7 +1878,7 @@ function render(tMs) {
       shadowAlpha: t.shadowAlpha, shadowBlur: t.shadowBlur, shadowX: t.shadowX, shadowY: t.shadowY,
       bold: t.bold, italic: t.italic, underline: t.underline, strike: t.strike, spacing: t.spacing,
       vertical: t.vertical, opacity: t.opacity, rotate: t.rotate, lineHeight: t.lineHeight,
-      boxWidth: t.boxWidth, background: t.background, backgroundColor: t.backgroundColor,
+      boxWidth: t.boxWidth, fitWidth: t.fitWidth, background: t.background, backgroundColor: t.backgroundColor,
       backgroundAlpha: t.backgroundAlpha, backgroundPad: t.backgroundPad,
     }));
   });
@@ -2730,8 +2766,9 @@ function render(tMs) {
   }
 
   drawSelectionOverlay();
-  updateWarnings();
+  if (!previewingPreset) updateWarnings();
   ctx.restore(); // translate
+  if (refreshPresetControls) presetEditor?.sync();
 }
 
 async function loadImage(dataUrl) {
@@ -3080,9 +3117,10 @@ function updateWarnings() {
   if (!state.rows.some((row) => String(row.value || '').trim())) {
     issues.push('표시할 사양 값이 없습니다.');
   }
-  if (!state.card.bgImageDataUrl) {
-    const labelContrast = V2.contrastRatio(state.text.labelColor, state.card.bg1);
-    const valueContrast = V2.contrastRatio(state.text.valueColor, state.card.bg1);
+  if (!state.card.bgImageDataUrl || (state.specPanel.on && state.specPanel.alpha === 1)) {
+    const background = state.specPanel.on && state.specPanel.alpha === 1 ? state.specPanel.fill : state.card.bg1;
+    const labelContrast = V2.contrastRatio(state.text.labelColor, background);
+    const valueContrast = V2.contrastRatio(state.text.valueColor, background);
     if (Math.min(labelContrast, valueContrast) < 3) issues.push('글자와 배경의 명암 차가 낮아 읽기 어려울 수 있습니다.');
   }
   const noisyFx = (state.fxs || []).filter((fx) => fx && fx.enabled !== false && (fx.layer || defaultFxLayer(fx.type)) === 'overlay');
@@ -3159,6 +3197,17 @@ function applyPanelEdgeResize(activeDrag, point) {
 
 // 포인터 이벤트 — 마우스·터치·펜을 한 코드로 처리 (모바일에서도 드래그 동작)
 canvas.addEventListener('pointerdown', (e) => {
+  if (presetEditor?.isPresetMode()) {
+    if (e.button !== 0 || !state.preset) return;
+    const point = toCard(e), im = state.image;
+    const box = { x: im.panelX, y: im.panelY, w: state.card.width * im.width, h: state.card.height * im.hFrac };
+    if (!inRect(point, box)) return;
+    if (!im.dataUrl) { document.getElementById('btn-image').click(); return; }
+    drag = { kind: 'image', sx: point.x, sy: point.y, ox: im.x, oy: im.y };
+    canvas.setPointerCapture(e.pointerId); canvas.classList.add('dragging');
+    e.preventDefault();
+    return;
+  }
   if (e.pointerType !== 'mouse' && e.isPrimary === false) return; // 멀티터치 2번째 손가락 무시
   const p = toCard(e);
   lastCanvasPointer = p;
@@ -3747,6 +3796,7 @@ function renderRows() {
 
 // ---------------- 폰트 목록 ----------------
 let AVAILABLE_FONTS = [
+  { label: '나눔고딕 (내장)', value: window.SpecCardPresets.FONT },
   { label: '기본(맑은고딕)', value: '"Malgun Gothic","Segoe UI",sans-serif' },
   { label: '돋움', value: 'Dotum,sans-serif' },
   { label: '굴림', value: 'Gulim,sans-serif' },
@@ -4020,6 +4070,18 @@ function renderTexts() {
     bgPadRow.append(bgPadLab, mkRange(0, 40, 1, t.backgroundPad == null ? 8 : t.backgroundPad, (v) => { t.backgroundPad = v; render(); }));
 
     card.append(r1, r2, r3, r3b, rPos, rTransform, rFlow, r4, r4b, r5, r5b, effects.box, r7, ...shadowRows, rBg, bgAlphaRow, bgPadRow);
+    if (t.id === state.preset?.nicknameId || t.presetVisible === false || t.fitWidth > 0) {
+      const options = tcRow();
+      const visible = document.createElement('label'); visible.className = 'chk';
+      const check = document.createElement('input'); check.type = 'checkbox'; check.checked = t.presetVisible !== false;
+      check.onchange = () => { t.presetVisible = check.checked; render(); };
+      visible.append(check, document.createTextNode('텍스트 표시'));
+      const fit = document.createElement('label'); fit.className = 'chk';
+      const fitCheck = document.createElement('input'); fitCheck.type = 'checkbox'; fitCheck.checked = t.fitWidth > 0;
+      fitCheck.onchange = () => { t.fitWidth = fitCheck.checked ? Math.max(40, (state.specPanel.width || 400) - 36) : 0; render(); };
+      fit.append(fitCheck, document.createTextNode('닉네임 한 줄 맞춤'));
+      options.append(visible, fit); card.prepend(options);
+    }
     wrap.appendChild(card);
   });
   const btn = document.getElementById('btn-add-text');
@@ -5027,6 +5089,8 @@ function bindControls() {
   };
   $('columns').onchange = (e) => { state.text.columns = +e.target.value; updateConditionalControls(); render(); };
   $('autofit').onchange = (e) => { state.text.autofit = e.target.checked; updateAutofitUI(); render(); };
+  $('spec-min-font').onchange = (e) => { state.text.minFontSize = Math.max(0, Math.min(40, Number(e.target.value) || 0)); render(); };
+  $('spec-hide-empty').onchange = (e) => { state.text.hideEmptyRows = e.target.checked; render(); };
   $('c-uniform').onchange = (e) => { state.text.uniform = e.target.checked; renderRows(); render(); };
 
   $('design-name').oninput = (e) => { state.name = e.target.value; trackChanges(); };
@@ -5255,7 +5319,7 @@ function updateAutofitUI() {
 // 크기(scale)는 '자유 배치'에서만 의미 있음
 function updateFitUI() {
   const scale = document.getElementById('img-scale');
-  if (scale) scale.disabled = state.image.fit !== 'free';
+  if (scale) scale.disabled = state.image.fit !== 'free' && !state.image.fitScale;
 }
 
 function setControlDisabled(id, disabled, reason = '') {
@@ -5602,6 +5666,8 @@ function syncControls() {
   $('spec-spacing').value = s.text.spacing || 0;
   $('columns').value = s.text.columns || 1;
   $('autofit').checked = !!s.text.autofit;
+  $('spec-min-font').value = s.text.minFontSize || 0;
+  $('spec-hide-empty').checked = !!s.text.hideEmptyRows;
   $('c-uniform').checked = !!s.text.uniform;
   updateAutofitUI();
   $('font-family').value = s.text.fontFamily;
@@ -5765,6 +5831,7 @@ async function applyLoadedState(loaded, file, options = {}) {
   syncControls(); renderRows(); renderTexts(); render(); syncPanelTransformControls();
   resetHistory();
   changeTracking = true;
+  presetEditor?.documentLoaded();
   if (options.recovered) {
     savedSignature = null;
     observedSignature = stateSig();
@@ -6052,6 +6119,7 @@ async function restoreHist(pos) {
     if (!state.card.bgImageDataUrl) bgImageDragMode = false;
     bandSel = 0; selected = null;
     syncControls(); renderRows(); renderTexts(); render(performance.now()); syncPanelTransformControls(); ensureAnim();
+    presetEditor?.sync();
     trackChanges();
   } finally {
     histLock = false;
@@ -6133,8 +6201,76 @@ async function offerRecovery() {
   }
 }
 
+// ---------------- 샘플 프리셋 편집 연결 ----------------
+function commitPresetEdit(mutator, atomic = false) {
+  if (histLock || saveBusy || exportRendering) throw new Error('현재 작업이 끝난 뒤 다시 시도해 주세요.');
+  const next = V2.clone(state);
+  const result = mutator(next) || next;
+  if (atomic) pushHist();
+  const previousBg = state.card.bgImageDataUrl;
+  state = result;
+  if (previousBg !== state.card.bgImageDataUrl && !state.card.bgImageDataUrl) bgImgEl = null;
+  selected = null; bgImageDragMode = false;
+  syncControls(); renderRows(); renderTexts(); render(); syncPanelTransformControls();
+  if (atomic) pushHist();
+  ensureAnim();
+}
+
+function previewSample(id, demo) {
+  const P = window.SpecCardPresets;
+  const base = defaultState();
+  const source = demo ? V2.normalizeState(base, base) : V2.clone(state);
+  if (!source.rows.some((r) => String(r.value || '').trim())) {
+    source.rows = [ ['CPU', 'AMD Ryzen 7 9800X3D'], ['MB', 'B850 WIFI'], ['RAM', 'DDR5 32GB'],
+      ['VGA', 'GeForce RTX 5070'], ['SSD', 'NVMe 2TB'], ['PSU', '850W Gold'], ['MON', '27인치 QHD 180Hz']
+    ].map(([label, value]) => ({ label, value }));
+  }
+  const previewState = P.apply(source, id, base, 'sample-preview-nickname');
+  const nick = P.nickname(previewState);
+  if (demo && nick) nick.text = '나의 데스크탑';
+  const target = document.createElement('canvas');
+  const host = document.createElement('div'); host.append(target);
+  // One isolated snapshot per selection, reused for animation. No per-frame
+  // image cloning/PNG encoding and no writes to the active document or history.
+  const draw = (time) => {
+    const saved = { state, canvas, ctx, hit, layout, RES, exportRendering, selected, previewingPreset };
+    try {
+      state = previewState; canvas = target; ctx = target.getContext('2d');
+      hit = { texts: [], stickers: [], bands: [] }; layout = { ox: 0, oy: 0, issues: [] };
+      RES = demo ? .5 : 1; exportRendering = true; previewingPreset = true; selected = null;
+      render(time);
+      return [...layout.issues];
+    } finally {
+      ({ state, canvas, ctx, hit, layout, RES, exportRendering, selected, previewingPreset } = saved);
+    }
+  };
+  const issues = draw(0);
+  return { canvas: target, draw, url: demo ? target.toDataURL('image/png') : null, issues,
+    animated: previewState.fxs.some((f) => f.enabled !== false) || (!!source.image.dataUrl && !!gifAnim) };
+}
+
+function initPresetEditor() {
+  presetEditor = window.createPresetEditor({
+    state: () => state,
+    layout: () => ({ issues: [...(layout.issues || [])], fontSize: hit.specLayout?.fontSize }),
+    edit: commitPresetEdit,
+    apply: (id) => commitPresetEdit((s) => window.SpecCardPresets.apply(s, id, defaultState(), makeId('nickname')), true),
+    preview: previewSample,
+    notify: toast,
+    redraw: () => render(performance.now()),
+    clearSelection: () => { selected = null; drag = null; bgImageDragMode = false; },
+    fontOptions: (select, value) => populateFontSelect(select, value, false),
+    rangeNumbers: refreshRangeNums,
+    nickname: (s) => {
+      return window.SpecCardPresets.nickname(s) || window.SpecCardPresets.restoreNickname(s, makeId('nickname'));
+    },
+  });
+  presetEditor.start();
+}
+
 // ---------------- 시작 ----------------
 async function initApp() {
+  await Promise.all([400, 700].map((weight) => document.fonts.load(`${weight} 24px "SpecCard Nanum Gothic"`)));
   await loadSpecIconSheets();
   arrangeEditorSections();
   initUiTheme();
@@ -6158,6 +6294,7 @@ async function initApp() {
   await refreshList();
   initPreviewInfo();
   initZoom();
+  initPresetEditor();
   setDirty(false);
   changeTracking = true;
   window.api.ready?.();

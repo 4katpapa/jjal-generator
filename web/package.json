@@ -1,6 +1,6 @@
 {
   "name": "jjal-generator-web",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "private": true,
   "description": "Browser edition of the PC spec card editor",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "speccard",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "description": "자짤 생성툴 - PC 사양 카드 생성기",
   "main": "main.js",
   "author": "정신안차려?",
@@ -8,7 +8,7 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.js",
-    "check": "node --check main.js && node --check preload.js && node --check specReader.js && node --check jsonStore.js && node --check backgroundLibrary.js && node --check renderer/background-library.js && node --check renderer/spec-icons.js && node --check renderer/v2-core.js && node --check renderer/app.js && npm test",
+    "check": "node --check main.js && node --check preload.js && node --check specReader.js && node --check jsonStore.js && node --check backgroundLibrary.js && node --check renderer/background-library.js && node --check renderer/spec-icons.js && node --check renderer/v2-core.js && node --check renderer/sample-presets.js && node --check renderer/preset-editor.js && node --check renderer/app.js && npm test",
     "dist": "electron-builder --win portable",
     "build:web": "npm --prefix web run build",
     "preview:web": "npm --prefix web run preview",
@@ -40,7 +40,13 @@
       "package.json"
     ],
     "extraResources": [
-      { "from": "assets/backgrounds", "to": "backgrounds", "filter": ["**/*.png"] }
+      {
+        "from": "assets/backgrounds",
+        "to": "backgrounds",
+        "filter": [
+          "**/*.png"
+        ]
+      }
     ],
     "win": {
       "target": [
@@ -49,7 +55,7 @@
       "icon": "build/icon.png"
     },
     "portable": {
-      "artifactName": "jjal-generator-v3.21-portable.exe"
+      "artifactName": "jjal-generator-v4.0.0-portable.exe"
     }
   }
 }

@@ -57,7 +57,7 @@ function buildHtml(original, config) {
         <p><strong>저장</strong>은 현재 브라우저에 보관합니다. 사이트 데이터를 지우면 저장본이 사라질 수 있으므로, <strong>백업</strong>으로 .speccard 파일을 내려받아 보관하세요. 다른 PC에서는 <strong>파일 열기</strong>로 이어서 편집할 수 있습니다.</p>
         <p>저장된 디자인은 사이트 주소별로 구분됩니다. <a href="https://jjal-generator.pages.dev/" target="_blank" rel="noopener noreferrer">이전 pages.dev 주소</a>에 저장한 디자인은 그곳에서 <strong>백업</strong>한 뒤, 새 주소에서 <strong>파일 열기</strong>로 가져오세요.</p>
         <p>개인 이미지와 입력한 사양은 브라우저에서 처리합니다. PC 부품 자동 감지는 <a href="https://github.com/4katpapa/jjal-generator/releases/latest" target="_blank" rel="noopener noreferrer">Windows 앱</a>에서 지원합니다.</p>
-        <p>글꼴은 사용하는 기기에 따라 달라질 수 있습니다. 정밀한 배치는 PC 화면에서 편집하기 좋습니다.</p></div>
+        <p>샘플 프리셋 18개에서 시작하거나 직접 만들기로 세부 조정할 수 있습니다. 나눔고딕은 웹에 포함되어 별도 설치가 필요 없습니다. 다른 글꼴은 기기에 따라 달라질 수 있습니다.</p></div>
       </details>
       <div class="project-state"`);
   html = replaceOnce(html, '>⚙ 사양 자동 채우기</button>', '>사양 붙여넣기</button>');
@@ -65,7 +65,7 @@ function buildHtml(original, config) {
   html = replaceOnce(html, 'id="btn-save" class="primary" title="저장"', 'id="btn-save" class="primary" title="현재 브라우저에 저장"');
   html = replaceOnce(html, 'id="btn-copy-image" title="선택 이미지 복사"', 'id="btn-copy-image" title="완성 카드 이미지 복사"');
   html = replaceOnce(html, '<ul id="design-list"', '<p class="hint web-storage-note">이 브라우저에 저장한 디자인입니다. 파일로 보관하려면 백업을 사용하세요.</p><ul id="design-list"');
-  html = replaceOnce(html, '· 버전 v3.21</div>', '· 웹판 v3.21</div>');
+  html = replaceOnce(html, '· 버전 v4.0.0</div>', '· 웹판 v4.0.0</div>');
   html = replaceOnce(html, '<script src="spec-icons.js"></script>', '<script src="spec-text.js"></script>\n  <script src="browser-api.js"></script>\n  <script src="spec-icons.js"></script>');
   return html;
 }
@@ -113,10 +113,14 @@ async function build() {
     await fs.writeFile(destination, bytes);
   };
   await write('index.html', html);
-  for (const file of ['app.js', 'v2-core.js', 'spec-icons.js', 'style.css', 'background-library.js', 'background-library.css']) {
+  for (const file of ['app.js', 'v2-core.js', 'spec-icons.js', 'style.css', 'background-library.js', 'background-library.css', 'sample-presets.js', 'preset-editor.js', 'preset-editor.css', 'fonts.css']) {
     await write(file, await fs.readFile(path.join(ROOT, 'renderer', file)));
   }
   for (const file of ['browser-api.js', 'spec-text.js', 'web.css']) await write(file, await fs.readFile(path.join(__dirname, file)));
+  for (const file of ['NanumGothic.otf', 'NanumGothicBold.otf', 'OFL.txt', 'NOTICE.md']) {
+    const name = `assets/fonts/nanum-gothic/${file}`;
+    await write(name, await fs.readFile(path.join(ROOT, 'renderer', name)));
+  }
   let webIcons = await fs.readFile(path.join(ROOT, 'renderer/spec-icons.js'), 'utf8');
   let iconBytes = 0;
   for (const series of ['mono', 'color', 'pixel']) {

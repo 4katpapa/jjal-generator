@@ -19,6 +19,9 @@ test('Web shell uses the shared editor with browser actions and crawlable instru
   assert.ok(!html.includes('itemtype="https://schema.org/WebSite"'));
   assert.ok(html.includes("connect-src 'self'"));
   assert.ok(original.includes('<h1>SPEC BENCH</h1>'));
+  assert.ok(html.includes('· 웹판 v4.0.0'));
+  for (const file of ['sample-presets.js', 'preset-editor.js', 'preset-editor.css', 'fonts.css']) assert.ok(html.includes(file));
+  assert.ok(html.indexOf('src="sample-presets.js"') < html.indexOf('src="app.js"'));
 });
 test('Search registration uses only the configured public URL and escaped verification token', () => {
   const html = buildHtml(original, siteSettings(config, { SITE_URL: 'https://example.pages.dev', GOOGLE_SITE_VERIFICATION: 'token"<x>' }));

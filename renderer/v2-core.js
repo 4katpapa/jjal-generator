@@ -171,6 +171,11 @@
     out.schemaVersion = SCHEMA_VERSION;
     out.name = text(out.name).slice(0, 120);
     out.file = out.file == null ? null : text(out.file).slice(0, 260);
+    out.preset = out.preset && typeof out.preset === 'object' && !Array.isArray(out.preset)
+      ? { id: text(out.preset.id).slice(0, 64), version: Math.round(clamp(out.preset.version, 1, 3, 1)),
+        nicknameId: text(out.preset.nicknameId).slice(0, 100),
+        side: out.preset.side === 'right' ? 'right' : 'left',
+        effectStrength: clamp(out.preset.effectStrength, 0, 100, 100), motion: !!out.preset.motion } : null;
     out.specIcons = Icons.normalizeSettings(incoming && incoming.specIcons);
 
     out.card.width = Math.round(clamp(out.card.width, 300, 2400, 850));
@@ -200,6 +205,11 @@
 
     out.text.columns = Number(out.text.columns) === 2 ? 2 : 1;
     out.text.fontSize = clamp(out.text.fontSize, 8, 240, 24);
+    out.text.minFontSize = clamp(out.text.minFontSize, 0, 40, 0);
+    out.text.hideEmptyRows = !!out.text.hideEmptyRows;
+    out.text.headerTextId = text(out.text.headerTextId).slice(0, 100);
+    out.text.footerTextId = text(out.text.footerTextId).slice(0, 100);
+    out.image.fitScale = !!out.image.fitScale;
     out.text.offX = clamp(out.text.offX, -2400, 4800, 34);
     out.text.offY = clamp(out.text.offY, -1200, 2400, 0);
     out.text.rowGap = clamp(out.text.rowGap, -8, 100, 4);
@@ -243,6 +253,7 @@
     out.image.saturation = clamp(out.image.saturation, 0, 3, 1);
     out.image.shadowAlpha = clamp(out.image.shadowAlpha, 0, 1, 0.45);
     out.image.shadowBlur = clamp(out.image.shadowBlur, 0, 120, 22);
+    out.image.frameGlow = clamp(out.image.frameGlow, 0, 60, 18);
     out.image.shadowX = clamp(out.image.shadowX, -160, 160, 0);
     out.image.shadowY = clamp(out.image.shadowY, -160, 160, 10);
     out.image.mirrorX = !!out.image.mirrorX;
@@ -284,6 +295,7 @@
       ...item, ...normalizeTextEffects(item),
       text: text(item.text).slice(0, 4000),
       size: clamp(item.size, 10, 240, 34),
+      fitWidth: clamp(item.fitWidth, 0, 2400, 0), presetVisible: item.presetVisible !== false,
       x: item.x == null ? null : clamp(item.x, -4800, 4800, 0),
       y: item.y == null ? null : clamp(item.y, -2400, 2400, 0),
       rotate: clamp(item.rotate, -180, 180, 0), opacity: clamp(item.opacity, 0, 1, 1),
