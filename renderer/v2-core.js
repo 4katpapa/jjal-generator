@@ -1,12 +1,13 @@
 'use strict';
 
 (function initSpecCardCore(root, factory) {
-  const api = factory();
+  const icons = typeof module === 'object' && module.exports ? require('./spec-icons') : root.SpecCardIcons;
+  const api = factory(icons);
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.SpecCardV2 = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, () => {
+})(typeof globalThis !== 'undefined' ? globalThis : this, (Icons) => {
   const SCHEMA_VERSION = 2;
-  const MAX = Object.freeze({ rows: 64, texts: 24, stickers: 32, bands: 12, fxs: 8 });
+  const MAX = Object.freeze({ rows: 64, rowValue: 1000, texts: 24, stickers: 32, bands: 12, fxs: 8 });
   const RETIRED_FX_TYPES = new Set(['float', 'confetti', 'fog', 'wave', 'breath']);
   const BORDER_FX_TYPES = new Set([
     'neon', 'pulse', 'spin', 'chase', 'marquee', 'rainbowspin', 'twochase', 'corners', 'electric',
@@ -56,9 +57,11 @@
   function normalizeRow(row) {
     const out = {
       label: text(row && row.label).trim().slice(0, 24),
-      value: text(row && row.value).slice(0, 1000),
+      // 기존 저장물은 새 입력 한도를 초과해도 내용을 보존한다.
+      value: text(row && row.value),
     };
     if (row && row.color) out.color = color(row.color, '#ffffff');
+    Object.assign(out, Icons.normalizeRowChoice(row));
     return out;
   }
 
@@ -160,6 +163,7 @@
   }
 
   function normalizeState(incoming, defaults) {
+    const legacy = !incoming || Number(incoming.schemaVersion || 1) < SCHEMA_VERSION;
     const out = mergePlain(defaults, incoming);
     for (const key of ['card', 'text', 'image', 'shadow', 'deco', 'specPanel']) {
       if (!out[key] || typeof out[key] !== 'object' || Array.isArray(out[key])) out[key] = {};
@@ -167,6 +171,7 @@
     out.schemaVersion = SCHEMA_VERSION;
     out.name = text(out.name).slice(0, 120);
     out.file = out.file == null ? null : text(out.file).slice(0, 260);
+    out.specIcons = Icons.normalizeSettings(incoming && incoming.specIcons);
 
     out.card.width = Math.round(clamp(out.card.width, 300, 2400, 850));
     out.card.height = Math.round(clamp(out.card.height, 120, 1200, 300));
@@ -223,7 +228,7 @@
     out.image.panelRotate = clamp(out.image.panelRotate, -180, 180, 0);
     out.image.hFrac = clamp(out.image.hFrac, 0.05, 1.5, 1);
     out.image.radius = clamp(out.image.radius, 0, 600, 0);
-    if (incoming && incoming.image && incoming.image.shape === 'rect' && Number(incoming.image.radius) > 0) {
+    if (legacy && incoming && incoming.image && incoming.image.shape === 'rect' && Number(incoming.image.radius) > 0) {
       out.image.shape = 'round';
     }
     out.image.shape = oneOf(out.image.shape, ['rect', 'round', 'diag', 'trape', 'tri', 'para', 'circle'], 'rect');
@@ -265,14 +270,14 @@
     out.specPanel.width = out.specPanel.width == null ? null : clamp(out.specPanel.width, 40, 4800, 320);
     out.specPanel.height = out.specPanel.height == null ? null : clamp(out.specPanel.height, 30, 2400, 160);
     out.specPanel.rotate = clamp(out.specPanel.rotate, -180, 180, 0);
-    if (incoming && incoming.specPanel && incoming.specPanel.shape === 'rect' && Number(incoming.specPanel.radius) > 0) {
+    if (legacy && incoming && incoming.specPanel && incoming.specPanel.shape === 'rect' && Number(incoming.specPanel.radius) > 0) {
       out.specPanel.shape = 'round';
     }
     out.specPanel.shape = oneOf(out.specPanel.shape, ['rect', 'round', 'para', 'ellipse'], 'rect');
     out.specPanel.hidden = false;
     out.specPanel.locked = false;
 
-    out.rows = Array.isArray(out.rows) ? out.rows.slice(0, MAX.rows).map(normalizeRow) : [];
+    out.rows = Array.isArray(out.rows) ? out.rows.map(normalizeRow) : [];
     out.texts = clampObjectList(out.texts, 'text', MAX.texts, (item) => ({
       ...item,
       text: text(item.text).slice(0, 4000),

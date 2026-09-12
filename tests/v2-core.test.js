@@ -113,6 +113,31 @@ test('normalizeState removes retired shadow/lock state and migrates movable pane
   assert.equal(state.texts[0].locked, false);
 });
 
+test('schema 2 round trips preserve explicit rectangular image and spec panel shapes', () => {
+  const defaults = { card: {}, text: {}, image: {}, specPanel: {}, rows: [], texts: [], stickers: [], bands: [], fxs: [] };
+  const saved = {
+    schemaVersion: 2,
+    image: { shape: 'rect', radius: 18 },
+    specPanel: { shape: 'rect', radius: 12 },
+  };
+  const loaded = core.normalizeState(JSON.parse(JSON.stringify(saved)), defaults);
+  assert.equal(loaded.image.shape, 'rect');
+  assert.equal(loaded.specPanel.shape, 'rect');
+  const reopened = core.normalizeState(JSON.parse(JSON.stringify(loaded)), defaults);
+  assert.equal(reopened.image.shape, 'rect');
+  assert.equal(reopened.specPanel.shape, 'rect');
+});
+
+test('normalizing saved designs and profiles preserves existing rows and long values', () => {
+  const value = '가'.repeat(1000) + '\n끝';
+  const rows = Array.from({ length: 65 }, (_, i) => ({ label: `행${i}`, value }));
+  const defaults = { card: {}, text: {}, image: {}, rows: [], texts: [], stickers: [], bands: [], fxs: [] };
+  const saved = core.normalizeState({ schemaVersion: 2, rows }, defaults);
+  const reopened = core.normalizeState(JSON.parse(JSON.stringify(saved)), defaults);
+  assert.deepEqual(reopened.rows, rows);
+  assert.deepEqual(rows.map(core.normalizeRow), rows);
+});
+
 test('normalizeState enforces UI collection limits and migrates effect layers', () => {
   const defaults = {
     card: {}, text: {}, image: {}, shadow: {}, deco: {}, specPanel: {},

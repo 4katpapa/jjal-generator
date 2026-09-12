@@ -3,6 +3,8 @@ const { app, BrowserWindow, ipcMain, dialog, session, shell, clipboard, nativeIm
 const path = require('path');
 const fs = require('fs');
 const { readSpecs } = require('./specReader');
+const { readJsonWithBackup, writeJsonAtomic } = require('./jsonStore');
+const { BackgroundLibrary, defaultBackgroundRoot, bundledBackgroundRoot } = require('./backgroundLibrary');
 
 // 개발 실행(name: speccard)과 포터블 빌드(productName: 자짤 생성툴)가
 // 같은 저장 폴더를 쓰도록 userData 경로 고정
@@ -15,20 +17,27 @@ app.setPath('userData', isolatedUserData
 const MAX_IMAGE_BYTES = 64 * 1024 * 1024;
 const RECOVERY_FILE = 'recovery-v2.json';
 let mainWindow = null;
-
-function writeJsonAtomic(fullPath, payload) {
-  const dir = path.dirname(fullPath);
-  fs.mkdirSync(dir, { recursive: true });
-  const temp = path.join(dir, `.${path.basename(fullPath)}.${process.pid}.${Date.now()}.tmp`);
-  const backup = `${fullPath}.bak`;
-  fs.writeFileSync(temp, JSON.stringify(payload, null, 2), 'utf8');
-  try {
-    if (fs.existsSync(fullPath)) fs.copyFileSync(fullPath, backup);
-    fs.copyFileSync(temp, fullPath);
-  } finally {
-    if (fs.existsSync(temp)) fs.unlinkSync(temp);
-  }
-}
+const backgrounds = new BackgroundLibrary({
+  bundledRoot: bundledBackgroundRoot({ packaged: app.isPackaged, resourcesPath: process.resourcesPath, appPath: app.getAppPath() }),
+  defaultRoot: defaultBackgroundRoot({
+    packaged: app.isPackaged, portableDir: process.env.PORTABLE_EXECUTABLE_DIR,
+    executable: app.getPath('exe'), appPath: app.getAppPath(),
+  }),
+  settingsFile: path.join(app.getPath('userData'), 'background-library.json'),
+  thumbnail: (buffer) => {
+    const image = nativeImage.createFromBuffer(buffer);
+    if (image.isEmpty()) throw new Error('이미지를 읽을 수 없습니다.');
+    const { width, height } = image.getSize();
+    if (width * height > 32000000) throw new Error('미리보기는 3,200만 화소 이하의 이미지만 지원합니다.');
+    const cropWidth = Math.max(1, Math.min(width, Math.round(height * 17 / 6)));
+    const cropHeight = Math.max(1, Math.min(height, Math.round(width * 6 / 17)));
+    return image.crop({ x: Math.floor((width - cropWidth) / 2), y: Math.floor((height - cropHeight) / 2), width: cropWidth, height: cropHeight })
+      .resize({ width: 340, height: 120, quality: 'good' }).toDataURL();
+  },
+  onChange: () => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('backgrounds:changed');
+  },
+});
 
 function designsDir() {
   const dir = path.join(app.getPath('userData'), 'designs');
@@ -78,6 +87,18 @@ function createWindow() {
 
 // ---- IPC ----
 
+ipcMain.handle('backgrounds:list', () => backgrounds.list());
+ipcMain.handle('backgrounds:thumbnail', (_event, request) => backgrounds.getThumbnail(request));
+ipcMain.handle('backgrounds:image', (_event, request) => backgrounds.getImage(request));
+ipcMain.handle('backgrounds:choose', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: '배경 이미지 폴더 선택', defaultPath: backgrounds.root, properties: ['openDirectory'],
+  });
+  return result.canceled || !result.filePaths.length ? null : backgrounds.selectRoot(result.filePaths[0]);
+});
+ipcMain.handle('backgrounds:default', () => backgrounds.selectRoot(null));
+ipcMain.handle('backgrounds:open', () => backgrounds.openFolder((root) => shell.openPath(root)));
+
 ipcMain.handle('specs:read', async () => {
   return readSpecs();
 });
@@ -110,7 +131,7 @@ ipcMain.handle('store:list', async () => {
       let name = f.replace(/\.json$/, '');
       let thumbnail = null;
       try {
-        const j = JSON.parse(fs.readFileSync(full, 'utf8'));
+        const j = readJsonWithBackup(full).value;
         if (j && j.name) name = j.name;
         if (j && typeof j._thumbnail === 'string' && j._thumbnail.startsWith('data:image/')) {
           thumbnail = j._thumbnail;
@@ -123,7 +144,7 @@ ipcMain.handle('store:list', async () => {
 
 ipcMain.handle('store:load', async (_e, file) => {
   const full = path.join(designsDir(), path.basename(file));
-  return JSON.parse(fs.readFileSync(full, 'utf8'));
+  return readJsonWithBackup(full).value;
 });
 
 ipcMain.handle('store:save', async (_e, payload) => {
@@ -195,10 +216,10 @@ ipcMain.handle('autosave:write', async (_e, payload) => {
 
 ipcMain.handle('autosave:read', async () => {
   const full = path.join(app.getPath('userData'), RECOVERY_FILE);
-  if (!fs.existsSync(full)) return null;
   try {
-    const parsed = JSON.parse(fs.readFileSync(full, 'utf8'));
-    return parsed && parsed.state ? parsed : null;
+    const result = readJsonWithBackup(full, (value) => value && typeof value === 'object'
+      && (value.state === null || (value.state && typeof value.state === 'object' && !Array.isArray(value.state))));
+    return result.value.state ? { ...result.value, fromBackup: result.fromBackup } : null;
   } catch (_) {
     return null;
   }
@@ -241,3 +262,5 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
+
+app.on('before-quit', () => backgrounds.stopWatch());

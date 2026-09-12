@@ -2,6 +2,7 @@
 
 const V2 = window.SpecCardV2;
 if (!V2) throw new Error('v2-core.js가 app.js보다 먼저 로드되어야 합니다.');
+const Icons = window.SpecCardIcons;
 
 let idSeq = 0;
 function makeId(prefix) {
@@ -66,6 +67,7 @@ function defaultState() {
     fxs: [], // 움직임 효과 목록 (최대 MAX_FX개): { type, speed, density, color }
     stickers: [], // 스티커 (이모지·이미지): { type, emoji|dataUrl, x, y, size, rotate }
     texts: [],
+    specIcons: { enabled: true, series: 'color', size: 1.15 },
     rows: [
       { label: 'CPU', value: '' },
       { label: 'MB', value: '' },
@@ -112,6 +114,10 @@ let dirty = false;
 let changeTracking = false;
 let autosaveTimer = null;
 let autosaveRevision = 0;
+let savedSignature = null;
+let observedSignature = null;
+let documentRevision = 0;
+let saveBusy = false;
 
 function updateSaveStatus(message) {
   const indicator = document.getElementById('dirty-indicator');
@@ -146,7 +152,7 @@ function scheduleAutosave() {
 function setDirty(next = true) {
   dirty = !!next;
   window.api.setDirty(dirty);
-  updateSaveStatus(dirty ? '자동 저장 대기' : '자동 저장 대기');
+  updateSaveStatus(dirty ? '자동 저장 대기' : '변경사항 없음');
   if (dirty) scheduleAutosave();
   else {
     clearTimeout(autosaveTimer);
@@ -154,10 +160,25 @@ function setDirty(next = true) {
   }
 }
 
-async function markSaved() {
-  setDirty(false);
-  try { await window.api.clearAutosave(); } catch (_) { /* 다음 실행에서 다시 확인 */ }
-  updateSaveStatus('저장 완료');
+async function markSaved(signature = stateSig()) {
+  savedSignature = signature;
+  observedSignature = stateSig();
+  setDirty(observedSignature !== savedSignature);
+  if (!dirty) {
+    try { await window.api.clearAutosave(); } catch (_) { /* 다음 실행에서 다시 확인 */ }
+    if (!dirty) updateSaveStatus('저장 완료');
+  }
+}
+
+function trackChanges() {
+  if (!changeTracking || exportRendering) return;
+  const signature = stateSig();
+  if (signature === observedSignature) return;
+  observedSignature = signature;
+  scheduleHist();
+  setDirty(signature !== savedSignature);
+  if (!dirty) window.api.clearAutosave().catch((error) => console.error('autosave clear failed', error));
+  updateHistUI();
 }
 
 // ---------------- 애니메이션 루프 ----------------
@@ -184,11 +205,11 @@ function updatePreviewInfo() {
   const zoomEl = document.getElementById('pv-zoom');
   if (!sizeEl || !zoomEl) return;
   if (RES !== SCREEN_RES) return; // 내보내기 중 임시 배율은 무시
-  const outW = Math.round(canvas.width / RES);
-  const outH = Math.round(canvas.height / RES);
+  const outW = state.card.width;
+  const outH = state.card.height;
   const shown = canvas.getBoundingClientRect().width;
   sizeEl.textContent = `${outW} × ${outH} px`;
-  zoomEl.textContent = outW > 0 ? `${Math.round((shown / outW) * 100)}%` : '';
+  zoomEl.textContent = canvas.width > 0 ? `${Math.round((shown / (canvas.width / RES)) * 100)}%` : '';
 }
 function initPreviewInfo() {
   updatePreviewInfo();
@@ -516,13 +537,15 @@ function hasMotionSource() {
   return !!gifAnim || (state.fxs || []).some((fx) => fx && fx.enabled !== false);
 }
 
-function estimatedExportMargin(boundary) {
+function exportMargin(boundary) {
   if (boundary === 'fixed') return 0;
   const fxPad = (state.fxs || []).reduce((max, fx) => {
     if (!fx || fx.enabled === false || (fx.layer || defaultFxLayer(fx.type)) !== 'border') return max;
     return Math.max(max, FX_GLOW_PAD[fx.type] || 0);
   }, 0);
-  return Math.max(fxPad, state.card.borderStyle === 'glow' ? (state.card.borderGlow || 18) : 0);
+  const glow = state.card.borderStyle === 'glow' && state.card.borderWidth > 0
+    ? (state.card.borderGlow == null ? 18 : state.card.borderGlow) : 0;
+  return Math.ceil(Math.max(fxPad, glow));
 }
 
 function readExportOptions() {
@@ -544,19 +567,27 @@ function readExportOptions() {
   };
 }
 
-function updateExportEstimate() {
-  const options = readExportOptions();
+function displayExportEstimate(options, width, height) {
   const animated = options.format === 'webp' && hasMotionSource();
-  const margin = estimatedExportMargin(options.boundary);
   const estimate = V2.exportEstimate(
-    state.card.width + margin * 2, state.card.height + margin * 2,
+    width, height,
     options.scale, options.durationMs, options.fps, animated,
   );
   const memoryMb = estimate.rawBytes / 1024 / 1024;
   const el = document.getElementById('export-estimate');
   if (el) el.textContent = `${estimate.width} × ${estimate.height}px · ${estimate.frames}프레임 · 작업 메모리 약 ${memoryMb.toFixed(memoryMb < 10 ? 1 : 0)}MB`;
+}
+
+function updateExportEstimate() {
+  const options = readExportOptions();
+  const margin = exportMargin(options.boundary);
+  displayExportEstimate(options, state.card.width + margin * 2, state.card.height + margin * 2);
   const quality = document.getElementById('export-quality');
-  if (quality) quality.disabled = options.format !== 'webp';
+  const animated = options.format === 'webp' && hasMotionSource();
+  if (quality) quality.disabled = !animated;
+  const qualityNote = document.getElementById('export-quality-note');
+  if (qualityNote) qualityNote.textContent = options.format === 'webp' && !animated
+    ? '정지 WebP는 무손실로 저장합니다. 품질 조절은 움직이는 WebP에 적용됩니다.' : '';
   for (const id of ['export-duration', 'export-fps']) {
     const field = document.getElementById(id);
     if (field) field.disabled = options.format !== 'webp' || !hasMotionSource();
@@ -571,9 +602,12 @@ function scheduleExportPreview() {
   if (!dialog || dialog.classList.contains('hidden') || exportBusy) return;
   exportPreviewTimer = setTimeout(async () => {
     try {
-      const options = { ...readExportOptions(), scale: 1 };
+      const configured = readExportOptions();
+      const options = { ...configured, scale: 1 };
+      if (configured.format === 'webp' && hasMotionSource() && options.boundary === 'trim') options.boundary = 'include';
       const source = await renderExportCanvas(options);
       if (revision !== exportPreviewRevision) return;
+      displayExportEstimate(configured, source.width, source.height);
       const preview = document.getElementById('export-preview-canvas');
       if (!preview) return;
       const ratio = Math.min(1, 420 / source.width, 210 / source.height);
@@ -900,8 +934,8 @@ function drawTextEl(t) {
     }
     if (t.shadow) {
       ctx.shadowColor = hexToRgba(t.shadowColor || '#000000', t.shadowAlpha == null ? 0.55 : t.shadowAlpha);
-      ctx.shadowBlur = t.shadowBlur == null ? Math.max(2, t.size * 0.18) : t.shadowBlur;
-      ctx.shadowOffsetX = t.shadowX || 0; ctx.shadowOffsetY = t.shadowY == null ? 2 : t.shadowY;
+      ctx.shadowBlur = (t.shadowBlur == null ? Math.max(2, t.size * 0.18) : t.shadowBlur) * RES;
+      ctx.shadowOffsetX = (t.shadowX || 0) * RES; ctx.shadowOffsetY = (t.shadowY == null ? 2 : t.shadowY) * RES;
     }
     if (t.outline) {
       ctx.lineWidth = t.outlineWidth || 4; ctx.strokeStyle = t.outlineColor || '#ffffff'; ctx.lineJoin = 'round';
@@ -939,8 +973,8 @@ function drawTextEl(t) {
   ctx.textAlign = t.align || 'left';
   if (t.shadow) {
     ctx.shadowColor = hexToRgba(t.shadowColor || '#000000', t.shadowAlpha == null ? 0.55 : t.shadowAlpha);
-    ctx.shadowBlur = t.shadowBlur == null ? Math.max(2, t.size * 0.18) : t.shadowBlur;
-    ctx.shadowOffsetX = t.shadowX || 0; ctx.shadowOffsetY = t.shadowY == null ? 2 : t.shadowY;
+    ctx.shadowBlur = (t.shadowBlur == null ? Math.max(2, t.size * 0.18) : t.shadowBlur) * RES;
+    ctx.shadowOffsetX = (t.shadowX || 0) * RES; ctx.shadowOffsetY = (t.shadowY == null ? 2 : t.shadowY) * RES;
   }
   lines.forEach((line, index) => {
     const y = t.y + index * lineH;
@@ -1098,9 +1132,8 @@ const FX_GLOW_PAD = {
 const SCREEN_EDIT_PAD = 24;
 
 function render(tMs) {
-  // 사용자 조작으로 인한 렌더(시각 미지정)만 히스토리 기록 대상
-  if (tMs == null && typeof scheduleHist === 'function') scheduleHist();
-  if (tMs == null && changeTracking && !exportRendering) setDirty(true);
+  // 선택 표시를 다시 그리는 것과 실제 디자인 변경을 구분한다.
+  if (tMs == null) trackChanges();
   if (tMs == null) tMs = performance.now();
   const { card, text, image, deco } = state;
   const fxs = state.fxs || [];
@@ -1108,16 +1141,13 @@ function render(tMs) {
   const rr = card.corner === 'sharp' ? 0 : card.radius;
 
   // 글로우와 편집 손잡이가 잘리지 않도록 캔버스에 여백(M)을 두고 카드 원점을 이동
-  // (블러 끝자락 ~2%는 안 보이므로 0.75배까지만 확보 — 여백 최소화)
   // 빛번짐을 카드 안쪽으로 제한하면 여백이 아예 필요 없어짐 (출력 크기 = 카드 크기)
   const clipGlow = card.clipGlow !== false;
-  const glowPad = !clipGlow && card.borderStyle === 'glow' && card.borderWidth > 0 ? 24 : 0;
-  // 테두리 효과의 글로우도 캔버스 밖으로 잘리지 않게 여백 확보
-  const fxPad = clipGlow ? 0 : fxs.reduce((m, f) => Math.max(m, FX_GLOW_PAD[f.type] || 0), 0);
+  const glowPad = exportMargin(clipGlow ? 'fixed' : 'include');
   // 화면 편집 때만 최소 여백을 둔다. 카드 가장자리의 이동·크기·회전 손잡이를
   // 계속 잡을 수 있게 하되 PNG/WebP 출력 크기에는 절대 포함하지 않는다.
   const editPad = !exportRendering && RES === SCREEN_RES ? SCREEN_EDIT_PAD : 0;
-  const M = Math.max(glowPad, fxPad, editPad);
+  const M = Math.max(glowPad, editPad);
   layout.ox = M; layout.oy = M;
   // 캔버스는 RES배 해상도로 렌더, 화면 표시 크기는 원래대로 (스타일 폭 고정)
   canvas.width = (W + M * 2) * RES;
@@ -1179,7 +1209,7 @@ function render(tMs) {
     const y = (H - dh) / 2 + (card.bgImageY || 0);
     ctx.save();
     ctx.globalAlpha = card.bgImageOpacity == null ? 1 : card.bgImageOpacity;
-    if (card.bgImageBlur > 0) ctx.filter = `blur(${card.bgImageBlur}px)`;
+    if (card.bgImageBlur > 0) ctx.filter = `blur(${card.bgImageBlur * RES}px)`;
     ctx.drawImage(downscaleSource(bgImgEl, iw, ih, dw * RES), x, y, dw, dh);
     ctx.restore();
     if (card.bgImageDim > 0) {
@@ -1328,9 +1358,9 @@ function render(tMs) {
         addBandShape();
         ctx.clip('evenodd');
         ctx.shadowColor = hexToRgba(band.shadowColor || '#000000', band.shadowAlpha == null ? 0.28 : band.shadowAlpha);
-        ctx.shadowBlur = band.shadowBlur == null ? 10 : band.shadowBlur;
-        ctx.shadowOffsetX = band.shadowX || 0;
-        ctx.shadowOffsetY = band.shadowY == null ? 4 : band.shadowY;
+        ctx.shadowBlur = (band.shadowBlur == null ? 10 : band.shadowBlur) * RES;
+        ctx.shadowOffsetX = (band.shadowX || 0) * RES;
+        ctx.shadowOffsetY = (band.shadowY == null ? 4 : band.shadowY) * RES;
         ctx.fillStyle = '#000';
         bandPath(); ctx.fill();
         ctx.restore();
@@ -1393,8 +1423,6 @@ function render(tMs) {
     : 0;
   const colW = Math.max(4, (specContentW - columnGap) / cols);
   const minValueW = Math.min(20, Math.max(4, colW * 0.3));
-  const specLabelW = Math.min(text.labelWidth, Math.max(4, colW - minValueW));
-  const specValueGap = Math.min(text.valueGap || 0, Math.max(0, colW - specLabelW - minValueW));
   const rowGroups = V2.splitRows(state.rows, cols, text.columnBreak);
   const AUTOFIT_MARGIN = explicitSpecSize ? 0 : Math.max(14, PADY);
   const availableSpecH = Math.max(0, specContentH - AUTOFIT_MARGIN * 2);
@@ -1405,18 +1433,21 @@ function render(tMs) {
     ctx.letterSpacing = `${text.spacing || 0}px`; // 자간 반영해 측정
     const lh = fsTry + (text.innerLineGap == null ? 4 : text.innerLineGap);
     const itemGap = text.itemGap == null ? Math.max(0, text.rowGap + 2) : text.itemGap;
+    const icons = Icons.metrics(state.specIcons, fsTry, colW);
+    const labelW = Math.min(text.labelWidth, Math.max(4, colW - icons.width - minValueW));
+    const valueGap = Math.min(text.valueGap || 0, Math.max(0, colW - icons.width - labelW - minValueW));
     const colData = [];
     let maxH = 0;
     for (let c = 0; c < cols; c++) {
       const rowsInCol = rowGroups[c] || [];
-      const availableValueW = Math.max(1, colW - specLabelW - specValueGap);
+      const availableValueW = Math.max(1, colW - icons.width - labelW - valueGap);
       const valMaxW = Math.max(1, text.wrapWidth > 0
         ? Math.min(availableValueW, text.wrapWidth)
         : availableValueW);
       // 줄바꿈 계산도 실제로 그릴 굵기로 재야 폭이 어긋나지 않음
       ctx.font = `${text.valueBold === false ? 400 : 700} ${fsTry}px ${font}`;
       const wrapped = rowsInCol.map((row) => wrapText(row.value, valMaxW));
-      const rowHeights = wrapped.map((lines) => Math.max(fsTry, (Math.max(1, lines.length) - 1) * lh + fsTry));
+      const rowHeights = wrapped.map((lines) => Math.max(icons.size, icons.textOffset + (Math.max(1, lines.length) - 1) * lh + fsTry));
       const totalH = rowHeights.reduce((sum, h) => sum + h, 0) + Math.max(0, rowsInCol.length - 1) * itemGap;
       let maxLineW = 0;
       wrapped.forEach((lines) => lines.forEach((ln) => {
@@ -1427,7 +1458,7 @@ function render(tMs) {
       colData.push({ rowsInCol, wrapped, rowHeights, totalH, maxLineW, maxLabelW, valMaxW });
       maxH = Math.max(maxH, totalH);
     }
-    return { colData, maxH, lh, itemGap, fs: fsTry };
+    return { colData, maxH, lh, itemGap, fs: fsTry, icons, labelW, valueGap };
   }
 
   let specM;
@@ -1437,7 +1468,7 @@ function render(tMs) {
     let fsTry = Math.max(minFs, text.fontSize || 24);
     specM = measureSpec(fsTry);
     const overflows = () => specM.maxH > availableSpecH
-      || specM.colData.some((cd) => cd.maxLabelW > specLabelW + 0.5);
+      || specM.colData.some((cd) => cd.maxLabelW > specM.labelW + 0.5);
     while (fsTry > minFs && overflows()) {
       fsTry -= 1;
       specM = measureSpec(fsTry);
@@ -1445,13 +1476,14 @@ function render(tMs) {
   } else {
     specM = measureSpec(text.fontSize);
   }
+  const specLabelW = specM.labelW, specValueGap = specM.valueGap;
   const colXs = Array.from({ length: cols }, (_, c) => specContentX + c * (colW + columnGap));
   if (specM.maxH > availableSpecH) {
     const target = explicitSpecSize ? '패널 높이' : '카드 영역';
     layout.issues.push(`사양 높이가 ${target}를 ${Math.ceil(specM.maxH - availableSpecH)}px 넘습니다.`);
   }
   specM.colData.forEach((cd, c) => {
-    const contentWidth = specLabelW + specValueGap + cd.maxLineW;
+    const contentWidth = specM.icons.width + specLabelW + specValueGap + cd.maxLineW;
     if (contentWidth > colW + 0.5 || cd.maxLabelW > specLabelW + 0.5) {
       layout.issues.push(`${c + 1}열 내용이 패널 가로 영역을 넘습니다.`);
     }
@@ -1478,6 +1510,8 @@ function render(tMs) {
     columnWidth: colW,
     labelWidth: specLabelW,
     valueGap: specValueGap,
+    iconSize: specM.icons.size,
+    iconWidth: specM.icons.width,
     lineCounts: specM.colData.map((cd) => cd.wrapped.map((lines) => lines.length)),
   };
   // 목록의 자연 바운딩 박스와 사용자가 직접 조절한 패널 컨테이너를 분리한다.
@@ -1491,7 +1525,7 @@ function render(tMs) {
     for (const sc of specCols) {
       if (!sc.rowsInCol.length) continue;
       minX = Math.min(minX, sc.colX);
-      maxX = Math.max(maxX, sc.colX + specLabelW + specValueGap + sc.maxLineW);
+      maxX = Math.max(maxX, sc.colX + specM.icons.width + specLabelW + specValueGap + sc.maxLineW);
       minY = Math.min(minY, sc.y0);
       maxY = Math.max(maxY, sc.y0 + sc.totalH);
     }
@@ -1559,9 +1593,9 @@ function render(tMs) {
         addPanelShape();
         ctx.clip('evenodd');
         ctx.shadowColor = hexToRgba(sp.shadowColor || '#000000', sp.shadowAlpha == null ? 0.35 : sp.shadowAlpha);
-        ctx.shadowBlur = sp.shadowBlur == null ? 20 : sp.shadowBlur;
-        ctx.shadowOffsetX = sp.shadowX || 0;
-        ctx.shadowOffsetY = sp.shadowY == null ? 8 : sp.shadowY;
+        ctx.shadowBlur = (sp.shadowBlur == null ? 20 : sp.shadowBlur) * RES;
+        ctx.shadowOffsetX = (sp.shadowX || 0) * RES;
+        ctx.shadowOffsetY = (sp.shadowY == null ? 8 : sp.shadowY) * RES;
         ctx.fillStyle = '#000';
         panelPath(); ctx.fill();
         ctx.restore();
@@ -1593,7 +1627,7 @@ function render(tMs) {
     ctx.letterSpacing = `${text.spacing || 0}px`;
     ctx.textBaseline = 'top';
     specCols.forEach((sc) => {
-      const lblLeft = sc.colX;
+      const lblLeft = sc.colX + specM.icons.width;
       const valLeft = lblLeft + specLabelW + specValueGap;
       const labelAlign = text.labelAlign || 'left';
       const valueAlign = text.valueAlign || 'left';
@@ -1603,20 +1637,23 @@ function render(tMs) {
         : valueAlign === 'center' ? valLeft + sc.valMaxW / 2 : valLeft;
       let y = sc.y0;
       sc.rowsInCol.forEach((row, ri) => {
+        const icon = Icons.resolveIcon(row, state.specIcons);
+        if (icon.visible) drawSpecIcon(ctx, icon.category, icon.series, sc.colX, y, specM.icons.size);
+        const textY = y + specM.icons.textOffset;
         // 라벨 — 굵기/그라디언트/그림자 선택 가능
         ctx.font = `${text.labelBold === false ? 400 : 700} ${fs}px ${font}`;
         ctx.textAlign = labelAlign;
         ctx.save();
         if (text.labelShadow) {
           ctx.shadowColor = hexToRgba(text.labelShadowColor || '#000000', 0.55);
-          ctx.shadowBlur = Math.max(2, fs * 0.18);
-          ctx.shadowOffsetY = 2;
+          ctx.shadowBlur = Math.max(2, fs * 0.18) * RES;
+          ctx.shadowOffsetY = 2 * RES;
         }
         ctx.fillStyle = text.labelGrad
-          ? makeGradient(lblLeft, y, ctx.measureText(row.label).width || 1, fs,
+          ? makeGradient(lblLeft, textY, ctx.measureText(row.label).width || 1, fs,
               text.labelColor, text.labelColor2 || text.labelColor, 90)
           : text.labelColor;
-        ctx.fillText(row.label, lblX, y);
+        ctx.fillText(row.label, lblX, textY);
         ctx.restore();
         // 값 — 일괄 지정 켜짐 → 값 글자색으로 통일. 그라디언트/그림자 선택 가능
         ctx.font = `${text.valueBold === false ? 400 : 700} ${fs}px ${font}`;
@@ -1626,15 +1663,15 @@ function render(tMs) {
         ctx.save();
         if (text.valueShadow) {
           ctx.shadowColor = hexToRgba(text.valueShadowColor || '#000000', 0.55);
-          ctx.shadowBlur = Math.max(2, fs * 0.18);
-          ctx.shadowOffsetY = 2;
+          ctx.shadowBlur = Math.max(2, fs * 0.18) * RES;
+          ctx.shadowOffsetY = 2 * RES;
         }
         lines.forEach((ln, li) => {
           ctx.fillStyle = text.valueGrad
-            ? makeGradient(valLeft, y + li * lineH, ctx.measureText(ln).width || 1, fs,
+            ? makeGradient(valLeft, textY + li * lineH, ctx.measureText(ln).width || 1, fs,
                 baseCol, text.valueColor2 || baseCol, 90)
             : baseCol;
-          ctx.fillText(ln, valX, y + li * lineH);
+          ctx.fillText(ln, valX, textY + li * lineH);
         });
         ctx.restore();
         y += sc.rowHeights[ri] + specM.itemGap;
@@ -1699,9 +1736,9 @@ function render(tMs) {
       addShape();
       ctx.clip('evenodd');
       ctx.shadowColor = hexToRgba(image.shadowColor || '#000000', image.shadowAlpha != null ? image.shadowAlpha : 0.45);
-      ctx.shadowBlur = image.shadowBlur != null ? image.shadowBlur : 22;
-      ctx.shadowOffsetX = image.shadowX || 0;
-      ctx.shadowOffsetY = image.shadowY != null ? image.shadowY : 10;
+      ctx.shadowBlur = (image.shadowBlur != null ? image.shadowBlur : 22) * RES;
+      ctx.shadowOffsetX = (image.shadowX || 0) * RES;
+      ctx.shadowOffsetY = (image.shadowY != null ? image.shadowY : 10) * RES;
       ctx.fillStyle = '#000';
       clipPath(); ctx.fill();
       ctx.restore();
@@ -1745,7 +1782,7 @@ function render(tMs) {
         : image.frameColor;
       if (image.frame === 'glow') {
         ctx.shadowColor = hexToRgba(image.frameColor, 0.9);
-        ctx.shadowBlur = 18;
+        ctx.shadowBlur = 18 * RES;
       } else if (image.frame === 'dashed') {
         ctx.setLineDash([image.frameWidth * 2.5, image.frameWidth * 1.6]);
       } else if (image.frame === 'dotted') {
@@ -1976,7 +2013,7 @@ function render(tMs) {
         const a = 0.2 + 0.8 * Math.max(0, Math.sin(2 * Math.PI * (ph * k3 + o3)));
         ctx.globalAlpha = baseAlpha * a;
         ctx.fillStyle = col;
-        ctx.shadowColor = col; ctx.shadowBlur = 10;
+        ctx.shadowColor = col; ctx.shadowBlur = 10 * RES;
         ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
@@ -2123,7 +2160,7 @@ function render(tMs) {
         const band = channels[channel];
         ctx.strokeStyle = hexToRgba(col, band.alpha);
         ctx.shadowColor = hexToRgba(col, band.alpha * 0.7);
-        ctx.shadowBlur = 3;
+        ctx.shadowBlur = 3 * RES;
         ctx.beginPath();
         const step = Math.max(1.25, W / 620);
         for (let x = 0; x < W; x += step) {
@@ -2193,7 +2230,7 @@ function render(tMs) {
             }
             distance -= lengths[segment];
           }
-          ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 8;
+          ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 8 * RES;
           ctx.beginPath(); ctx.arc(px, py, 2.2, 0, Math.PI * 2); ctx.fill();
           ctx.shadowBlur = 0;
         }
@@ -2321,7 +2358,7 @@ function render(tMs) {
       : card.borderColor;
     if (bs === 'glow') {
       ctx.shadowColor = hexToRgba(card.borderColor, 0.9);
-      ctx.shadowBlur = card.borderGlow == null ? 18 : card.borderGlow;
+      ctx.shadowBlur = (card.borderGlow == null ? 18 : card.borderGlow) * RES;
     } else if (bs === 'dashed') {
       ctx.setLineDash([bwd * (card.borderDash || 2.5), bwd * (card.borderGap || 1.6)]);
     } else if (bs === 'dotted') {
@@ -2354,7 +2391,7 @@ function render(tMs) {
       ctx.lineWidth = lw;
       ctx.strokeStyle = `hsl(${hue}, 100%, 62%)`;
       ctx.shadowColor = `hsl(${hue}, 100%, 62%)`;
-      ctx.shadowBlur = 10 + (f.density || 0.5) * 22 + 6 * Math.sin(2 * Math.PI * ph * 2);
+      ctx.shadowBlur = (10 + (f.density || 0.5) * 22 + 6 * Math.sin(2 * Math.PI * ph * 2)) * RES;
       roundRectPath(ctx, lw / 2, lw / 2, W - lw, H - lw, Math.max(0, rr - lw / 2));
       ctx.stroke();
       ctx.restore();
@@ -2367,7 +2404,7 @@ function render(tMs) {
       ctx.lineWidth = lw;
       ctx.strokeStyle = hexToRgba(col, a);
       ctx.shadowColor = col;
-      ctx.shadowBlur = (6 + (f.density || 0.5) * 30) * a;
+      ctx.shadowBlur = (6 + (f.density || 0.5) * 30) * a * RES;
       roundRectPath(ctx, lw / 2, lw / 2, W - lw, H - lw, Math.max(0, rr - lw / 2));
       ctx.stroke();
       ctx.restore();
@@ -2385,7 +2422,7 @@ function render(tMs) {
       ctx.lineWidth = lw;
       ctx.strokeStyle = g;
       ctx.shadowColor = col;
-      ctx.shadowBlur = 8 + (f.density || 0.5) * 14;
+      ctx.shadowBlur = (8 + (f.density || 0.5) * 14) * RES;
       roundRectPath(ctx, lw / 2, lw / 2, W - lw, H - lw, Math.max(0, rr - lw / 2));
       ctx.stroke();
       ctx.restore();
@@ -2399,7 +2436,7 @@ function render(tMs) {
       ctx.lineWidth = lw;
       ctx.strokeStyle = col;
       ctx.shadowColor = col;
-      ctx.shadowBlur = 14;
+      ctx.shadowBlur = 14 * RES;
       ctx.lineCap = 'round';
       ctx.setLineDash([dashLen, P - dashLen]);
       ctx.lineDashOffset = -ph * P;
@@ -2434,7 +2471,7 @@ function render(tMs) {
       ctx.lineWidth = lw;
       ctx.strokeStyle = g;
       ctx.shadowColor = 'rgba(255,255,255,0.6)';
-      ctx.shadowBlur = 4 + (f.density || 0.5) * 16;
+      ctx.shadowBlur = (4 + (f.density || 0.5) * 16) * RES;
       roundRectPath(ctx, lw / 2, lw / 2, W - lw, H - lw, Math.max(0, rr - lw / 2));
       ctx.stroke();
       ctx.restore();
@@ -2447,7 +2484,7 @@ function render(tMs) {
       ctx.save();
       ctx.lineWidth = lw;
       ctx.lineCap = 'round';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 12 * RES;
       for (const [colr, dir, shift] of [[col, 1, 0], [hueShiftHex(col, 60), -1, P / 2]]) {
         ctx.strokeStyle = colr;
         ctx.shadowColor = colr;
@@ -2492,7 +2529,7 @@ function render(tMs) {
       ctx.strokeStyle = col;
       ctx.lineWidth = 1.6;
       ctx.shadowColor = col;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 8 * RES;
       for (let i = 0; i < m; i++) {
         const [x0, y0] = perim(rnd() * per);
         // 카드 안쪽으로 지그재그
@@ -2524,7 +2561,7 @@ function render(tMs) {
       corners.forEach(([x, y, dx, dy], i) => {
         const a = 0.18 + 0.82 * Math.max(0, Math.sin(2 * Math.PI * (ph - i / 4)));
         ctx.strokeStyle = hexToRgba(col, a);
-        ctx.shadowColor = col; ctx.shadowBlur = 8 * a;
+        ctx.shadowColor = col; ctx.shadowBlur = 8 * a * RES;
         ctx.beginPath(); ctx.moveTo(x + dx * len, y); ctx.lineTo(x, y); ctx.lineTo(x, y + dy * len); ctx.stroke();
       });
       ctx.restore();
@@ -2561,7 +2598,7 @@ function render(tMs) {
       ctx.lineWidth = lw;
       ctx.strokeStyle = hexToRgba(col, 0.22);
       notchPath(); ctx.stroke();
-      ctx.strokeStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 7;
+      ctx.strokeStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 7 * RES;
       ctx.lineCap = 'round';
       ctx.setLineDash([perimeter * 0.13, perimeter * 0.87]);
       ctx.lineDashOffset = -ph * perimeter;
@@ -2600,7 +2637,7 @@ function render(tMs) {
       points.forEach(([x, y], i) => {
         const a = 0.2 + 0.8 * Math.max(0, Math.sin(2 * Math.PI * (ph - i / points.length)));
         ctx.fillStyle = hexToRgba(col, a);
-        ctx.shadowColor = col; ctx.shadowBlur = 10 * a;
+        ctx.shadowColor = col; ctx.shadowBlur = 10 * a * RES;
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
         ctx.strokeStyle = hexToRgba(col, 0.32 + a * 0.45);
@@ -3352,10 +3389,206 @@ function hideHoverTooltip() {
   hoverTooltip.setAttribute('aria-hidden', 'true');
 }
 
+const specIconSheets = new Map();
+async function loadSpecIconSheets() {
+  await Promise.all(Icons.SERIES.map(async (series) => {
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error(`${series.name} 아이콘 파일을 읽지 못했습니다.`));
+      img.src = series.file;
+    });
+    const sheet = document.createElement('canvas');
+    sheet.width = image.naturalWidth; sheet.height = image.naturalHeight;
+    const g = sheet.getContext('2d');
+    g.drawImage(image, 0, 0);
+    const rects = Icons.spriteRects(g.getImageData(0, 0, sheet.width, sheet.height).data, sheet.width, sheet.height);
+    // 원본 이미지의 배율별 디코딩 캐시가 다음 출력의 선명도를 바꾸지 않게 고정한다.
+    specIconSheets.set(series.id, { image: sheet, rects });
+  }));
+}
+
+function drawSpecIcon(context, category, series, x, y, size) {
+  if (!category || size <= 0) return;
+  const item = Icons.CATEGORIES.find((entry) => entry.id === category);
+  const sheet = specIconSheets.get(series);
+  if (!item || !sheet) return;
+  const source = sheet.rects[item.index];
+  const scale = size / Math.max(source.w, source.h);
+  const width = source.w * scale, height = source.h * scale;
+  context.save();
+  context.imageSmoothingEnabled = series !== 'pixel';
+  context.drawImage(sheet.image, source.x, source.y, source.w, source.h,
+    x + (size - width) / 2, y + (size - height) / 2, width, height);
+  context.restore();
+}
+
+function iconPreview(category, series, size = 28) {
+  const preview = document.createElement('canvas');
+  preview.width = size * 2; preview.height = size * 2;
+  preview.style.width = `${size}px`; preview.style.height = `${size}px`;
+  preview.setAttribute('aria-hidden', 'true');
+  if (series === 'pixel') preview.classList.add('pixel-icon');
+  const g = preview.getContext('2d');
+  g.scale(2, 2);
+  drawSpecIcon(g, category, series, 1, 1, size - 2);
+  return preview;
+}
+
+function updateRowIconButton(button, row) {
+  const icon = Icons.resolveIcon(row, state.specIcons);
+  const category = Icons.CATEGORIES.find((item) => item.id === icon.category);
+  button.replaceChildren(iconPreview(icon.category, icon.series, 28));
+  button.classList.toggle('icon-hidden', !icon.visible);
+  if (!icon.category) {
+    const dash = document.createElement('span'); dash.textContent = '—'; dash.className = 'no-icon-mark';
+    button.appendChild(dash);
+  }
+  const mode = !row.icon ? '자동' : row.icon === 'none' ? '표시 안 함' : '직접 선택';
+  button.title = `${row.label || '이 항목'} 아이콘: ${category ? category.name : '없음'} · ${mode}${state.specIcons.enabled ? '' : ' · 카드 표시 꺼짐'}\n눌러서 변경`;
+  button.setAttribute('aria-label', `${row.label || '이 항목'} 아이콘 설정`);
+}
+
+function syncSpecIconControls() {
+  const enabled = document.getElementById('spec-icons-enabled');
+  if (!enabled) return;
+  enabled.checked = state.specIcons.enabled;
+  document.getElementById('spec-icons-size').value = String(state.specIcons.size);
+  document.getElementById('spec-icons-size').disabled = !state.specIcons.enabled;
+  document.querySelectorAll('#spec-icon-series button').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.series === state.specIcons.series));
+    button.disabled = !state.specIcons.enabled;
+  });
+}
+
+function bindSpecIconControls() {
+  const group = document.getElementById('spec-icon-series');
+  for (const series of Icons.SERIES) {
+    const button = document.createElement('button');
+    button.type = 'button'; button.dataset.series = series.id; button.title = series.description;
+    const name = document.createElement('span'); name.textContent = series.name;
+    button.append(iconPreview('gpu', series.id, 32), name);
+    button.onclick = () => {
+      state.specIcons.series = series.id;
+      syncSpecIconControls(); renderRows(); render();
+    };
+    group.appendChild(button);
+  }
+  document.getElementById('spec-icons-enabled').onchange = (event) => {
+    state.specIcons.enabled = event.target.checked;
+    syncSpecIconControls(); renderRows(); render();
+  };
+  document.getElementById('spec-icons-size').onchange = (event) => {
+    state.specIcons.size = Number(event.target.value); render();
+  };
+}
+
+function openSpecIconPicker(row = null) {
+  const adding = !row;
+  if (adding && state.rows.length >= V2.MAX.rows) return;
+  const opener = document.activeElement;
+  const dialog = document.createElement('dialog');
+  dialog.className = 'spec-icon-dialog';
+  dialog.setAttribute('aria-labelledby', 'spec-icon-title');
+  // 선택 창의 키 입력으로 뒤쪽 카드가 실행 취소되거나 삭제되지 않도록 한다.
+  dialog.addEventListener('keydown', (event) => event.stopPropagation());
+  const form = document.createElement('form');
+  const header = document.createElement('header'); header.className = 'modal-head';
+  const title = document.createElement('h2'); title.id = 'spec-icon-title';
+  title.textContent = adding ? '부품 · 주변기기 추가' : `${row.label || '항목'} 아이콘`;
+  const close = document.createElement('button'); close.type = 'button'; close.className = 'icon-btn';
+  close.textContent = '✕'; close.setAttribute('aria-label', '아이콘 설정 닫기'); close.onclick = () => dialog.close();
+  header.append(title, close); form.appendChild(header);
+  const description = document.createElement('p'); description.className = 'hint';
+  description.textContent = adding
+    ? '종류를 고르면 라벨과 아이콘을 준비합니다. 이름과 사양은 직접 입력할 수 있습니다.'
+    : '자동은 라벨에 맞춥니다. 직접 고른 아이콘은 라벨을 바꿔도 유지됩니다.';
+  form.appendChild(description);
+  const labelInput = document.createElement('input'); labelInput.type = 'text'; labelInput.maxLength = 24;
+  labelInput.id = 'icon-row-label'; labelInput.required = adding; labelInput.placeholder = '예: 보조 모니터';
+  labelInput.value = row ? row.label : '';
+  if (adding) {
+    const label = document.createElement('label'); label.textContent = '항목 이름'; label.appendChild(labelInput); form.appendChild(label);
+  }
+  const controls = document.createElement('div'); controls.className = 'icon-picker-controls';
+  const showLabel = document.createElement('label'); showLabel.className = 'chk';
+  const show = document.createElement('input'); show.type = 'checkbox'; show.id = 'icon-card-enabled'; show.checked = state.specIcons.enabled;
+  showLabel.append(show, document.createTextNode('이 카드에 아이콘 표시'));
+  const seriesLabel = document.createElement('label'); seriesLabel.textContent = '이 항목의 시리즈';
+  const seriesSelect = document.createElement('select'); seriesSelect.id = 'icon-row-series';
+  for (const item of [{ id: '', name: '전체 설정 따름' }, ...Icons.SERIES]) {
+    const option = document.createElement('option'); option.value = item.id; option.textContent = item.name; seriesSelect.appendChild(option);
+  }
+  seriesSelect.value = row && row.iconSeries || '';
+  seriesLabel.appendChild(seriesSelect); controls.append(showLabel, seriesLabel); form.appendChild(controls);
+  const grid = document.createElement('div'); grid.className = 'icon-choice-grid'; grid.setAttribute('role', 'group'); grid.setAttribute('aria-label', '아이콘 종류');
+  let choice = row && row.icon || 'auto';
+  const options = [{ id: 'auto', name: '자동 · 라벨 기준' }, { id: 'none', name: '표시 안 함' }, ...Icons.CATEGORIES];
+  const refreshChoices = () => {
+    const series = seriesSelect.value || state.specIcons.series;
+    for (const button of grid.children) {
+      const item = options.find((entry) => entry.id === button.dataset.icon);
+      const category = item.id === 'auto' ? Icons.inferCategory(labelInput.value) : item.id === 'none' ? null : item.id;
+      const name = document.createElement('span'); name.textContent = item.name;
+      button.replaceChildren(iconPreview(category, series, 36), name);
+      if (item.id === 'none') button.firstChild.replaceWith(Object.assign(document.createElement('span'), { className: 'no-icon-tile', textContent: '—' }));
+      button.setAttribute('aria-pressed', String(item.id === choice));
+    }
+  };
+  for (const item of options) {
+    const button = document.createElement('button'); button.type = 'button'; button.dataset.icon = item.id;
+    button.onclick = () => {
+      choice = item.id;
+      if (adding && item.label) labelInput.value = item.id === 'generic' ? '' : item.label;
+      refreshChoices();
+      if (adding && item.id === 'generic') labelInput.focus();
+    };
+    grid.appendChild(button);
+  }
+  seriesSelect.onchange = refreshChoices;
+  labelInput.oninput = refreshChoices;
+  refreshChoices(); form.appendChild(grid);
+  const hint = document.createElement('p'); hint.className = 'hint';
+  hint.textContent = '자동 감지에 없는 주변기기도 자유롭게 추가할 수 있습니다. 전체 표시를 끄더라도 선택한 아이콘 설정은 보관됩니다.';
+  form.appendChild(hint);
+  const actions = document.createElement('div'); actions.className = 'modal-btns';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = '취소'; cancel.onclick = () => dialog.close();
+  const apply = document.createElement('button'); apply.type = 'submit'; apply.className = 'primary'; apply.textContent = adding ? '항목 추가' : '적용';
+  actions.append(cancel, apply); form.appendChild(actions);
+  let appliedIndex = -1;
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    if (adding && (!labelInput.value.trim() || state.rows.length >= V2.MAX.rows)) { labelInput.focus(); return; }
+    pushHist();
+    const target = row || { label: labelInput.value.trim(), value: '' };
+    if (choice === 'auto') delete target.icon; else target.icon = choice;
+    if (seriesSelect.value) target.iconSeries = seriesSelect.value; else delete target.iconSeries;
+    state.specIcons.enabled = show.checked;
+    if (adding) state.rows.push(target);
+    appliedIndex = state.rows.indexOf(target);
+    syncSpecIconControls(); renderRows(); render();
+    dialog.close();
+  };
+  dialog.onclose = () => {
+    dialog.remove();
+    if (appliedIndex >= 0) {
+      const selector = adding ? 'textarea' : '.row-icon-button';
+      document.querySelector(`.spec-row[data-row-index="${appliedIndex}"] ${selector}`)?.focus();
+    } else if (opener && opener.isConnected) opener.focus();
+  };
+  dialog.appendChild(form); document.body.appendChild(dialog); dialog.showModal();
+  if (adding) labelInput.focus(); else grid.querySelector('[aria-pressed="true"]')?.focus();
+}
+
 function renderRows() {
   hideHoverTooltip();
   const wrap = document.getElementById('rows');
   wrap.innerHTML = '';
+  const add = document.getElementById('btn-add-row');
+  if (add) {
+    add.disabled = state.rows.length >= V2.MAX.rows;
+    add.title = add.disabled ? `새 사양 행은 ${V2.MAX.rows}개까지 추가할 수 있습니다. 기존 행은 보존됩니다.` : '사양 행 추가';
+  }
   state.rows.forEach((row, i) => {
     // v2.0 개편 이후 사양 행은 항상 표시하며, 삭제로만 목록에서 제거한다.
     if (row.hidden) delete row.hidden;
@@ -3365,6 +3598,11 @@ function renderRows() {
     // 드래그 손잡이 — 잡아서 원하는 위치로 한 번에 이동
     const grip = document.createElement('span');
     grip.className = 'grip'; grip.textContent = '⠿'; grip.title = '드래그해서 순서 이동';
+    const iconButton = document.createElement('button'); iconButton.type = 'button'; iconButton.className = 'row-icon-button';
+    iconButton.setAttribute('aria-haspopup', 'dialog');
+    iconButton.onclick = () => openSpecIconPicker(row);
+    updateRowIconButton(iconButton, row);
+    const rowStart = document.createElement('div'); rowStart.className = 'row-start'; rowStart.append(iconButton, grip);
     grip.onpointerdown = (e) => {
       if (e.pointerType === 'mouse') { div.draggable = true; return; }
       e.preventDefault();
@@ -3421,9 +3659,13 @@ function renderRows() {
     };
     const lbl = document.createElement('input');
     lbl.className = 'lbl'; lbl.value = row.label; lbl.maxLength = 24;
-    lbl.oninput = () => { row.label = lbl.value; render(); };
+    lbl.oninput = () => { row.label = lbl.value; updateRowIconButton(iconButton, row); render(); };
     const val = document.createElement('textarea');
     val.rows = 2; val.value = row.value; val.placeholder = '값 입력 · Enter로 줄바꿈';
+    val.maxLength = Math.max(V2.MAX.rowValue, row.value.length);
+    val.title = row.value.length > V2.MAX.rowValue
+      ? `기존 ${row.value.length}자를 보존합니다. 새 입력은 기본 ${V2.MAX.rowValue}자까지 가능합니다.`
+      : `최대 ${V2.MAX.rowValue}자 · Enter로 줄바꿈`;
     val.oninput = () => { row.value = val.value; render(); };
     const col = document.createElement('input');
     col.type = 'color'; col.className = 'rowcolor';
@@ -3462,7 +3704,7 @@ function renderRows() {
     del.className = 'del'; del.textContent = '×'; del.title = '삭제';
     del.onclick = () => { state.rows.splice(i, 1); renderRows(); render(); };
     btns.append(up, dn, del);
-    div.append(grip, lbl, val, colorWrap, btns);
+    div.append(rowStart, lbl, val, colorWrap, btns);
     wrap.appendChild(div);
   });
   refreshColumnBreakOptions();
@@ -4422,27 +4664,42 @@ function makeDesignThumbnail() {
 }
 
 async function saveCurrentDesign(asNew = false) {
+  if (saveBusy) return;
   const nameInput = document.getElementById('design-name');
   state.name = nameInput.value.trim() || '무제';
-  const previousFile = state.file;
-  if (asNew) state.file = null;
+  nameInput.value = state.name;
+  trackChanges();
+  pushHist();
+  const revision = documentRevision;
+  const signature = stateSig();
+  saveBusy = true;
+  for (const id of ['btn-save', 'btn-save-as']) document.getElementById(id).disabled = true;
   try {
     const payload = V2.clone(state);
+    if (asNew) payload.file = null;
     payload._thumbnail = makeDesignThumbnail();
     const result = await window.api.saveDesign(payload);
+    if (revision !== documentRevision) { await refreshList(); return; }
     state.file = result.file;
-    await markSaved();
+    if (asNew) {
+      documentRevision += 1;
+      resetHistory(payload);
+    }
+    await markSaved(signature);
     await refreshList();
     toast(asNew ? `새 디자인으로 저장: ${result.name}` : `저장했어요: ${result.name}`);
   } catch (error) {
-    state.file = previousFile;
     toast(`저장 실패: ${error.message}`);
+  } finally {
+    saveBusy = false;
+    for (const id of ['btn-save', 'btn-save-as']) document.getElementById(id).disabled = false;
   }
 }
 
 // ---------------- 컨트롤 바인딩 ----------------
 function bindControls() {
   const $ = (id) => document.getElementById(id);
+  bindSpecIconControls();
 
   $('btn-auto').onclick = async () => {
     try {
@@ -4452,7 +4709,12 @@ function bindControls() {
       if (!auto.length) { toast('감지할 수 있는 사양이 없습니다.'); return; }
       const selectedIndexes = await chooseDetectedSpecs(auto);
       if (!selectedIndexes) return;
-      state.rows = V2.mergeAutoSpecs(state.rows, auto, selectedIndexes);
+      const merged = V2.mergeAutoSpecs(state.rows, auto, selectedIndexes);
+      if (merged.length > Math.max(V2.MAX.rows, state.rows.length)) {
+        toast(`사양은 최대 ${V2.MAX.rows}개까지 추가할 수 있습니다. 가져올 항목을 줄여 주세요.`);
+        return;
+      }
+      state.rows = merged;
       renderRows(); render();
       toast(`${selectedIndexes.length}개 자동 항목을 적용했습니다.`);
     } catch (e) {
@@ -4463,7 +4725,10 @@ function bindControls() {
     }
   };
 
-  $('btn-add-row').onclick = () => { state.rows.push({ label: 'NEW', value: '' }); renderRows(); render(); };
+  $('btn-add-row').onclick = () => {
+    if (state.rows.length >= V2.MAX.rows) return;
+    openSpecIconPicker();
+  };
 
   // 내 사양 프로필 — 디자인과 별개로 여러 사양 묶음을 보관
   $('btn-spec-save').onclick = async () => {
@@ -4684,19 +4949,22 @@ function bindControls() {
   $('autofit').onchange = (e) => { state.text.autofit = e.target.checked; updateAutofitUI(); render(); };
   $('c-uniform').onchange = (e) => { state.text.uniform = e.target.checked; renderRows(); render(); };
 
-  $('design-name').oninput = (e) => { state.name = e.target.value; setDirty(true); };
+  $('design-name').oninput = (e) => { state.name = e.target.value; trackChanges(); };
 
   $('btn-save').onclick = () => saveCurrentDesign(false);
   $('btn-save-as').onclick = () => saveCurrentDesign(true);
   $('btn-new').onclick = async () => {
     if (dirty && !(await confirmBox('저장하지 않은 변경사항을 닫고 새 디자인을 만들까요?'))) return;
+    documentRevision += 1;
     changeTracking = false;
     state = V2.normalizeState(defaultState(), defaultState()); colorsDirty = false;
     await loadImage(null); // 정지 이미지·움짤 모두 정리
     await loadBackgroundImage(null);
+    bgImageDragMode = false;
     selected = null;
     syncControls(); renderRows(); renderTexts(); render(); syncPanelTransformControls();
     changeTracking = true;
+    resetHistory();
     await markSaved();
     toast('새 디자인');
   };
@@ -4722,7 +4990,7 @@ function bindControls() {
   };
 
   // 실행 취소 / 다시 실행
-  $('btn-undo').onclick = () => restoreHist(histPos - 1);
+  $('btn-undo').onclick = undoEdit;
   $('btn-redo').onclick = () => restoreHist(histPos + 1);
 
   // 상단바 — 저장된 디자인 드롭다운
@@ -4795,6 +5063,28 @@ function bindControls() {
   bindValue('band-sh-y', (el) => { curBand().shadowY = +el.value; });
 
   const bgPick = $('btn-image-bg');
+  const bgPresets = $('btn-background-presets');
+  if (bgPresets) bgPresets.onclick = () => {
+    const target = state;
+    const revision = documentRevision;
+    window.BackgroundPresetUI.open({ onApply: async (url, isCurrent) => {
+      const image = await new Promise((resolve, reject) => {
+        const im = new Image();
+        im.onload = () => resolve(im);
+        im.onerror = () => reject(new Error('배경 이미지를 읽지 못했습니다.'));
+        im.src = url;
+      });
+      if (!isCurrent() || state !== target || documentRevision !== revision) return false;
+      pushHist();
+      state.card.bgImageDataUrl = url;
+      state.card.bgImageX = 0; state.card.bgImageY = 0; state.card.bgImageScale = 1;
+      bgImgEl = image;
+      clearDownscaleCache();
+      syncControls(); setBackgroundDragMode(false); render();
+      toast('배경을 적용했습니다. 위치·확대·어둡게 조절로 사양 글자에 맞춰 보세요.');
+      return true;
+    } });
+  };
   if (bgPick) bgPick.onclick = async () => {
     try {
       const url = await window.api.pickImage();
@@ -5243,6 +5533,7 @@ function syncControls() {
   updateBackgroundImageUI();
   syncPanelTransformControls();
   refreshRangeNums();
+  syncSpecIconControls();
 }
 
 // ---------------- 저장 목록 ----------------
@@ -5283,6 +5574,7 @@ async function refreshList() {
 
 // 저장본(JSON)을 현재 상태로 적용 — 옛 필드 호환 포함
 async function applyLoadedState(loaded, file, options = {}) {
+  if (!loaded || typeof loaded !== 'object' || Array.isArray(loaded)) throw new Error('디자인 파일 형식이 올바르지 않습니다.');
   const base = defaultState();
   for (const k of Object.keys(base)) {
     // 양쪽 모두 순수 객체일 때만 병합 — null(typeof 'object')이나 문자열이 섞이면 그대로 대입
@@ -5308,7 +5600,6 @@ async function applyLoadedState(loaded, file, options = {}) {
     if (!base.bands.length) base.bands = [newBand()];
   }
   base.bands.forEach((b) => { if (b.border === 'full') b.border = 'edge'; });
-  bandSel = 0;
   // 옛 저장본의 title/nick → texts로 이관
   if (!Array.isArray(loaded.texts)) base.texts = [];
   if (loaded.title && loaded.title.text) {
@@ -5324,17 +5615,47 @@ async function applyLoadedState(loaded, file, options = {}) {
       align: loaded.nick.align, outline: loaded.nick.outline, outlineColor: loaded.nick.outlineColor,
     }));
   }
-  state = V2.normalizeState(base, defaultState());
-  state.file = file || null;
+  base.schemaVersion = loaded.schemaVersion || 1;
+  base.specIcons = Icons.normalizeSettings(loaded.specIcons);
+  const next = V2.normalizeState(base, defaultState());
+  next.file = file || null;
+  const previous = state;
+  const previousDirty = dirty;
+  documentRevision += 1;
+  changeTracking = false;
+  clearTimeout(autosaveTimer);
+  clearTimeout(histT);
+  autosaveRevision += 1;
+  stopAnim();
+  state = next;
+  try {
+    await loadImage(state.image.dataUrl);
+    await loadBackgroundImage(state.card.bgImageDataUrl);
+  } catch (error) {
+    // 새 파일의 이미지가 손상됐으면 편집 중이던 문서와 변경 추적을 보존한다.
+    state = previous;
+    try {
+      await loadImage(state.image.dataUrl);
+      await loadBackgroundImage(state.card.bgImageDataUrl);
+    } finally {
+      changeTracking = true;
+      setDirty(previousDirty);
+      render(performance.now()); ensureAnim();
+    }
+    throw error;
+  }
   colorsDirty = false;
-  await loadImage(state.image.dataUrl);
-  await loadBackgroundImage(state.card.bgImageDataUrl);
+  bandSel = 0;
   bgImageDragMode = false;
   selected = null;
-  changeTracking = false;
   syncControls(); renderRows(); renderTexts(); render(); syncPanelTransformControls();
+  resetHistory();
   changeTracking = true;
-  if (options.recovered) setDirty(true);
+  if (options.recovered) {
+    savedSignature = null;
+    observedSignature = stateSig();
+    setDirty(true);
+  }
   else await markSaved();
   ensureAnim();
 }
@@ -5403,7 +5724,8 @@ function buildAnimWebp(frames, W, H, bgHex) {
   for (const f of frames) {
     const subs = [];
     for (const c of f.chunks) {
-      if (c.cc === 'ALPH') hasAlpha = true;
+      // VP8L은 별도 ALPH 청크 없이 헤더의 alpha_is_used 비트에 투명도를 담는다.
+      if (c.cc === 'ALPH' || (c.cc === 'VP8L' && c.data.length >= 5 && (c.data[4] & 0x10))) hasAlpha = true;
       subs.push(wpChunk(c.cc, c.data));
     }
     const head = new Uint8Array(16);
@@ -5559,19 +5881,39 @@ function initCollapse() {
 // ---------------- 실행 취소 / 다시 실행 (최대 100단계) ----------------
 const HIST_MAX = 100;
 let hist = [], histPos = -1, histLock = false, histT = null;
-// 상태 서명 — 긴 문자열(이미지 dataURL)은 길이+앞부분만 사용해 비교 비용 절감
-function stateSig() {
-  return JSON.stringify(state, (k, v) =>
-    (typeof v === 'string' && v.length > 256 ? 'S' + v.length + v.slice(0, 24) : v));
+// 파일 연결은 문서 수명에 속하고, 편집 이력에는 내용만 보관한다.
+function historyContent(snapshot) {
+  const { file, _thumbnail, ...content } = snapshot;
+  return content;
 }
-function pushHist() {
+// 이미지 전체 문자열을 키로 비교하므로 동일 길이/접두사의 이미지도 구별한다.
+// 텍스트는 생략 없이 비교하며, 큰 dataURL만 안정적인 식별자로 치환한다.
+const historyAssets = new Map();
+function stateSig(snapshot = state) {
+  return JSON.stringify(historyContent(snapshot), (key, value) => {
+    if ((key === 'dataUrl' || key === 'bgImageDataUrl') && typeof value === 'string') {
+      if (!historyAssets.has(value)) historyAssets.set(value, historyAssets.size + 1);
+      return { asset: historyAssets.get(value) };
+    }
+    return value;
+  });
+}
+function pushHist(snapshot = state) {
   if (histLock) return;
-  const sig = stateSig();
+  clearTimeout(histT);
+  const sig = stateSig(snapshot);
   if (histPos >= 0 && hist[histPos] && hist[histPos].sig === sig) return;
   hist = hist.slice(0, histPos + 1);
-  hist.push({ snap: structuredClone(state), sig });
+  hist.push({ snap: structuredClone(historyContent(snapshot)), sig });
   if (hist.length > HIST_MAX) hist.shift();
   histPos = hist.length - 1;
+  updateHistUI();
+}
+function resetHistory(initial = state) {
+  clearTimeout(histT);
+  hist = []; histPos = -1; histLock = false;
+  pushHist(initial);
+  if (initial !== state) pushHist();
   updateHistUI();
 }
 // 변경이 잦은 조작(드래그·슬라이더)은 0.4초 조용해진 뒤 한 번만 기록
@@ -5581,29 +5923,45 @@ function scheduleHist() {
   histT = setTimeout(pushHist, 400);
 }
 async function restoreHist(pos) {
-  if (pos < 0 || pos >= hist.length || pos === histPos) return;
+  if (histLock || pos < 0 || pos >= hist.length || pos === histPos) return;
   clearTimeout(histT);
   histLock = true;
-  histPos = pos;
-  const prevImg = state.image.dataUrl;
-  state = structuredClone(hist[pos].snap);
-  if (state.image.dataUrl !== prevImg) await loadImage(state.image.dataUrl);
-  bandSel = 0;
-  syncControls(); renderRows(); renderTexts(); render(); syncPanelTransformControls(); ensureAnim();
-  histLock = false;
   updateHistUI();
+  try {
+    const file = state.file;
+    const prevImg = state.image.dataUrl;
+    const prevBg = state.card.bgImageDataUrl;
+    state = { ...structuredClone(hist[pos].snap), file };
+    histPos = pos;
+    if (state.image.dataUrl !== prevImg) await loadImage(state.image.dataUrl);
+    if (state.card.bgImageDataUrl !== prevBg) await loadBackgroundImage(state.card.bgImageDataUrl);
+    if (!state.card.bgImageDataUrl) bgImageDragMode = false;
+    bandSel = 0; selected = null;
+    syncControls(); renderRows(); renderTexts(); render(performance.now()); syncPanelTransformControls(); ensureAnim();
+    trackChanges();
+  } finally {
+    histLock = false;
+    updateHistUI();
+  }
+}
+async function undoEdit() {
+  if (histLock) return;
+  // 0.4초 묶음 기록을 기다리지 않고 눌러도 마지막 입력부터 취소한다.
+  pushHist();
+  await restoreHist(histPos - 1);
 }
 function updateHistUI() {
   const u = document.getElementById('btn-undo');
   const r = document.getElementById('btn-redo');
-  if (u) u.disabled = histPos <= 0;
-  if (r) r.disabled = histPos >= hist.length - 1;
+  const pending = histPos >= 0 && hist[histPos].sig !== stateSig();
+  if (u) u.disabled = histLock || (histPos <= 0 && !pending);
+  if (r) r.disabled = histLock || pending || histPos >= hist.length - 1;
 }
 window.addEventListener('keydown', (e) => {
   if (!(e.ctrlKey || e.metaKey)) return;
   const tag = e.target && e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-  if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); restoreHist(histPos - 1); }
+  if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); undoEdit(); }
   else if (e.key === 'y' || e.key === 'Y') { e.preventDefault(); restoreHist(histPos + 1); }
 });
 
@@ -5648,10 +6006,10 @@ async function offerRecovery() {
   try { recovery = await window.api.readAutosave(); } catch (_) { return; }
   if (!recovery || !recovery.state) return;
   const when = recovery.savedAt ? new Date(recovery.savedAt).toLocaleString('ko-KR') : '이전 실행';
-  const restore = await confirmBox(`${when}에 남은 자동 복구본이 있습니다. 이어서 편집할까요?`);
+  const backupNotice = recovery.fromBackup ? '최신 복구본을 읽지 못해 이전 백업을 찾았습니다. ' : '';
+  const restore = await confirmBox(`${backupNotice}${when}에 남은 자동 복구본이 있습니다. 이어서 편집할까요?`);
   if (restore) {
     await applyLoadedState(recovery.state, recovery.state.file || null, { recovered: true });
-    hist = []; histPos = -1; pushHist();
     toast('자동 복구본을 불러왔습니다. 저장해 확정하세요.');
   } else {
     await window.api.clearAutosave();
@@ -5661,6 +6019,7 @@ async function offerRecovery() {
 
 // ---------------- 시작 ----------------
 async function initApp() {
+  await loadSpecIconSheets();
   arrangeEditorSections();
   initUiTheme();
   populatePatternSelects();
@@ -5678,7 +6037,8 @@ async function initApp() {
   updateConditionalControls();
   render(performance.now());
   syncPanelTransformControls();
-  pushHist(); // 초기 상태를 히스토리 기준점으로
+  resetHistory();
+  savedSignature = observedSignature = stateSig();
   await refreshList();
   initPreviewInfo();
   initZoom();

@@ -1,6 +1,6 @@
 {
   "name": "speccard",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "자짤 생성툴 - PC 사양 카드 생성기",
   "main": "main.js",
   "author": "정신안차려?",
@@ -8,7 +8,7 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.js",
-    "check": "node --check main.js && node --check preload.js && node --check specReader.js && node --check renderer/v2-core.js && node --check renderer/app.js && npm test",
+    "check": "node --check main.js && node --check preload.js && node --check specReader.js && node --check jsonStore.js && node --check backgroundLibrary.js && node --check renderer/background-library.js && node --check renderer/spec-icons.js && node --check renderer/v2-core.js && node --check renderer/app.js && npm test",
     "dist": "electron-builder --win portable"
   },
   "devDependencies": {
@@ -30,9 +30,14 @@
       "main.js",
       "preload.js",
       "specReader.js",
+      "jsonStore.js",
+      "backgroundLibrary.js",
       "renderer/**",
       "build/icon.png",
       "package.json"
+    ],
+    "extraResources": [
+      { "from": "assets/backgrounds", "to": "backgrounds", "filter": ["**/*.png"] }
     ],
     "win": {
       "target": [
@@ -41,7 +46,7 @@
       "icon": "build/icon.png"
     },
     "portable": {
-      "artifactName": "자짤생성툴v2.0-portable.exe"
+      "artifactName": "jjal-generator-v3.0-portable.exe"
     }
   }
 }
