@@ -84,7 +84,11 @@ npm run test:web
 
 검색용 이름은 **자짤생성툴**입니다. `<title>`, 화면의 `<h1>`, Open Graph 제목·사이트 이름, 홈페이지의 `WebSite` 구조화 데이터에 같은 이름을 사용합니다. 검색 결과의 실제 표시 이름과 반영 시점은 Google이 결정합니다.
 
-`sitemap.xml` 제출은 완료했습니다. 현재 Google의 최초 가져오기 상태를 확인 중이며, 제목 변경 배포 후 대표 페이지의 색인을 요청합니다.
+2026-09-13에 GitHub의 이름 변경 커밋 `55adc6d`로 자동 배포가 성공했고, 공개 페이지에서 제목·화면 이름·Open Graph 사이트 이름·`WebSite` 이름이 모두 `자짤생성툴`임을 확인했습니다.
+
+Search Console에서 홈페이지의 **색인 생성 완료**와 Googlebot 스마트폰의 페이지 가져오기 성공을 확인했습니다. 확인된 최근 크롤링은 2026-09-13 00:01:30(KST)로, 이름 변경 배포 전입니다. 변경된 이름의 재수집 요청은 Google의 일일 할당량 초과로 접수되지 않았습니다. 다음 확인 시 할당량이 초기화된 뒤 URL 검사에서 재수집을 요청하고 새 이름의 검색 표시를 확인합니다.
+
+`sitemap.xml`은 2026-09-13에 재제출을 완료했습니다. 공개 HTTP 응답은 200이고 XML 형식·대표 주소가 정상이지만, Google 보고서는 아직 **가져올 수 없음**입니다. 사이트맵 처리 성공은 미확인 상태이며 홈페이지 색인과 별도로 다음 확인 시 보고서를 점검합니다.
 
 ## 공식 문서
 
@@ -94,3 +98,4 @@ npm run test:web
 - [미리보기 배포의 검색 제외](https://developers.cloudflare.com/pages/configuration/preview-deployments/)
 - [Google 사이트 소유권 확인](https://support.google.com/webmasters/answer/9008080?hl=ko)
 - [Google 재크롤링 요청](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl)
+- [Google 검색의 사이트 이름](https://developers.google.com/search/docs/appearance/site-names)

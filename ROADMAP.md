@@ -4,7 +4,7 @@
 
 ## 현재 버전 — v3.21
 
-### 웹판 — 공개 운영 / 검색 등록 진행
+### 웹판 — 공개 운영 / Google 홈페이지 색인 확인
 
 - [x] 기존 renderer를 공유하는 웹판과 브라우저 파일·저장 연결부
 - [x] 사양 직접 입력·여러 줄 붙여넣기와 프로젝트 호환
@@ -17,8 +17,10 @@
 - [x] Pages 공개 배포 및 공개 HTTPS 주소에서 동작 확인
 - [x] 검색 제목·화면 이름·공유 제목·WebSite 이름을 `자짤생성툴`로 통일
 - [x] Google Search Console 소유권 확인
-- [x] 사이트맵 제출 (Google의 가져오기 상태 확인 중)
-- [ ] 대표 페이지 색인 요청
+- [x] Google 홈페이지 색인·Googlebot 페이지 가져오기 성공 확인
+- [x] 사이트맵 제출 및 2026-09-13 재제출
+- [ ] Google 사이트맵 가져오기 성공 확인 (현재 보고서는 가져오기 실패, 공개 XML 응답은 정상)
+- [ ] 변경된 이름의 재수집 요청 접수 확인 (2026-09-13 요청은 Google 일일 할당량 초과로 미접수)
 
 공개 주소는 [jjal-generator.pages.dev](https://jjal-generator.pages.dev/)입니다. 자동 배포는 GitHub `main`에 push할 때 실행합니다. 프로젝트 내부 `web/`에 소스를 두고 배경 원본은 유지합니다. 배포 설정과 현재 검증 범위는 `docs/WEB_DEPLOYMENT.md`, `docs/WEB_VALIDATION.md`에 정리합니다.
 
