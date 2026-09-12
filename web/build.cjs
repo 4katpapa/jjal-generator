@@ -28,6 +28,8 @@ function replaceOnce(source, needle, replacement) {
 
 function buildHtml(original, config) {
   let html = original;
+  const verificationTags = String(config.googleSiteVerification || '').split(/[\s,]+/).filter(Boolean)
+    .map((token) => `<meta name="google-site-verification" content="${escapeHtml(token)}" />`).join('\n  ');
   const siteData = config.siteUrl ? `<div itemscope itemtype="https://schema.org/WebSite"><meta itemprop="name" content="${escapeHtml(config.title)}" /><link itemprop="url" href="${escapeHtml(config.siteUrl)}/" /></div>` : '';
   html = replaceOnce(html, '<title>자짤 생성툴</title>', `<title>${escapeHtml(config.title)}</title>
   <meta name="description" content="${escapeHtml(config.description)}" />
@@ -40,7 +42,7 @@ function buildHtml(original, config) {
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="stylesheet" href="web.css" />
   ${config.siteUrl ? `<link rel="canonical" href="${escapeHtml(config.siteUrl)}/" /><meta property="og:url" content="${escapeHtml(config.siteUrl)}/" />` : ''}
-  ${config.googleSiteVerification ? `<meta name="google-site-verification" content="${escapeHtml(config.googleSiteVerification)}" />` : ''}`);
+  ${verificationTags}`);
   html = replaceOnce(html, "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';",
     "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';");
   html = replaceOnce(html, '<body>', `<body class="web-edition">\n  ${siteData}\n  <div id="web-startup" role="status"><p>${escapeHtml(config.title)}을 준비하고 있습니다…</p><button type="button">다시 시도</button></div>\n  <noscript><p class="web-noscript">${escapeHtml(config.title)}은 브라우저에서 실행됩니다. JavaScript를 켜면 카드 편집과 이미지 저장을 사용할 수 있습니다.</p></noscript>`);
@@ -49,9 +51,11 @@ function buildHtml(original, config) {
   html = replaceOnce(html, '<div class="project-state"', `<details class="web-guide">
         <summary>사용법 · 저장 안내</summary>
         <div><p>${escapeHtml(config.description)}</p>
+        ${config.siteUrl ? `<p>공식 웹 주소: <a href="${escapeHtml(config.siteUrl)}/">${escapeHtml(config.siteUrl.replace(/^https:\/\//, ''))}</a></p>` : ''}
         <p>CPU·그래픽카드·메모리와 모니터·키보드 등 주변기기를 입력하고, 배경 프리셋과 아이콘으로 나만의 자짤을 만드세요.</p>
         <ol><li>사양을 직접 입력하거나 여러 줄을 붙여넣습니다.</li><li>배경·색상·글자 외곽선·발광 효과를 조절합니다.</li><li>PNG 또는 WebP로 저장해 커뮤니티에서 사용합니다.</li></ol>
         <p><strong>저장</strong>은 현재 브라우저에 보관합니다. 사이트 데이터를 지우면 저장본이 사라질 수 있으므로, <strong>백업</strong>으로 .speccard 파일을 내려받아 보관하세요. 다른 PC에서는 <strong>파일 열기</strong>로 이어서 편집할 수 있습니다.</p>
+        <p>저장된 디자인은 사이트 주소별로 구분됩니다. <a href="https://jjal-generator.pages.dev/" target="_blank" rel="noopener noreferrer">이전 pages.dev 주소</a>에 저장한 디자인은 그곳에서 <strong>백업</strong>한 뒤, 새 주소에서 <strong>파일 열기</strong>로 가져오세요.</p>
         <p>개인 이미지와 입력한 사양은 브라우저에서 처리합니다. PC 부품 자동 감지는 <a href="https://github.com/4katpapa/jjal-generator/releases/latest" target="_blank" rel="noopener noreferrer">Windows 앱</a>에서 지원합니다.</p>
         <p>글꼴은 사용하는 기기에 따라 달라질 수 있습니다. 정밀한 배치는 PC 화면에서 편집하기 좋습니다.</p></div>
       </details>

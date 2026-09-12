@@ -8,7 +8,7 @@ const original = fs.readFileSync(path.resolve(__dirname, '../../renderer/index.h
 const config = require('../site.config.json');
 
 test('Web shell uses the shared editor with browser actions and crawlable instructions', () => {
-  const html = buildHtml(original, siteSettings(config, {}));
+  const html = buildHtml(original, siteSettings({ ...config, siteUrl: '' }, {}));
   assert.ok(html.includes('<title>자짤생성툴</title>'));
   assert.ok(html.includes('<h1>자짤생성툴</h1>'));
   assert.ok(html.includes('property="og:site_name" content="자짤생성툴"'));
