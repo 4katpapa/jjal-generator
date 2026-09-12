@@ -1,0 +1,43 @@
+.web-guide { margin: 8px 12px; border: 1px solid var(--line); border-radius: 7px; font-size: 12px; }
+.web-guide summary { cursor: pointer; padding: 8px 10px; color: var(--accent-strong); font-weight: 600; }
+.web-guide > div { padding: 0 12px 12px; line-height: 1.65; }
+.web-guide p + p, .web-guide ol { margin-top: 9px; }
+.web-guide ol { padding-left: 20px; }
+.web-guide a { color: var(--accent-strong); text-decoration: underline; }
+.web-storage-note { padding: 8px 10px; max-width: 290px; }
+.web-input-help { margin-bottom: 10px; }
+.web-noscript { position: fixed; inset: 0 0 auto; padding: 25px; z-index: 9999; color: #172033; background: #fff; }
+#web-startup { position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column; gap: 15px; justify-content: center; align-items: center; padding: 24px; text-align: center; background: var(--surface); color: var(--text); }
+#web-startup p { font-size: 16px; }
+.web-spec-dialog { margin: auto; padding: 24px; width: min(620px, calc(100vw - 28px)); max-height: calc(100dvh - 28px); overflow: auto; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface); color: var(--text); }
+.web-spec-dialog::backdrop { background: rgba(5, 13, 24, .62); }
+.web-spec-dialog h2 { margin-bottom: 10px; }
+.web-spec-dialog p { line-height: 1.6; margin-bottom: 12px; }
+.web-spec-dialog label { display: block; margin-bottom: 6px; }
+.web-spec-dialog textarea { width: 100%; padding: 12px; font: inherit; font-size: 15px; color: var(--text); background: var(--field); border: 1px solid var(--line-strong); border-radius: 6px; resize: vertical; }
+#web-spec-error { color: var(--danger); margin-top: 8px; }
+.web-edition .brand-copy h1 { font-size: 22px; letter-spacing: -.6px; }
+.web-edition .brand-copy .sub { letter-spacing: 0; }
+.web-edition #card { touch-action: none; }
+#web-download-note { position: fixed; z-index: 1200; right: 16px; bottom: 16px; width: min(360px, calc(100vw - 32px)); padding: 14px; border: 1px solid var(--accent); border-radius: 9px; background: var(--surface); color: var(--text); box-shadow: 0 6px 30px var(--shadow); }
+#web-download-note p { font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+#web-download-note a { display: inline-block; max-width: calc(100% - 62px); overflow-wrap: anywhere; color: var(--accent-strong); text-decoration: underline; font-weight: 600; }
+#web-download-note button { float: right; min-height: 28px; padding: 3px 9px; }
+@media (max-width: 720px) {
+  .web-edition #stage { min-height: 230px; flex-basis: 39dvh; }
+  .web-edition #topbar { gap: 5px; }
+  .web-edition .topbar-main { flex-wrap: wrap; gap: 4px; }
+  .web-edition .task-switcher label { font-size: 11px; }
+  .web-edition #topbar #design-name { width: 110px; min-width: 75px; }
+  .web-edition #stage-center { padding-block: 5px; }
+  .web-edition #canvas-wrap { max-width: min(100%, calc((39dvh - 115px) * var(--card-aspect, 2.833333))); }
+  .web-edition #card { max-height: calc(39dvh - 115px); }
+  .web-edition input[type="text"], .web-edition input[type="number"], .web-edition textarea { font-size: 16px; }
+  .web-edition .background-library { width: calc(100vw - 16px); height: calc(100dvh - 24px); padding: 12px; }
+  .web-edition .bgl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .web-edition .bgl-filters { flex-wrap: wrap; gap: 6px; }
+  .web-edition .bgl-filters label:nth-child(2) { width: min(150px, 42%); }
+  .web-edition .bgl-filters #bgl-count { width: 100%; padding-bottom: 0; }
+  .web-edition .bgl-footer { gap: 8px; }
+  .web-edition #bgl-apply { padding-inline: 12px; }
+}

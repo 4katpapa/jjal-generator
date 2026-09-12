@@ -3,6 +3,7 @@
 const V2 = window.SpecCardV2;
 if (!V2) throw new Error('v2-core.js가 app.js보다 먼저 로드되어야 합니다.');
 const Icons = window.SpecCardIcons;
+const IS_WEB = window.api.platform === 'web';
 
 let idSeq = 0;
 function makeId(prefix) {
@@ -587,7 +588,8 @@ function updateExportEstimate() {
   if (quality) quality.disabled = !animated;
   const qualityNote = document.getElementById('export-quality-note');
   if (qualityNote) qualityNote.textContent = options.format === 'webp' && !animated
-    ? '정지 WebP는 무손실로 저장합니다. 품질 조절은 움직이는 WebP에 적용됩니다.' : '';
+    ? (IS_WEB ? '정지 WebP는 최고 품질로 저장합니다. 정확한 픽셀 보존이 필요하면 PNG를 사용하세요.'
+      : '정지 WebP는 무손실로 저장합니다. 품질 조절은 움직이는 WebP에 적용됩니다.') : '';
   for (const id of ['export-duration', 'export-fps']) {
     const field = document.getElementById(id);
     if (field) field.disabled = options.format !== 'webp' || !hasMotionSource();
@@ -4389,7 +4391,7 @@ function recordColor(hex) {
   if (!hex) return;
   let a = loadRecent().filter((c) => c.toLowerCase() !== hex.toLowerCase());
   a.unshift(hex);
-  localStorage.setItem(RECENT_KEY, JSON.stringify(a.slice(0, 14)));
+  try { localStorage.setItem(RECENT_KEY, JSON.stringify(a.slice(0, 14))); } catch (_) { /* 최근 색 저장이 막혀도 편집은 계속한다. */ }
 }
 // 색을 대상 입력에 반영만 함 — '최근' 기록은 팝오버의 '적용' 버튼에서만
 function applyColorToTarget(hex) {
@@ -4636,7 +4638,8 @@ function loadSpecProfiles() {
   return {};
 }
 function saveSpecProfiles(profiles) {
-  localStorage.setItem(MY_SPEC_PROFILES_KEY, JSON.stringify(profiles));
+  try { localStorage.setItem(MY_SPEC_PROFILES_KEY, JSON.stringify(profiles)); return true; }
+  catch (_) { toast('사양 프로필을 저장하지 못했습니다. 프로젝트 파일로 백업해 주세요.'); return false; }
 }
 function loadMySpecs() {
   const profiles = loadSpecProfiles();
@@ -4664,7 +4667,9 @@ function chooseSpecProfile() {
       const del = document.createElement('button'); del.textContent = '🗑'; del.title = '프로필 삭제';
       del.onclick = async () => {
         if (!(await confirmBox(`'${name}' 사양 프로필을 삭제할까요?`))) return;
-        delete profiles[name]; saveSpecProfiles(profiles); row.remove(); updateMySpecsUI();
+        const next = { ...profiles }; delete next[name];
+        if (!saveSpecProfiles(next)) return;
+        delete profiles[name]; row.remove(); updateMySpecsUI();
       };
       row.append(open, del); list.appendChild(row);
     });
@@ -4678,7 +4683,7 @@ function chooseDetectedSpecs(rows) {
   return new Promise((resolve) => {
     const overlay = document.createElement('div'); overlay.className = 'modal-overlay';
     const box = document.createElement('div'); box.className = 'modal-card modal-wide';
-    const title = document.createElement('h3'); title.textContent = '자동 감지 결과 확인';
+    const title = document.createElement('h3'); title.textContent = IS_WEB ? '붙여넣은 사양 확인' : '자동 감지 결과 확인';
     const desc = document.createElement('p');
     desc.textContent = '가져올 항목만 선택하세요. 이미 직접 입력한 값은 선택해도 덮어쓰지 않습니다.';
     const list = document.createElement('div'); list.className = 'detect-list';
@@ -4774,6 +4779,7 @@ function bindControls() {
       $('btn-auto').disabled = true;
       $('btn-auto').textContent = '읽는 중…';
       const auto = await window.api.readSpecs();
+      if (!auto) return;
       if (!auto.length) { toast('감지할 수 있는 사양이 없습니다.'); return; }
       const selectedIndexes = await chooseDetectedSpecs(auto);
       if (!selectedIndexes) return;
@@ -4784,12 +4790,12 @@ function bindControls() {
       }
       state.rows = merged;
       renderRows(); render();
-      toast(`${selectedIndexes.length}개 자동 항목을 적용했습니다.`);
+      toast(`${selectedIndexes.length}개 ${IS_WEB ? '사양' : '자동 항목'}을 적용했습니다.`);
     } catch (e) {
       toast('읽기 실패: ' + e.message);
     } finally {
       $('btn-auto').disabled = false;
-      $('btn-auto').textContent = '⚙ 사양 자동 채우기';
+      $('btn-auto').textContent = IS_WEB ? '사양 붙여넣기' : '⚙ 사양 자동 채우기';
     }
   };
 
@@ -4805,7 +4811,7 @@ function bindControls() {
     const profiles = loadSpecProfiles();
     if (profiles[name] && !(await confirmBox(`'${name}' 프로필을 덮어쓸까요?`))) return;
     profiles[name] = state.rows.map(V2.normalizeRow);
-    saveSpecProfiles(profiles);
+    if (!saveSpecProfiles(profiles)) return;
     updateMySpecsUI();
     toast(`'${name}' 사양 프로필을 저장했습니다.`);
   };
@@ -5223,10 +5229,12 @@ function bindControls() {
   };
   const paste = $('btn-paste-image');
   if (paste) paste.onclick = async () => {
-    const url = await window.api.pasteImage();
-    if (!url) { toast('클립보드에 이미지가 없습니다.'); return; }
-    state.image.dataUrl = url; state.image.x = 0; state.image.y = 0;
-    await loadImage(url); render();
+    try {
+      const url = await window.api.pasteImage();
+      if (!url) { toast('클립보드에 이미지가 없습니다.'); return; }
+      state.image.dataUrl = url; state.image.x = 0; state.image.y = 0;
+      await loadImage(url); render();
+    } catch (error) { toast(`붙여넣기 실패: ${error.message}`); }
   };
   const copy = $('btn-copy-image');
   if (copy) copy.onclick = async () => {
@@ -5635,8 +5643,15 @@ function syncControls() {
 
 // ---------------- 저장 목록 ----------------
 async function refreshList() {
-  const list = await window.api.listDesigns();
   const ul = document.getElementById('design-list');
+  let list;
+  try { list = await window.api.listDesigns(); }
+  catch (error) {
+    const item = document.createElement('li');
+    item.textContent = error.message;
+    ul.replaceChildren(item);
+    return;
+  }
   ul.innerHTML = '';
   if (!list.length) { ul.innerHTML = '<li style="color:#777;border:none;background:none">저장된 디자인 없음</li>'; return; }
   for (const d of list) {
@@ -5652,7 +5667,8 @@ async function refreshList() {
     name.className = 'name'; name.textContent = d.name; name.title = '불러오기';
     name.onclick = async () => {
       if (dirty && !(await confirmBox('저장하지 않은 변경사항을 닫고 디자인을 불러올까요?'))) return;
-      await openDesign(d.file);
+      try { await openDesign(d.file); }
+      catch (error) { toast(`불러오기 실패: ${error.message}`); return; }
       const pop = document.getElementById('design-pop');
       if (pop) pop.classList.add('hidden');
     };
@@ -5660,9 +5676,10 @@ async function refreshList() {
     x.className = 'x'; x.textContent = '🗑';
     x.onclick = async (ev) => {
       ev.stopPropagation();
-      if (!(await confirmBox(`'${d.name}' 디자인을 휴지통으로 보낼까요?`))) return;
-      await window.api.deleteDesign(d.file);
-      refreshList();
+      if (!(await confirmBox(IS_WEB ? `'${d.name}' 디자인을 이 브라우저에서 삭제할까요? 필요한 디자인은 먼저 백업해 주세요.`
+        : `'${d.name}' 디자인을 휴지통으로 보낼까요?`))) return;
+      try { await window.api.deleteDesign(d.file); await refreshList(); }
+      catch (error) { toast(`삭제 실패: ${error.message}`); }
     };
     li.append(name, x);
     ul.appendChild(li);
@@ -5862,7 +5879,7 @@ async function exportWebp(options = {}) {
     if (progress) progress.value = 25;
     const still = await renderExportCanvas(options);
     const blob = await new Promise((resolve) => still.toBlob(resolve, 'image/webp', 1));
-    if (!blob) throw new Error('WebP 인코딩을 지원하지 않는 환경입니다.');
+    if (!blob || blob.type !== 'image/webp') throw new Error('이 브라우저는 WebP 저장을 지원하지 않습니다. PNG로 저장해 주세요.');
     if (cancelled()) throw new Error('cancelled');
     const bytes = new Uint8Array(await blob.arrayBuffer());
     if (progress) progress.value = 80;
@@ -5888,7 +5905,7 @@ async function exportWebp(options = {}) {
     if (!width) { width = frameCanvas.width; height = frameCanvas.height; }
     if (frameCanvas.width !== width || frameCanvas.height !== height) throw new Error('애니메이션 프레임 크기가 일치하지 않습니다.');
     const blob = await new Promise((resolve) => frameCanvas.toBlob(resolve, 'image/webp', quality));
-    if (!blob) throw new Error('WebP 프레임 인코딩에 실패했습니다.');
+    if (!blob || blob.type !== 'image/webp') throw new Error('이 브라우저는 WebP 저장을 지원하지 않습니다. PNG로 저장해 주세요.');
     const chunks = wpSubChunks(new Uint8Array(await blob.arrayBuffer()));
     if (!chunks.length) throw new Error('WebP 프레임 데이터를 읽지 못했습니다.');
     frames.push({ chunks, delay: tAt(i + 1) - tAt(i) });
@@ -6089,10 +6106,12 @@ function applyUiTheme(mode) {
   document.body.classList.toggle('dark', mode === 'dark');
   const btn = document.getElementById('btn-ui-theme');
   if (btn) btn.textContent = mode === 'dark' ? '☀' : '🌙';
-  localStorage.setItem(UI_THEME_KEY, mode);
+  try { localStorage.setItem(UI_THEME_KEY, mode); } catch (_) { /* 브라우저가 환경 설정 저장을 막아도 현재 테마는 적용한다. */ }
 }
 function initUiTheme() {
-  applyUiTheme(localStorage.getItem(UI_THEME_KEY) || 'light');
+  let mode = 'light';
+  try { mode = localStorage.getItem(UI_THEME_KEY) || mode; } catch (_) { /* 기본 테마 사용 */ }
+  applyUiTheme(mode);
   document.getElementById('btn-ui-theme').onclick = () => {
     applyUiTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
   };
@@ -6141,10 +6160,12 @@ async function initApp() {
   initZoom();
   setDirty(false);
   changeTracking = true;
+  window.api.ready?.();
   await offerRecovery();
 }
 
 initApp().catch((error) => {
   console.error(error);
   toast(`앱 초기화 실패: ${error.message}`);
+  window.api.initializationFailed?.(error);
 });
