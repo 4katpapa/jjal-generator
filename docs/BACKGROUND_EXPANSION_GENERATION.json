@@ -28,8 +28,8 @@
       "review": "passed",
       "review_note": "붉은 클래식 용 방패와 어두운 왼쪽 공간.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 붉은 용의 문장: 검은 표면 위에 떠 있는 붉은 방패.\nSubject: classic MSI dragon shield, scarlet rim light, matte black metal, restrained smoke.\nIdentity elements: 클래식 드래곤 방패.\nStyle/medium: 금속 3D 렌더.\nPalette: 블랙·스칼렛·실버. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-01_붉은_용의_문장.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-01_붉은_용의_문장.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/101_붉은_용의_문장.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/101_붉은_용의_문장.png",
       "reference_files": [
         "work/background-expansion/references/msi-shield.png"
       ],
@@ -53,8 +53,8 @@
       "review": "passed",
       "review_note": "작은 금색 MSI 명판과 차분한 검은 금속면.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 금빛 회로의 서명: 가장자리의 금속 명판과 가는 회로.\nSubject: MSI wordmark, brushed black metal, fine champagne gold circuit traces.\nIdentity elements: MSI 워드마크.\nStyle/medium: 고급 제품 매크로.\nPalette: 흑연·샴페인골드·브론즈. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-02_금빛_회로의_서명.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-02_금빛_회로의_서명.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/102_금빛_회로의_서명.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/102_금빛_회로의_서명.png",
       "reference_files": [],
       "tags": []
     },
@@ -74,8 +74,8 @@
       "review": "passed",
       "review_note": "은룡 부조와 밝은 얼음 풍경.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 서리 속 은룡: 반투명 얼음에 얕게 새긴 용의 흔적.\nSubject: MSI dragon motif, frosted glass relief, ice crystals at edges, pearl white.\nIdentity elements: 용 심볼.\nStyle/medium: 반투명 얼음 조각.\nPalette: 펄화이트·아이스블루·실버. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use the coiling dragon silhouette as the motif, without the red shield panel; adapt its material to the requested ice or ink.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-03_서리_속_은룡.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-03_서리_속_은룡.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/103_서리_속_은룡.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/103_서리_속_은룡.png",
       "reference_files": [
         "work/background-expansion/references/msi-shield.png"
       ],
@@ -97,8 +97,8 @@
       "review": "passed",
       "review_note": "기계 용과 MSI 표식, 오른쪽의 격납고 공간.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 기계 용의 격납고: 금속 비늘과 붉은 눈을 가진 용.\nSubject: mechanical dragon, layered metal scales, crimson eye, industrial hangar.\nIdentity elements: 용 모티프·작은 MSI 표시.\nStyle/medium: SF 기계 생물 콘셉트.\nPalette: 건메탈·크림슨·쿨그레이. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-04_기계_용의_격납고.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-04_기계_용의_격납고.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/104_기계_용의_격납고.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/104_기계_용의_격납고.png",
       "reference_files": [],
       "tags": []
     },
@@ -118,8 +118,8 @@
       "review": "passed",
       "review_note": "Lucky의 붉은 몸과 노란 날개, 벚꽃 소풍.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Lucky의 봄 소풍: 벚꽃 아래 앉아 있는 작은 붉은 용.\nSubject: MSI Lucky dragon, cherry blossom picnic, pastel spring, soft illustration.\nIdentity elements: Lucky.\nStyle/medium: 부드러운 캐릭터 일러스트.\nPalette: 크림·벚꽃핑크·민트. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images: Each attached image is an IDENTITY REFERENCE ONLY for the named brand logo or character. Create a NEW scene with the requested panoramic composition. Preserve the identifying shape, face, colors and proportions from the reference; do not copy its surrounding layout or text.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-05_Lucky의_봄_소풍.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-05_Lucky의_봄_소풍.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/105_Lucky의_봄_소풍.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/105_Lucky의_봄_소풍.png",
       "reference_files": [
         "work/background-expansion/references/lucky.png"
       ],
@@ -141,8 +141,8 @@
       "review": "passed",
       "review_note": "같은 Lucky 캐릭터의 게임패드와 심야 게임방.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Lucky의 심야 게임방: 책상 끝에서 패드를 든 Lucky.\nSubject: MSI Lucky gaming nook, controller, tiny desk, red cyan ambient lighting.\nIdentity elements: Lucky·MSI 표시.\nStyle/medium: 작은 디오라마.\nPalette: 네이비·레드·시안. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-06_Lucky의_심야_게임방.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-06_Lucky의_심야_게임방.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/106_Lucky의_심야_게임방.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/106_Lucky의_심야_게임방.png",
       "reference_files": [
         "work/background-expansion/references/lucky.png"
       ],
@@ -164,8 +164,8 @@
       "review": "passed",
       "review_note": "왼쪽 용 심볼과 MSI 글자, 미색 수묵 풍경.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 붉은 먹과 용: 종이 위에 흐르는 붓선과 용 실루엣.\nSubject: ink dragon silhouette, vermilion brush accents, warm rice paper, minimal.\nIdentity elements: 용 심볼·작은 MSI 표시.\nStyle/medium: 수묵과 붉은 잉크.\nPalette: 미색·먹색·주홍. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use the coiling dragon silhouette as the motif, without the red shield panel; adapt its material to the requested ice or ink.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-07_붉은_먹과_용.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-07_붉은_먹과_용.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/107_붉은_먹과_용.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/107_붉은_먹과_용.png",
       "reference_files": [
         "work/background-expansion/references/msi-shield.png"
       ],
@@ -187,8 +187,8 @@
       "review": "passed",
       "review_note": "구리빛 용 비늘과 사구, 오른쪽 MSI 표식.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 용 비늘의 노을: 낮은 사구와 비늘 같은 겹침을 연결.\nSubject: dragon-scale dunes, copper sunset, layered sculptural sand, burgundy haze.\nIdentity elements: 용 비늘 모티프·MSI 워드마크.\nStyle/medium: 추상 풍경 일러스트.\nPalette: 구리·버건디·샌드. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/11_브랜드_MSI/MSI-08_용_비늘의_노을.png",
-      "original_file": "work/background-expansion/originals/11_브랜드_MSI/MSI-08_용_비늘의_노을.png",
+      "file": "assets/backgrounds/11_브랜드_MSI/108_용_비늘의_노을.png",
+      "original_file": "work/background-expansion/originals/11_브랜드_MSI/108_용_비늘의_노을.png",
       "reference_files": [],
       "tags": []
     },
@@ -208,8 +208,8 @@
       "review": "passed",
       "review_note": "주황색 매 모티프와 AORUS 로고, 카본 표면.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 주황빛 매의 문장: 카본 위에 빛나는 날카로운 매 심볼.\nSubject: AORUS falcon emblem, orange edge lighting, black carbon, angular metal.\nIdentity elements: AORUS Falcon.\nStyle/medium: 카본·금속 3D 렌더.\nPalette: 블랙·오렌지·건메탈. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use ONLY the white angular AORUS Falcon emblem visible at the TOP LEFT of the product box in the reference, with the AORUS wordmark if appropriate. Do NOT include CHIBI, a robot, a figurine, or a product box in this scene.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-01_주황빛_매의_문장.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-01_주황빛_매의_문장.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/109_주황빛_매의_문장.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/109_주황빛_매의_문장.png",
       "reference_files": [
         "work/background-expansion/references/chibi-figure.png"
       ],
@@ -231,8 +231,8 @@
       "review": "passed",
       "review_note": "냉각핀을 연상시키는 금속 깃털과 AORUS 명판.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 금속 날개의 궤적: 깃털 모양 냉각핀과 발광 선.\nSubject: falcon wing heatsink fins, titanium feathers, amber light trails.\nIdentity elements: Falcon 모티프·AORUS 표시.\nStyle/medium: 하드웨어 추상 매크로.\nPalette: 차콜·앰버·티타늄. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use ONLY the white angular AORUS Falcon emblem visible at the TOP LEFT of the product box in the reference, with the AORUS wordmark if appropriate. Do NOT include CHIBI, a robot, a figurine, or a product box in this scene.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-02_금속_날개의_궤적.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-02_금속_날개의_궤적.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/110_금속_날개의_궤적.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/110_금속_날개의_궤적.png",
       "reference_files": [
         "work/background-expansion/references/chibi-figure.png"
       ],
@@ -254,8 +254,8 @@
       "review": "passed",
       "review_note": "AERO 글자와 은백색 유리 갤러리.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: AERO 화이트 갤러리: 은백색 판재와 유리 곡면.\nSubject: GIGABYTE AERO, silver white gallery, glass arcs, quiet iridescent accents.\nIdentity elements: AERO 워드마크.\nStyle/medium: 미니멀 제품 공간.\nPalette: 실버·오프화이트·옅은 라일락. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-03_AERO_화이트_갤러리.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-03_AERO_화이트_갤러리.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/111_AERO_화이트_갤러리.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/111_AERO_화이트_갤러리.png",
       "reference_files": [],
       "tags": []
     },
@@ -275,8 +275,8 @@
       "review": "passed",
       "review_note": "GIGABYTE 철자가 보이는 기판 도시, 오른쪽 어두운 공간.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 푸른 기판 도시: 회로가 야간 도시의 길처럼 이어짐.\nSubject: GIGABYTE wordmark, blue circuit-board city, isometric towers, quiet atmosphere.\nIdentity elements: GIGABYTE 워드마크.\nStyle/medium: 아이소메트릭 기술 도시.\nPalette: 인디고·전기블루·시안. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-04_푸른_기판_도시.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-04_푸른_기판_도시.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/112_푸른_기판_도시.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/112_푸른_기판_도시.png",
       "reference_files": [],
       "tags": []
     },
@@ -296,8 +296,8 @@
       "review": "passed",
       "review_note": "CHIBI의 검은 부리와 파란 눈, 미니 키보드.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: CHIBI의 작은 작업대: 매 캐릭터와 미니 키보드.\nSubject: AORUS CHIBI little falcon, miniature keyboard workbench, pastel desk.\nIdentity elements: CHIBI.\nStyle/medium: 귀여운 미니어처 일러스트.\nPalette: 크림·살구·스카이블루. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. The character is the small AORUS CHIBI falcon robot: black angular beak helmet, two tall swept horns, cyan eyes, silver layered wing feathers, claw feet, cyan chest emblem. Use only this character identity; no product box.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-05_CHIBI의_작은_작업대.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-05_CHIBI의_작은_작업대.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/113_CHIBI의_작은_작업대.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/113_CHIBI의_작은_작업대.png",
       "reference_files": [
         "work/background-expansion/references/chibi-figure.png"
       ],
@@ -319,8 +319,8 @@
       "review": "passed",
       "review_note": "동일한 CHIBI 캐릭터와 우주복, 우주 유영.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: CHIBI의 우주 유영: 작은 우주복과 먼 행성.\nSubject: AORUS CHIBI astronaut, tiny spacesuit, distant planet, sparse stars.\nIdentity elements: CHIBI·AORUS 표시.\nStyle/medium: 캐릭터 SF 일러스트.\nPalette: 미드나잇블루·앰버·보라. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. The character is the small AORUS CHIBI falcon robot: black angular beak helmet, two tall swept horns, cyan eyes, silver layered wing feathers, claw feet, cyan chest emblem. Use only this character identity; no product box.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-06_CHIBI의_우주_유영.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-06_CHIBI의_우주_유영.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/114_CHIBI의_우주_유영.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/114_CHIBI의_우주_유영.png",
       "reference_files": [
         "work/background-expansion/references/chibi-figure.png"
       ],
@@ -342,8 +342,8 @@
       "review": "passed",
       "review_note": "흰 매와 AORUS 로고, 종이층 설산 풍경.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 설산 위의 매: 흰 산맥 위 작은 매 심볼.\nSubject: AORUS falcon, white mountain layers, icy paper-cut landscape, mint shadows.\nIdentity elements: Falcon·화이트 제품군 모티프.\nStyle/medium: 종이층 풍경.\nPalette: 아이스화이트·청회색·민트. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use ONLY the white angular AORUS Falcon emblem visible at the TOP LEFT of the product box in the reference, with the AORUS wordmark if appropriate. Do NOT include CHIBI, a robot, a figurine, or a product box in this scene.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-07_설산_위의_매.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-07_설산_위의_매.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/115_설산_위의_매.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/115_설산_위의_매.png",
       "reference_files": [
         "work/background-expansion/references/chibi-figure.png"
       ],
@@ -365,8 +365,8 @@
       "review": "passed",
       "review_note": "날아오르는 매와 AORUS 로고, 금빛 구름.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 황금 하늘의 비상: 날개 실루엣과 잔잔한 구름 바다.\nSubject: falcon silhouette in flight, golden cloud sea, copper dusk, broad calm sky.\nIdentity elements: Falcon 모티프·AORUS 표시.\nStyle/medium: 시네마틱 풍경.\nPalette: 오커·코퍼·더스티블루. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use ONLY the white angular AORUS Falcon emblem visible at the TOP LEFT of the product box in the reference, with the AORUS wordmark if appropriate. Do NOT include CHIBI, a robot, a figurine, or a product box in this scene.",
-      "file": "assets/backgrounds/12_브랜드_GIGABYTE/GIGABYTE-08_황금_하늘의_비상.png",
-      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/GIGABYTE-08_황금_하늘의_비상.png",
+      "file": "assets/backgrounds/12_브랜드_GIGABYTE/116_황금_하늘의_비상.png",
+      "original_file": "work/background-expansion/originals/12_브랜드_GIGABYTE/116_황금_하늘의_비상.png",
       "reference_files": [
         "work/background-expansion/references/chibi-figure.png"
       ],
@@ -388,8 +388,8 @@
       "review": "passed",
       "review_note": "오른쪽 ROG 눈 심볼과 네온 유리.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 네온 Fearless Eye: 유리 위에 떠오르는 ROG 눈.\nSubject: ROG Fearless Eye, floating neon glass, magenta cyan glow, black backdrop.\nIdentity elements: ROG Fearless Eye.\nStyle/medium: 네온 유리 3D 렌더.\nPalette: 블랙·마젠타·시안. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images: Each attached image is an IDENTITY REFERENCE ONLY for the named brand logo or character. Create a NEW scene with the requested panoramic composition. Preserve the identifying shape, face, colors and proportions from the reference; do not copy its surrounding layout or text.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-01_네온_Fearless_Eye.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-01_네온_Fearless_Eye.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/117_네온_Fearless_Eye.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/117_네온_Fearless_Eye.png",
       "reference_files": [
         "work/background-expansion/references/rog.jpg"
       ],
@@ -411,8 +411,8 @@
       "review": "passed",
       "review_note": "TUF GAMING 표식과 노란 산업 격납고.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: TUF 정비 격납고: 두꺼운 금속 패널과 작은 경고색.\nSubject: TUF Gaming emblem, reinforced metal panels, industrial hangar, amber accents.\nIdentity elements: TUF Gaming 심볼.\nStyle/medium: 산업 공간 콘셉트.\nPalette: 흑연·카키·앰버. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-02_TUF_정비_격납고.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-02_TUF_정비_격납고.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/118_TUF_정비_격납고.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/118_TUF_정비_격납고.png",
       "reference_files": [],
       "tags": []
     },
@@ -432,8 +432,8 @@
       "review": "passed",
       "review_note": "ASUS 철자와 밝은 곡면 공간.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: ASUS 푸른 백색 공간: 부드러운 수평선과 은색 로고.\nSubject: ASUS wordmark, airy white architecture, silver surfaces, pale blue horizon.\nIdentity elements: ASUS 워드마크.\nStyle/medium: 미니멀 건축 렌더.\nPalette: 화이트·페일블루·실버. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-03_ASUS_푸른_백색_공간.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-03_ASUS_푸른_백색_공간.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/119_ASUS_푸른_백색_공간.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/119_ASUS_푸른_백색_공간.png",
       "reference_files": [],
       "tags": []
     },
@@ -453,8 +453,8 @@
       "review": "passed",
       "review_note": "왼쪽 ROG 심볼과 비 오는 도시.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: ROG 빗속의 도시: 건물 끝의 눈 모양 홀로그램.\nSubject: ROG holographic eye, rainy futuristic skyline, red violet reflections.\nIdentity elements: ROG Fearless Eye.\nStyle/medium: 야간 도시 일러스트.\nPalette: 남청·레드·바이올렛. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-04_ROG_빗속의_도시.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-04_ROG_빗속의_도시.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/120_ROG_빗속의_도시.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/120_ROG_빗속의_도시.png",
       "reference_files": [
         "work/background-expansion/references/rog.jpg"
       ],
@@ -476,8 +476,8 @@
       "review": "passed",
       "review_note": "OMNI의 기계 쥐 외형과 빨간 의상, 스케이트보드.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: OMNI 스케이트 파크: 보드를 든 OMNI와 둥근 램프.\nSubject: ROG OMNI mechanical mouse, skateboard, pastel skatepark, playful pose.\nIdentity elements: OMNI.\nStyle/medium: 파스텔 캐릭터 일러스트.\nPalette: 크림·라벤더·코랄. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images: Each attached image is an IDENTITY REFERENCE ONLY for the named brand logo or character. Create a NEW scene with the requested panoramic composition. Preserve the identifying shape, face, colors and proportions from the reference; do not copy its surrounding layout or text.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-05_OMNI_스케이트_파크.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-05_OMNI_스케이트_파크.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/121_OMNI_스케이트_파크.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/121_OMNI_스케이트_파크.png",
       "reference_files": [
         "work/background-expansion/references/omni.webp"
       ],
@@ -499,8 +499,8 @@
       "review": "passed",
       "review_note": "동일한 OMNI 외형과 전자부품 정비 장면.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: OMNI의 정비 시간: 공구 옆에 앉은 작은 로봇.\nSubject: ROG OMNI workshop, small tools, sci-fi maintenance bay, cyan red lighting.\nIdentity elements: OMNI·작은 ROG 표시.\nStyle/medium: SF 작업실 디오라마.\nPalette: 딥퍼플·시안·레드. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Retain OMNI's large mechanical mouse ears, round goggle eyes with pixel pupils and red jacket. Pose him working with small electronic parts. Do not include the missile from the reference.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-06_OMNI의_정비_시간.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-06_OMNI의_정비_시간.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/122_OMNI의_정비_시간.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/122_OMNI의_정비_시간.png",
       "reference_files": [
         "work/background-expansion/references/omni.webp"
       ],
@@ -522,8 +522,8 @@
       "review": "passed",
       "review_note": "왼쪽 ROG 눈 심볼의 진주빛 유리 표현.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 진주빛 ROG 프리즘: 흰 유리에 새긴 눈과 옅은 무지개.\nSubject: ROG eye etched in pearl glass, restrained pastel refraction, white prism.\nIdentity elements: ROG Fearless Eye.\nStyle/medium: 유리·프리즘 추상.\nPalette: 펄화이트·페일핑크·아쿠아. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-07_진주빛_ROG_프리즘.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-07_진주빛_ROG_프리즘.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/123_진주빛_ROG_프리즘.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/123_진주빛_ROG_프리즘.png",
       "reference_files": [
         "work/background-expansion/references/rog.jpg"
       ],
@@ -545,8 +545,8 @@
       "review": "passed",
       "review_note": "오른쪽 ROG 눈 심볼과 종이·벽면 질감.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: ROG 거리의 색면: 가장자리에 겹친 눈 심볼과 찢긴 종이.\nSubject: ROG eye street-art collage, torn paper edges, cobalt red shapes, quiet center.\nIdentity elements: ROG Fearless Eye.\nStyle/medium: 스트리트 콜라주.\nPalette: 웜그레이·코발트·레드. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/13_브랜드_ASUS/ASUS-08_ROG_거리의_색면.png",
-      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/ASUS-08_ROG_거리의_색면.png",
+      "file": "assets/backgrounds/13_브랜드_ASUS/124_ROG_거리의_색면.png",
+      "original_file": "work/background-expansion/originals/13_브랜드_ASUS/124_ROG_거리의_색면.png",
       "reference_files": [
         "work/background-expansion/references/rog.jpg"
       ],
@@ -568,8 +568,8 @@
       "review": "passed",
       "review_note": "AMD RYZEN 글자와 주황색 일식.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Ryzen 일식: 원형 심볼을 닮은 주황빛 코로나.\nSubject: AMD Ryzen circular motif, solar eclipse corona, burnt orange, dark space.\nIdentity elements: Ryzen 원형 모티프·작은 Ryzen 표시.\nStyle/medium: 우주 추상 일러스트.\nPalette: 블랙·번트오렌지·앰버. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images: Each attached image is an IDENTITY REFERENCE ONLY for the named brand logo or character. Create a NEW scene with the requested panoramic composition. Preserve the identifying shape, face, colors and proportions from the reference; do not copy its surrounding layout or text.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-01_Ryzen_일식.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-01_Ryzen_일식.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/125_Ryzen_일식.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/125_Ryzen_일식.png",
       "reference_files": [
         "work/background-expansion/references/ryzen.jpg"
       ],
@@ -591,8 +591,8 @@
       "review": "passed",
       "review_note": "RADEON 철자와 그래픽카드, 붉은 빛의 터널.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Radeon 빛의 터널: 적색 빛줄기와 낮은 GPU 실루엣.\nSubject: Radeon wordmark, crimson light tunnel, low GPU silhouette, dark metal.\nIdentity elements: Radeon 워드마크.\nStyle/medium: SF 하드웨어 렌더.\nPalette: 차콜·크림슨·건메탈. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-02_Radeon_빛의_터널.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-02_Radeon_빛의_터널.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/126_Radeon_빛의_터널.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/126_Radeon_빛의_터널.png",
       "reference_files": [],
       "tags": []
     },
@@ -612,8 +612,8 @@
       "review": "passed",
       "review_note": "오른쪽 AMD Arrow 모티프와 밝은 세라믹.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 백색 Arrow 조각: 세라믹 표면의 화살표 심볼.\nSubject: AMD Arrow logo, white ceramic relief, soft apricot bounce light.\nIdentity elements: AMD Arrow.\nStyle/medium: 미니멀 세라믹 부조.\nPalette: 화이트·웜그레이·옅은 살구. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Reference shows the real AMD Arrow and RYZEN lettering; use only the identity elements requested for this particular scene, with no chip photography copied.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-03_백색_Arrow_조각.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-03_백색_Arrow_조각.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/127_백색_Arrow_조각.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/127_백색_Arrow_조각.png",
       "reference_files": [
         "work/background-expansion/references/ryzen.jpg"
       ],
@@ -635,8 +635,8 @@
       "review": "passed",
       "review_note": "AMD RYZEN 칩과 연결된 공중 도시.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 칩렛의 공중 도시: 연결된 작은 칩 섬과 빛의 다리.\nSubject: AMD chiplet-inspired floating islands, copper links, burgundy computational city.\nIdentity elements: 칩렛 개념·AMD 표시.\nStyle/medium: 반도체 기반 SF 풍경.\nPalette: 버건디·코퍼·블랙. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Reference shows the real AMD Arrow and RYZEN lettering; use only the identity elements requested for this particular scene, with no chip photography copied.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-04_칩렛의_공중_도시.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-04_칩렛의_공중_도시.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/128_칩렛의_공중_도시.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/128_칩렛의_공중_도시.png",
       "reference_files": [
         "work/background-expansion/references/ryzen.jpg"
       ],
@@ -658,8 +658,8 @@
       "review": "passed",
       "review_note": "Ruby의 붉은 머리·갑옷과 겨울 외투, 설원.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Ruby의 설원: 붉은 방한복 인물과 눈 덮인 산.\nSubject: AMD Ruby Whiteout homage, red winter suit, snowy mountains, quiet snowfall.\nIdentity elements: 과거 Ruby·Whiteout 모티프.\nStyle/medium: 캐릭터 풍경 일러스트.\nPalette: 설백·아이스블루·레드. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use the adult red-haired Ruby character shown in the reference, with her distinctive red and charcoal futuristic armor. One character only, no turnaround sheet, no ART BULLY or ILLFONIC labels. For the snow scene add practical winter outerwear without changing her face or red hair.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-05_Ruby의_설원.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-05_Ruby의_설원.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/129_Ruby의_설원.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/129_Ruby의_설원.png",
       "reference_files": [
         "work/background-expansion/references/ruby.jpg"
       ],
@@ -683,8 +683,8 @@
       "review": "passed",
       "review_note": "같은 Ruby 캐릭터와 RADEON 표식, 야간 옥상.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Ruby의 야간 옥상: 붉은 옷의 인물과 먼 도시 불빛.\nSubject: AMD Ruby demo character, rooftop at night, ruby red outfit, distant teal city.\nIdentity elements: 과거 Ruby·작은 Radeon 표시.\nStyle/medium: 복고 SF 캐릭터 아트.\nPalette: 네이비·루비레드·청록. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Use the adult red-haired Ruby character shown in the reference, with her distinctive red and charcoal futuristic armor. One character only, no turnaround sheet, no ART BULLY or ILLFONIC labels. For the snow scene add practical winter outerwear without changing her face or red hair.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-06_Ruby의_야간_옥상.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-06_Ruby의_야간_옥상.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/130_Ruby의_야간_옥상.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/130_Ruby의_야간_옥상.png",
       "reference_files": [
         "work/background-expansion/references/ruby.jpg"
       ],
@@ -708,8 +708,8 @@
       "review": "passed",
       "review_note": "AMD RYZEN 글자와 주황색 붓원, 미색 종이.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Ryzen 주황빛 붓원: 종이 위에 그린 원형과 옅은 먹선.\nSubject: Ryzen circular motif, orange ink brush ring, ivory paper, restrained charcoal.\nIdentity elements: Ryzen 원형 모티프.\nStyle/medium: 붓·종이 추상화.\nPalette: 아이보리·오렌지·먹색. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Reference shows the real AMD Arrow and RYZEN lettering; use only the identity elements requested for this particular scene, with no chip photography copied.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-07_Ryzen_주황빛_붓원.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-07_Ryzen_주황빛_붓원.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/131_Ryzen_주황빛_붓원.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/131_Ryzen_주황빛_붓원.png",
       "reference_files": [
         "work/background-expansion/references/ryzen.jpg"
       ],
@@ -731,8 +731,8 @@
       "review": "passed",
       "review_note": "AMD Arrow 조각과 웨이퍼 무지개 반사.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 실리콘의 스펙트럼: 웨이퍼 표면의 얕은 무지개.\nSubject: AMD Arrow detail, iridescent silicon wafer, champagne terracotta violet.\nIdentity elements: AMD Arrow·웨이퍼 모티프.\nStyle/medium: 반도체 매크로 추상.\nPalette: 샴페인·테라코타·보라. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Reference shows the real AMD Arrow and RYZEN lettering; use only the identity elements requested for this particular scene, with no chip photography copied.",
-      "file": "assets/backgrounds/14_브랜드_AMD/AMD-08_실리콘의_스펙트럼.png",
-      "original_file": "work/background-expansion/originals/14_브랜드_AMD/AMD-08_실리콘의_스펙트럼.png",
+      "file": "assets/backgrounds/14_브랜드_AMD/132_실리콘의_스펙트럼.png",
+      "original_file": "work/background-expansion/originals/14_브랜드_AMD/132_실리콘의_스펙트럼.png",
       "reference_files": [
         "work/background-expansion/references/ryzen.jpg"
       ],
@@ -754,8 +754,8 @@
       "review": "passed",
       "review_note": "Intel 글자와 오른쪽 파란 칩.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 푸른 코어의 빛: 정밀한 칩 표면과 작은 Intel 로고.\nSubject: Intel wordmark, luminous blue silicon core, fine etched chip, cyan rim light.\nIdentity elements: Intel 워드마크·칩 모티프.\nStyle/medium: 반도체 매크로 렌더.\nPalette: 네이비·코발트·시안. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-01_푸른_코어의_빛.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-01_푸른_코어의_빛.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/133_푸른_코어의_빛.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/133_푸른_코어의_빛.png",
       "reference_files": [],
       "tags": []
     },
@@ -775,8 +775,8 @@
       "review": "passed",
       "review_note": "Intel ARC 철자와 청보라 우주 관문.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Arc 성운의 문: 청보라 공간에 열린 빛의 아치.\nSubject: Intel Arc, blue violet nebula portal, soft cosmic arch, quiet negative space.\nIdentity elements: Intel Arc 워드마크.\nStyle/medium: 우주 SF 일러스트.\nPalette: 딥퍼플·블루·마젠타. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-02_Arc_성운의_문.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-02_Arc_성운의_문.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/134_Arc_성운의_문.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/134_Arc_성운의_문.png",
       "reference_files": [],
       "tags": []
     },
@@ -796,8 +796,8 @@
       "review": "passed",
       "review_note": "Intel Core 배지와 밝은 사각 타일.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Core 세라믹 타일: 층을 이룬 흰 사각판과 파란 배지.\nSubject: Intel Core badge, layered ceramic square tiles, white aqua, clean shadows.\nIdentity elements: Core 배지.\nStyle/medium: 부드러운 제품 3D.\nPalette: 화이트·아쿠아·페일블루. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-03_Core_세라믹_타일.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-03_Core_세라믹_타일.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/135_Core_세라믹_타일.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/135_Core_세라믹_타일.png",
       "reference_files": [],
       "tags": []
     },
@@ -817,8 +817,8 @@
       "review": "passed",
       "review_note": "왼쪽 Intel 표식과 웨이퍼 반사.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 웨이퍼 위의 도시광: 원형 표면을 타고 번지는 청보라 반사.\nSubject: Intel silicon wafer, blue violet radial reflections, precision grid at edge.\nIdentity elements: Intel 표시·웨이퍼.\nStyle/medium: 기술 매크로 사진풍.\nPalette: 잉크블루·바이올렛·실버. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-04_웨이퍼_위의_도시광.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-04_웨이퍼_위의_도시광.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/136_웨이퍼_위의_도시광.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/136_웨이퍼_위의_도시광.png",
       "reference_files": [],
       "tags": []
     },
@@ -838,8 +838,8 @@
       "review": "passed",
       "review_note": "BunnyPeople의 방진복·검은 바이저, 작은 클린룸.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: BunnyPeople 클린룸: 방진복 작업자와 작은 웨이퍼.\nSubject: Intel BunnyPeople, cleanroom suits, miniature wafer lab, white sky blue.\nIdentity elements: 과거 BunnyPeople.\nStyle/medium: 미니어처 캐릭터 공간.\nPalette: 화이트·스카이블루·옅은 노랑. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Retain the hooded cleanroom suit silhouette, blank black face visor and silver trim/gloves; the party version can use blue, yellow and magenta suit variants. No human face inside the visor.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-05_BunnyPeople_클린룸.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-05_BunnyPeople_클린룸.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/137_BunnyPeople_클린룸.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/137_BunnyPeople_클린룸.png",
       "reference_files": [
         "work/background-expansion/references/bunnypeople.jpg"
       ],
@@ -863,8 +863,8 @@
       "review": "passed",
       "review_note": "같은 BunnyPeople 외형의 색색 방진복, 복고 댄스 장면.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: BunnyPeople의 복고 파티: 색색의 방진복과 춤추는 포즈.\nSubject: Intel BunnyPeople dancing, colorful cleanroom suits, retro 1990s party lighting.\nIdentity elements: 과거 BunnyPeople.\nStyle/medium: 1990년대 광고풍 3D.\nPalette: 남청·보라·옐로·블루. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands. Retain the hooded cleanroom suit silhouette, blank black face visor and silver trim/gloves; the party version can use blue, yellow and magenta suit variants. No human face inside the visor.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-06_BunnyPeople의_복고_파티.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-06_BunnyPeople의_복고_파티.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/138_BunnyPeople의_복고_파티.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/138_BunnyPeople의_복고_파티.png",
       "reference_files": [
         "work/background-expansion/references/bunnypeople.jpg"
       ],
@@ -888,8 +888,8 @@
       "review": "passed",
       "review_note": "왼쪽 Intel 글자와 투명한 푸른 유리.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 푸른 유리의 정원: 작은 로고와 겹친 투명 판재.\nSubject: Intel wordmark, layered blue glass garden, frosted transparent planes, mint.\nIdentity elements: Intel 워드마크.\nStyle/medium: 유리 조각·미니멀 정물.\nPalette: 아이스블루·민트·화이트. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-07_푸른_유리의_정원.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-07_푸른_유리의_정원.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/139_푸른_유리의_정원.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/139_푸른_유리의_정원.png",
       "reference_files": [],
       "tags": []
     },
@@ -909,8 +909,8 @@
       "review": "passed",
       "review_note": "클래식 Intel Inside 배지와 베이지 PC 소재.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Intel Inside의 기억: 오래된 배지와 베이지 PC 재질.\nSubject: classic Intel Inside badge, beige PC plastic, brushed silver, nostalgic texture.\nIdentity elements: 클래식 Intel Inside 배지.\nStyle/medium: 1990년대 소재 콜라주.\nPalette: 베이지·블루·실버. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/15_브랜드_Intel/INTEL-08_Intel_Inside의_기억.png",
-      "original_file": "work/background-expansion/originals/15_브랜드_Intel/INTEL-08_Intel_Inside의_기억.png",
+      "file": "assets/backgrounds/15_브랜드_Intel/140_Intel_Inside의_기억.png",
+      "original_file": "work/background-expansion/originals/15_브랜드_Intel/140_Intel_Inside의_기억.png",
       "reference_files": [],
       "tags": [
         "archive"
@@ -932,8 +932,8 @@
       "review": "passed",
       "review_note": "오른쪽 NVIDIA 눈 모티프의 초록 유리 표현과 어두운 왼쪽 공간.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 에메랄드 Eye: 검은 공간에 떠 있는 초록 유리 심볼.\nSubject: NVIDIA eye emblem, emerald glass, lime rim light, matte black atmosphere.\nIdentity elements: NVIDIA 눈 심볼.\nStyle/medium: 유리·빛 3D 렌더.\nPalette: 블랙·라임·에메랄드. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images: Each attached image is an IDENTITY REFERENCE ONLY for the named brand logo or character. Create a NEW scene with the requested panoramic composition. Preserve the identifying shape, face, colors and proportions from the reference; do not copy its surrounding layout or text.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-01_에메랄드_Eye.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-01_에메랄드_Eye.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/141_에메랄드_Eye.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/141_에메랄드_Eye.png",
       "reference_files": [
         "work/background-expansion/references/nvidia.png"
       ],
@@ -955,8 +955,8 @@
       "review": "passed",
       "review_note": "RTX 미러룸, 우측 NVIDIA 심볼과 반사광, 중앙 사양 영역은 어둡고 비교적 잔잔함.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: RTX 반사의 방: 거울과 프리즘 사이를 지나는 광선.\nSubject: GeForce RTX, ray-traced mirror room, prism caustics, green violet accents.\nIdentity elements: GeForce RTX 워드마크.\nStyle/medium: 광선·반사 실험 공간.\nPalette: 차콜·그린·바이올렛. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-02_RTX_반사의_방.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-02_RTX_반사의_방.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/142_RTX_반사의_방.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/142_RTX_반사의_방.png",
       "reference_files": [],
       "tags": []
     },
@@ -976,8 +976,8 @@
       "review": "passed",
       "review_note": "백색 표면의 Eye 부조가 우측에 있고 중앙 사양 영역은 밝고 낮은 대비로 유지됨.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 백색 Eye 부조: 무광 흰 표면에 얕게 새긴 심볼.\nSubject: NVIDIA eye embossed in white ceramic, pale mint shadows, matte surface.\nIdentity elements: NVIDIA 눈 심볼.\nStyle/medium: 미니멀 세라믹 부조.\nPalette: 화이트·페일민트·실버. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-03_백색_Eye_부조.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-03_백색_Eye_부조.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/143_백색_Eye_부조.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/143_백색_Eye_부조.png",
       "reference_files": [
         "work/background-expansion/references/nvidia.png"
       ],
@@ -999,8 +999,8 @@
       "review": "passed",
       "review_note": "좌측 계산의 숲과 NVIDIA 심볼, 우측은 어둡고 넓은 사양 안전 영역으로 유지됨.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 계산의 숲: 빛나는 노드가 나무처럼 뻗는 데이터 구조.\nSubject: NVIDIA eye detail, computational lattice forest, green nodes, sparse data branches.\nIdentity elements: NVIDIA 표시·계산 구조 모티프.\nStyle/medium: 기술·자연 융합 추상.\nPalette: 블랙·라임·딥틸. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-04_계산의_숲.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-04_계산의_숲.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/144_계산의_숲.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/144_계산의_숲.png",
       "reference_files": [
         "work/background-expansion/references/nvidia.png"
       ],
@@ -1022,8 +1022,8 @@
       "review": "passed",
       "review_note": "Dawn의 요정 날개·어두운 올림머리와 아침 숲.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: Dawn의 아침 숲: 나무 끝 작은 요정과 부드러운 햇살.\nSubject: NVIDIA Dawn fairy, woodland attire, morning forest, mint leaves, soft golden light.\nIdentity elements: 과거 Dawn.\nStyle/medium: 판타지 숲 일러스트.\nPalette: 세이지·민트·연금색. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images: Each attached image is an IDENTITY REFERENCE ONLY for the named brand logo or character. Create a NEW scene with the requested panoramic composition. Preserve the identifying shape, face, colors and proportions from the reference; do not copy its surrounding layout or text.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-05_Dawn의_아침_숲.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-05_Dawn의_아침_숲.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/145_Dawn의_아침_숲.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/145_Dawn의_아침_숲.png",
       "reference_files": [
         "work/background-expansion/references/dawn.jpg"
       ],
@@ -1047,8 +1047,8 @@
       "review": "passed",
       "review_note": "우측 에메랄드 AI 코어와 궤도 링, 중앙은 어두운 사양 안전 영역이며 인물 요소 없음.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 에메랄드 AI 코어: 어두운 관측실의 발광 GPU 크리스털과 궤도 링.\nSubject: NVIDIA AI accelerator core, faceted GPU crystal, emerald glow, violet cyan orbital rings.\nIdentity elements: NVIDIA AI 코어·눈 심볼.\nStyle/medium: 시네마틱 SF 제품 콘셉트.\nPalette: 딥네이비·에메랄드·바이올렛·시안. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include one small accurate NVIDIA eye emblem as an unobtrusive part of the focal area; no other brands. No readable slogans, product model names, numbers, or extra inscriptions. No human, fairy, wings, mascot, face, creature, or additional characters.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve the recognizable NVIDIA eye shape and colors, but do not reproduce the reference layout, captions, watermark, packaging, or extra views.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-06_에메랄드_AI_코어.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-06_에메랄드_AI_코어.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/146_에메랄드_AI_코어.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/146_에메랄드_AI_코어.png",
       "reference_files": [
         "work/background-expansion/references/nvidia.png"
       ],
@@ -1072,8 +1072,8 @@
       "review": "passed",
       "review_note": "좌측 백색 냉각핀 구조와 NVIDIA 심볼, 우측은 밝고 낮은 디테일의 사양 영역으로 유지됨.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 백색 냉각핀 건축: GPU 금속핀을 닮은 조용한 구조물.\nSubject: NVIDIA eye detail, silver GPU heatsink architecture, paper-like white fins.\nIdentity elements: GPU 냉각핀·NVIDIA 표시.\nStyle/medium: 하드웨어 기반 건축 추상.\nPalette: 실버·오프화이트·옅은 라임. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-07_백색_냉각핀_건축.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-07_백색_냉각핀_건축.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/147_백색_냉각핀_건축.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/147_백색_냉각핀_건축.png",
       "reference_files": [
         "work/background-expansion/references/nvidia.png"
       ],
@@ -1095,8 +1095,8 @@
       "review": "passed",
       "review_note": "우측 CRT와 초록 인광 심볼, 중앙은 중간 톤의 비교적 잔잔한 사양 영역으로 유지됨.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 초록 인광의 기억: CRT빛과 초기 3D를 떠올리는 도형.\nSubject: NVIDIA eye, green phosphor glow, retro low-poly shapes, brushed silver texture.\nIdentity elements: NVIDIA 눈 심볼.\nStyle/medium: 레트로 디지털 콜라주.\nPalette: 회녹색·라임·실버. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. Include the specified brand emblem or wordmark as an accurate, unobtrusive part of the focal area; no other brands. Brand lettering, when used, must be correctly spelled. Use only short official names; no invented slogans, product models, or extra inscriptions.\nInput images are IDENTITY REFERENCES ONLY. Create a new panoramic scene, not a duplicate of the reference composition. Preserve recognizable subject shapes. Do not reproduce reference captions, watermark, packaging, extra views, or additional brands.",
-      "file": "assets/backgrounds/16_브랜드_NVIDIA/NVIDIA-08_초록_인광의_기억.png",
-      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/NVIDIA-08_초록_인광의_기억.png",
+      "file": "assets/backgrounds/16_브랜드_NVIDIA/148_초록_인광의_기억.png",
+      "original_file": "work/background-expansion/originals/16_브랜드_NVIDIA/148_초록_인광의_기억.png",
       "reference_files": [
         "work/background-expansion/references/nvidia.png"
       ],
@@ -1118,8 +1118,8 @@
       "review": "passed",
       "review_note": "흰 본체·모니터·키보드·마우스가 오른쪽 책상에 보임.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 햇살 드는 화이트 셋업: 흰 본체·모니터·키보드와 원목 책상, 얇은 커튼.\nSubject: white desktop PC tower, monitor, keyboard and mouse, oak desk, sunlit curtains.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 인테리어 사진풍.\nPalette: 크림·우드·세이지. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-01_햇살_드는_화이트_셋업.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-01_햇살_드는_화이트_셋업.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/149_햇살_드는_화이트_셋업.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/149_햇살_드는_화이트_셋업.png",
       "reference_files": [],
       "tags": []
     },
@@ -1139,8 +1139,8 @@
       "review": "passed",
       "review_note": "검은 본체·듀얼 모니터·키보드·마우스가 왼쪽에 보임.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 비 오는 밤의 게임방: 검은 유리 본체·듀얼 모니터·주변기기, 빗방울 맺힌 창.\nSubject: rainy gaming room, visible desktop tower, dual monitors, keyboard mouse, neon window.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 시네마틱 방 풍경.\nPalette: 네이비·시안·마젠타. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-02_비_오는_밤의_게임방.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-02_비_오는_밤의_게임방.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/150_비_오는_밤의_게임방.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/150_비_오는_밤의_게임방.png",
       "reference_files": [],
       "tags": []
     },
@@ -1160,8 +1160,8 @@
       "review": "passed",
       "review_note": "오른쪽 PC 본체·모니터·키보드·마우스와 식물·책장.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 식물과 우드 셋업: 본체가 보이는 넓은 책상과 화분·책장.\nSubject: desktop PC room, walnut desk, visible PC tower monitor keyboard mouse, plants and bookshelf.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 자연스러운 실내 사진풍.\nPalette: 세이지·월넛·아이보리. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-03_식물과_우드_셋업.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-03_식물과_우드_셋업.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/151_식물과_우드_셋업.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/151_식물과_우드_셋업.png",
       "reference_files": [],
       "tags": []
     },
@@ -1181,8 +1181,8 @@
       "review": "passed",
       "review_note": "오른쪽 PC 장비 구성과 다락방·노을 풍경.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 노을빛 다락방 작업실: 창 아래 컴퓨터 본체·모니터와 경사진 천장.\nSubject: attic desktop PC studio at sunset, sloped ceiling, tower monitor keyboard mouse, cozy room.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 애니메이션 배경화.\nPalette: 살구·테라코타·더스티블루. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-04_노을빛_다락방_작업실.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-04_노을빛_다락방_작업실.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/152_노을빛_다락방_작업실.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/152_노을빛_다락방_작업실.png",
       "reference_files": [],
       "tags": []
     },
@@ -1202,8 +1202,8 @@
       "review": "passed",
       "review_note": "오른쪽 별도 PC 본체·모니터·키보드·마우스와 행성 관측창.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 우주선의 개인 컴퓨터실: 분리형 PC 본체·모니터·주변기기와 행성 관측창.\nSubject: spaceship private desktop PC cabin, separate tower monitor keyboard mouse, planet viewport.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: SF 실내 콘셉트.\nPalette: 인디고·실버·아쿠아. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-05_우주선의_개인_컴퓨터실.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-05_우주선의_개인_컴퓨터실.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/153_우주선의_개인_컴퓨터실.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/153_우주선의_개인_컴퓨터실.png",
       "reference_files": [],
       "tags": []
     },
@@ -1223,8 +1223,8 @@
       "review": "passed",
       "review_note": "왼쪽 PC 장비 구성과 아래쪽 고양이 방석.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 고양이가 쉬는 컴퓨터 방: 본체 옆 방석에서 잠든 고양이와 PC 책상.\nSubject: cat beside desktop PC setup, visible tower monitor keyboard mouse, pastel home office.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 부드러운 생활 일러스트.\nPalette: 크림·페일핑크·올리브. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-06_고양이가_쉬는_컴퓨터_방.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-06_고양이가_쉬는_컴퓨터_방.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/154_고양이가_쉬는_컴퓨터_방.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/154_고양이가_쉬는_컴퓨터_방.png",
       "reference_files": [],
       "tags": []
     },
@@ -1244,8 +1244,8 @@
       "review": "passed",
       "review_note": "오른쪽 PC 장비 구성, 따뜻한 조명과 눈 오는 창가.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 눈 오는 밤의 개발자 방: 데스크톱과 책, 따뜻한 스탠드, 창밖의 눈.\nSubject: snowy night desktop computer room, tower monitor keyboard mouse, warm desk lamp, books.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 따뜻한 실내 일러스트.\nPalette: 남청·앰버·브라운. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-07_눈_오는_밤의_개발자_방.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-07_눈_오는_밤의_개발자_방.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/155_눈_오는_밤의_개발자_방.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/155_눈_오는_밤의_개발자_방.png",
       "reference_files": [],
       "tags": []
     },
@@ -1265,8 +1265,8 @@
       "review": "passed",
       "review_note": "왼쪽 베이지 PC 본체·CRT 컴퓨터 모니터·키보드·마우스.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 1990년대 베이지 PC 방: 베이지 본체·CRT 컴퓨터 모니터·키보드·볼 마우스.\nSubject: 1990s beige desktop computer room, PC tower, CRT computer monitor, keyboard, ball mouse.\nIdentity elements: desktop PC tower, monitor, keyboard, mouse.\nStyle/medium: 복고 인테리어 일러스트.\nPalette: 베이지·올리브·앰버. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI.",
-      "file": "assets/backgrounds/17_데스크셋업_방/DESK-08_1990년대_베이지_PC_방.png",
-      "original_file": "work/background-expansion/originals/17_데스크셋업_방/DESK-08_1990년대_베이지_PC_방.png",
+      "file": "assets/backgrounds/17_데스크셋업_방/156_1990년대_베이지_PC_방.png",
+      "original_file": "work/background-expansion/originals/17_데스크셋업_방/156_1990년대_베이지_PC_방.png",
       "reference_files": [],
       "tags": []
     },
@@ -1286,8 +1286,8 @@
       "review": "passed",
       "review_note": "벚꽃 들판, 사각 픽셀 덩어리와 계단형 윤곽.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 자연: 벚꽃나무와 낮은 언덕의 봄 들판.\nSubject: pixel art cherry blossom meadow, limited palette, crisp square pixels, calm sky.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 벚꽃핑크·연두·크림. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-01_벚꽃나무와_낮은_언덕의_봄_들판.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-01_벚꽃나무와_낮은_언덕의_봄_들판.png",
+      "file": "assets/backgrounds/18_도트풍/157_벚꽃나무와_낮은_언덕의_봄_들판.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/157_벚꽃나무와_낮은_언덕의_봄_들판.png",
       "reference_files": [],
       "tags": []
     },
@@ -1307,8 +1307,8 @@
       "review": "passed",
       "review_note": "달 기지와 고리 행성, 어두운 우주와 픽셀 윤곽.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: SF: 고리 행성을 바라보는 달 기지.\nSubject: pixel art lunar base, ringed planet, sparse stars, low-detail space.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 인디고·민트·라일락. Predominantly DARK, suitable for white text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-02_고리_행성을_바라보는_달_기지.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-02_SF.png",
+      "file": "assets/backgrounds/18_도트풍/158_고리_행성을_바라보는_달_기지.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/158_고리_행성을_바라보는_달_기지.png",
       "reference_files": [],
       "tags": []
     },
@@ -1328,8 +1328,8 @@
       "review": "passed",
       "review_note": "비 오는 네온 도시·고가철도. 하단의 불필요한 글자 흔적을 이미지 생성 편집으로 제거.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 미래 도시: 비 내리는 네온 골목과 고가철도.\nSubject: pixel art rainy neon city, elevated railway, cyan magenta, quiet mist.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 네이비·마젠타·청록. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-03_비_내리는_네온_골목과_고가철도.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-03_비_내리는_네온_골목과_고가철도-v2.png",
+      "file": "assets/backgrounds/18_도트풍/159_비_내리는_네온_골목과_고가철도.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/159_비_내리는_네온_골목과_고가철도.png",
       "reference_files": [],
       "edits": [
         {
@@ -1355,8 +1355,8 @@
       "review": "passed",
       "review_note": "해저 연구소·잠수정과 어두운 물, 픽셀 윤곽.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 과학: 잠수정 불빛이 비추는 해저 연구소.\nSubject: pixel art underwater research station, submarine light, sparse marine particles.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 딥블루·아쿠아·앰버. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-04_잠수정_불빛이_비추는_해저_연구소.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-04_잠수정_불빛이_비추는_해저_연구소.png",
+      "file": "assets/backgrounds/18_도트풍/160_잠수정_불빛이_비추는_해저_연구소.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/160_잠수정_불빛이_비추는_해저_연구소.png",
       "reference_files": [],
       "tags": []
     },
@@ -1376,8 +1376,8 @@
       "review": "passed",
       "review_note": "사막여우·선인장과 황혼의 사막, 픽셀 표현.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 동물: 사막여우와 선인장이 있는 황혼 사막.\nSubject: pixel art fennec fox, cactus desert at dusk, warm sand, clear stepped silhouettes.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 샌드·코랄·보라. Restrained MID-TONE with smooth local contrast, suitable for a translucent text panel.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-05_사막여우와_선인장이_있는_황혼_사막.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-05_사막여우와_선인장이_있는_황혼_사막.png",
+      "file": "assets/backgrounds/18_도트풍/161_사막여우와_선인장이_있는_황혼_사막.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/161_사막여우와_선인장이_있는_황혼_사막.png",
       "reference_files": [],
       "tags": []
     },
@@ -1397,8 +1397,8 @@
       "review": "passed",
       "review_note": "본체·모니터·키보드·마우스가 보이는 도트풍 PC 방.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 컴퓨터: 비 오는 창가의 작은 PC 방.\nSubject: pixel art cozy PC room, desktop tower monitor keyboard mouse, rainy window.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 남청·앰버·청록. Predominantly DARK, suitable for white text.\nComposition: Keep the RIGHT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the LEFTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. MANDATORY: an unmistakable separate desktop PC TOWER, COMPUTER MONITOR, KEYBOARD and MOUSE must all be visibly present together. Show enough room context: desk, wall, floor or window. Do not substitute a television or laptop for the desktop PC. Keep the complete hardware ensemble inside the designated focal side; do not crop the tower or keyboard. Monitor displays a simple abstract gradient without UI. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-06_비_오는_창가의_작은_PC_방.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-06_컴퓨터.png",
+      "file": "assets/backgrounds/18_도트풍/162_비_오는_창가의_작은_PC_방.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/162_비_오는_창가의_작은_PC_방.png",
       "reference_files": [],
       "tags": []
     },
@@ -1418,8 +1418,8 @@
       "review": "passed",
       "review_note": "아케이드 기계와 어두운 중앙 공간, 계단형 픽셀 윤곽.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 게임 감성: 아케이드 기계와 낮은 네온 불빛.\nSubject: pixel art retro arcade interior, blank cabinet screens, restrained neon, calm center.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 딥퍼플·시안·체리레드. Predominantly DARK, suitable for white text.\nComposition: Keep the CENTRAL 70 percent of the width low-contrast and low-detail for two columns of PC specs. Put the focal subject wholly at the far RIGHT edge, preferably within the rightmost 20 percent. The far left may have small restrained details. No large central logo or central character.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-07_아케이드_기계와_낮은_네온_불빛.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-07_아케이드_기계와_낮은_네온_불빛.png",
+      "file": "assets/backgrounds/18_도트풍/163_아케이드_기계와_낮은_네온_불빛.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/163_아케이드_기계와_낮은_네온_불빛.png",
       "reference_files": [],
       "tags": []
     },
@@ -1439,8 +1439,8 @@
       "review": "passed",
       "review_note": "눈 마을·따뜻한 창문 불빛과 밝은 픽셀 풍경.",
       "prompt": "Use case: stylized-concept. Create ONE standalone background artwork.\nCanvas: ultra-wide horizontal panorama, EXACT 17:6 aspect ratio, designed for an 850x300 pixel card; render at a proportional high resolution. Fill the entire image.\nScene: 계절: 눈 덮인 마을과 따뜻한 창문 불빛.\nSubject: pixel art snowy village, warm window lights, pale blue snow, crisp pixel clusters.\nIdentity elements: pixel art.\nStyle/medium: 레트로 픽셀 아트.\nPalette: 아이스블루·크림·피치. Predominantly LIGHT, suitable for dark text.\nComposition: Keep the LEFT 65 percent of the width calm and low-detail for overlaid PC specs. Place the entire focal subject in the RIGHTMOST 25 percent, with a little edge padding.\nConstraints: One continuous original background scene, no collage, no frame, no letterboxing, no card mockup, no spec text, no labels, no watermark, no signatures. Keep faces and character ears fully inside the frame. The text area must remain an atmospheric continuation of the scene, not a blank rectangle. No brand logos, no readable lettering or numbers anywhere. Authentic pixel-art appearance: distinct square pixel clusters, stepped contours, limited harmonious palette, selective dithering. No painterly brushwork, no smooth airbrushed illustration, no superficial grid overlay.",
-      "file": "assets/backgrounds/18_도트풍/PIXEL-08_눈_덮인_마을과_따뜻한_창문_불빛.png",
-      "original_file": "work/background-expansion/originals/18_도트풍/PIXEL-08_눈_덮인_마을과_따뜻한_창문_불빛.png",
+      "file": "assets/backgrounds/18_도트풍/164_눈_덮인_마을과_따뜻한_창문_불빛.png",
+      "original_file": "work/background-expansion/originals/18_도트풍/164_눈_덮인_마을과_따뜻한_창문_불빛.png",
       "reference_files": [],
       "tags": []
     }

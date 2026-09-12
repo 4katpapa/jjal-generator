@@ -5564,7 +5564,7 @@ function syncControls() {
   $('export-bg').value = s.card.exportBg || 'transparent';
   $('background-preset-status').textContent = s.card.bgImageDataUrl
     ? '배경이 적용되어 있습니다. 랜덤 버튼으로 다른 내장 배경을 골라 보세요.'
-    : '내장 배경 100장 중 골라 쓰거나, 랜덤 버튼을 눌러 바로 바꿔 보세요.';
+    : '내장 배경에서 골라 쓰거나, 랜덤 버튼을 눌러 바로 바꿔 보세요.';
   $('c-label').value = s.text.labelColor;
   $('c-value').value = s.text.valueColor;
   specTextEffectEditors.forEach((editor) => editor.sync());
