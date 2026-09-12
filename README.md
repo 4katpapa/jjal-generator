@@ -4,16 +4,16 @@
 
 [v3.21 포터블 다운로드](https://github.com/4katpapa/jjal-generator/releases/tag/v3.21) — Windows x64용 실행 파일과 SHA-256을 제공합니다.
 
-[웹에서 바로 사용하기](https://jjal-generator.pages.dev/) — 설치 없이 PC 사양 카드를 만들 수 있습니다.
+[웹에서 바로 사용하기](https://jjal-generator.pages.dev/) — 설치 없이 PC 사양 카드를 만들 수 있습니다. **웹판은 사양 자동 불러오기를 지원하지 않으며, 직접 입력하거나 붙여넣어 사용합니다.**
 
 Windows PC 사양을 읽고, 이미지·문구·도형을 배치해 명함형 사양 카드를 만드는 Electron 데스크톱 앱입니다. 같은 편집 코드를 사용하는 브라우저 웹판도 제공합니다.
 
-- Claude Code와 Codex를 이용해 제작했으며, 2.0에서 편집 구조와 사용 경험을 전면 개편했습니다.
+- **개발 보조: Claude Code · OpenAI Codex.** Codex를 통한 편집 기능 개선, 아이콘·배경 작업, 브라우저 웹판 제작·배포를 포함합니다.
 - 무료 배포 및 자유 수정 가능(MIT). 재배포할 때 제작자 이름을 남겨 주세요.
 
 ## 웹판
 
-설치 없이 브라우저에서 사양을 입력·붙여넣고, 배경 프리셋·아이콘·글자 효과를 조합해 PNG·WebP로 저장합니다. 디자인은 현재 브라우저에 보관하며, `.speccard` 파일로 백업하거나 Windows 앱과 주고받을 수 있습니다. PC 부품 자동 감지는 Windows 앱에서 지원합니다.
+자짤생성툴은 설치 없이 PC 사양 카드와 스펙카드를 만드는 무료 자짤 생성기입니다. 브라우저에서 사양을 입력·붙여넣고, 배경 프리셋·아이콘·글자 효과를 조합해 PNG·WebP로 저장합니다. 디자인은 현재 브라우저에 보관하며, `.speccard` 파일로 백업하거나 Windows 앱과 주고받을 수 있습니다. PC 부품 자동 감지는 Windows 앱에서 지원합니다.
 
 웹판은 [jjal-generator.pages.dev](https://jjal-generator.pages.dev/)에서 사용할 수 있습니다. GitHub의 `main`에 업데이트를 push하면 Cloudflare Pages가 자동으로 빌드하고 배포합니다. 웹용 배경과 썸네일은 기존 원본에서 빌드할 때 생성하며, 방문자는 배경 팩을 별도로 설치하지 않습니다.
 
