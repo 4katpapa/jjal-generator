@@ -49,10 +49,10 @@ npm run test:web
 
 ## Cloudflare Pages 무료 배포
 
-현재 상태는 로컬 웹판과 배포 준비 완료, Cloudflare 계정 생성·연결 대기입니다. 실제 공개 주소와 Google 소유권 인증값은 아직 설정하지 않았습니다.
+공개 주소는 **[https://jjal-generator.pages.dev/](https://jjal-generator.pages.dev/)** 입니다. 2026-09-12에 Pages 프로젝트 `jjal-generator`를 만들고 `4katpapa/jjal-generator` 저장소의 `main`과 자동 배포를 연결했습니다. 아래 설정은 현재 운영 구성입니다.
 
 1. Cloudflare 무료 계정을 만들고 이메일 인증을 완료합니다.
-2. 대시보드의 **Workers & Pages → Create application → Pages → Connect to Git**에서 GitHub 계정을 연결합니다. 저장소 접근은 `4katpapa/jjal-generator`만 선택합니다.
+2. 대시보드의 **Workers & Pages → Create application → Continue to Pages → Import an existing Git repository**에서 GitHub 계정을 연결합니다. 저장소 접근은 `4katpapa/jjal-generator`만 선택합니다.
 3. 다음 설정으로 Pages 프로젝트를 만듭니다.
 
 | 설정 | 값 |
@@ -70,7 +70,7 @@ npm run test:web
 4. 공개 주소가 정해지면 Pages의 **Production 환경 변수** `SITE_URL`에 그 HTTPS 주소를 설정하고 재배포합니다. 주소 끝의 `/`는 자동 정리됩니다. 예시 주소를 그대로 사용하지 않습니다.
 5. 공개 HTTPS 주소에서 편집·저장·배경·다운로드를 확인합니다. 필요하면 Pages 배포 기록에서 이전 배포로 되돌립니다.
 
-미리보기 배포는 기본적으로 검색엔진에서 제외됩니다. Production 환경에만 최종 `SITE_URL`과 Google 인증값을 설정해 미리보기 주소를 검색용 대표 주소로 사용하지 않습니다.
+운영 `SITE_URL`은 `https://jjal-generator.pages.dev`입니다. 최초 설정에서 Preview에도 같은 운영 주소를 지정했습니다. 미리보기 배포는 기본적으로 검색엔진에서 제외되며, 검색용 대표 주소는 운영 주소를 사용합니다. Google 인증값은 Production 환경의 `GOOGLE_SITE_VERIFICATION`에만 설정합니다.
 
 ## Google 검색 등록
 
@@ -80,12 +80,17 @@ npm run test:web
 
 `SITE_URL`이 설정되면 빌드가 canonical, Open Graph URL, `sitemap.xml`, robots의 사이트맵 주소를 함께 생성합니다. 설정 전에는 임의의 공개 주소나 잘못된 사이트맵을 생성하지 않습니다.
 
-검색 등록은 무료이며 검색 포함 여부와 순위는 Google이 결정합니다. 실제 공개 배포·소유권 인증·검색 등록은 계정 연결 후 별도로 완료해야 합니다.
+2026-09-12에 운영 사이트의 HTML 태그로 Google 소유권 확인을 완료했습니다. 인증값은 Cloudflare의 Production 환경 변수에서 관리하며, 계정 비밀번호나 API 토큰은 소스에 저장하지 않습니다. 검색 등록은 무료이며 검색 포함 여부와 순위는 Google이 결정합니다.
+
+검색용 이름은 **자짤생성툴**입니다. `<title>`, 화면의 `<h1>`, Open Graph 제목·사이트 이름, 홈페이지의 `WebSite` 구조화 데이터에 같은 이름을 사용합니다. 검색 결과의 실제 표시 이름과 반영 시점은 Google이 결정합니다.
+
+`sitemap.xml` 제출은 완료했습니다. 현재 Google의 최초 가져오기 상태를 확인 중이며, 제목 변경 배포 후 대표 페이지의 색인을 요청합니다.
 
 ## 공식 문서
 
 - [Cloudflare Pages Git 연결과 자동 배포](https://developers.cloudflare.com/pages/get-started/git-integration/)
 - [무료 정적 파일 요청](https://developers.cloudflare.com/pages/functions/pricing/)
 - [Pages 파일·빌드 제한](https://developers.cloudflare.com/pages/platform/limits/)
+- [미리보기 배포의 검색 제외](https://developers.cloudflare.com/pages/configuration/preview-deployments/)
 - [Google 사이트 소유권 확인](https://support.google.com/webmasters/answer/9008080?hl=ko)
 - [Google 재크롤링 요청](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl)

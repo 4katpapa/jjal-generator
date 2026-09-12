@@ -28,11 +28,13 @@ function replaceOnce(source, needle, replacement) {
 
 function buildHtml(original, config) {
   let html = original;
+  const siteData = config.siteUrl ? `<div itemscope itemtype="https://schema.org/WebSite"><meta itemprop="name" content="${escapeHtml(config.title)}" /><link itemprop="url" href="${escapeHtml(config.siteUrl)}/" /></div>` : '';
   html = replaceOnce(html, '<title>자짤 생성툴</title>', `<title>${escapeHtml(config.title)}</title>
   <meta name="description" content="${escapeHtml(config.description)}" />
   <meta name="theme-color" content="#006cff" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ko_KR" />
+  <meta property="og:site_name" content="${escapeHtml(config.title)}" />
   <meta property="og:title" content="${escapeHtml(config.title)}" />
   <meta property="og:description" content="${escapeHtml(config.description)}" />
   <link rel="icon" href="favicon.png" type="image/png" />
@@ -41,8 +43,8 @@ function buildHtml(original, config) {
   ${config.googleSiteVerification ? `<meta name="google-site-verification" content="${escapeHtml(config.googleSiteVerification)}" />` : ''}`);
   html = replaceOnce(html, "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';",
     "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';");
-  html = replaceOnce(html, '<body>', '<body class="web-edition">\n  <div id="web-startup" role="status"><p>자짤 생성기를 준비하고 있습니다…</p><button type="button">다시 시도</button></div>\n  <noscript><p class="web-noscript">자짤 생성기는 브라우저에서 실행됩니다. JavaScript를 켜면 카드 편집과 이미지 저장을 사용할 수 있습니다.</p></noscript>');
-  html = replaceOnce(html, '<h1>SPEC BENCH</h1>', '<h1>자짤 생성기</h1>');
+  html = replaceOnce(html, '<body>', `<body class="web-edition">\n  ${siteData}\n  <div id="web-startup" role="status"><p>${escapeHtml(config.title)}을 준비하고 있습니다…</p><button type="button">다시 시도</button></div>\n  <noscript><p class="web-noscript">${escapeHtml(config.title)}은 브라우저에서 실행됩니다. JavaScript를 켜면 카드 편집과 이미지 저장을 사용할 수 있습니다.</p></noscript>`);
+  html = replaceOnce(html, '<h1>SPEC BENCH</h1>', `<h1>${escapeHtml(config.title)}</h1>`);
   html = replaceOnce(html, '<span class="sub">PC 사양 카드 작업대</span>', '<span class="sub">설치 없이 만드는 PC 사양 카드</span>');
   html = replaceOnce(html, '<div class="project-state"', `<details class="web-guide">
         <summary>사용법 · 저장 안내</summary>
@@ -175,7 +177,7 @@ async function build() {
   Cache-Control: public, max-age=31536000, immutable
 `);
   // An explicit 404 avoids Pages' SPA fallback returning index.html for missing images.
-  await write('404.html', '<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>페이지를 찾을 수 없습니다 | 자짤 생성기</title><h1>페이지를 찾을 수 없습니다.</h1><p><a href="/">자짤 생성기로 돌아가기</a></p></html>');
+  await write('404.html', `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>페이지를 찾을 수 없습니다 | ${escapeHtml(config.title)}</title><h1>페이지를 찾을 수 없습니다.</h1><p><a href="/">${escapeHtml(config.title)}로 돌아가기</a></p></html>`);
   const report = { backgrounds: items.length, originalBytes, optimizedBytes, thumbnailBytes, iconBytes,
     categories: new Set(items.map((item) => item.category)).size, siteUrl: config.siteUrl || null };
   const generatedFiles = await filesUnder(stage);

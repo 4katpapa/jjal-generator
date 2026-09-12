@@ -4,7 +4,7 @@
 
 ## 현재 버전 — v3.21
 
-### 웹판 — 구현 완료 / 계정 연결 대기
+### 웹판 — 공개 운영 / 검색 등록 진행
 
 - [x] 기존 renderer를 공유하는 웹판과 브라우저 파일·저장 연결부
 - [x] 사양 직접 입력·여러 줄 붙여넣기와 프로젝트 호환
@@ -13,11 +13,14 @@
 - [x] 검색용 제목·본문·메타 설명, 공개 주소 설정 시 사이트맵 생성
 - [x] 기존 검사 61개 및 웹용 검사 12개 통과
 - [x] 실제 브라우저의 붙여넣기·배경·저장 후 새로고침·파일 불러오기·출력 링크 확인
-- [ ] Cloudflare 무료 계정 생성·GitHub 저장소 연결
-- [ ] Pages 공개 배포 및 공개 HTTPS 주소에서 동작 확인
-- [ ] Google Search Console 소유권 확인·사이트맵·색인 요청
+- [x] Cloudflare 무료 계정 생성·GitHub 저장소 연결
+- [x] Pages 공개 배포 및 공개 HTTPS 주소에서 동작 확인
+- [x] 검색 제목·화면 이름·공유 제목·WebSite 이름을 `자짤생성툴`로 통일
+- [x] Google Search Console 소유권 확인
+- [x] 사이트맵 제출 (Google의 가져오기 상태 확인 중)
+- [ ] 대표 페이지 색인 요청
 
-자동 배포는 GitHub `main`에 push할 때 실행하는 구성으로 확정했습니다. 프로젝트 내부 `web/`에 소스를 두고 배경 원본은 유지합니다. 배포 설정과 현재 검증 범위는 `docs/WEB_DEPLOYMENT.md`, `docs/WEB_VALIDATION.md`에 정리합니다.
+공개 주소는 [jjal-generator.pages.dev](https://jjal-generator.pages.dev/)입니다. 자동 배포는 GitHub `main`에 push할 때 실행합니다. 프로젝트 내부 `web/`에 소스를 두고 배경 원본은 유지합니다. 배포 설정과 현재 검증 범위는 `docs/WEB_DEPLOYMENT.md`, `docs/WEB_VALIDATION.md`에 정리합니다.
 
 - [x] 배경 프리셋 안내와 랜덤 도움말의 고정 장수 제거
 - [x] 추가 64장을 101–164번과 이름으로 통일
