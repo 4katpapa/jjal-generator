@@ -30,7 +30,14 @@ function buildHtml(original, config) {
   let html = original;
   const verificationTags = String(config.googleSiteVerification || '').split(/[\s,]+/).filter(Boolean)
     .map((token) => `<meta name="google-site-verification" content="${escapeHtml(token)}" />`).join('\n  ');
-  const siteData = config.siteUrl ? `<div itemscope itemtype="https://schema.org/WebSite"><meta itemprop="name" content="${escapeHtml(config.title)}" /><link itemprop="url" href="${escapeHtml(config.siteUrl)}/" /></div>` : '';
+  // Keep one WebSite node; escape '<' so configured names cannot end the script element.
+  const siteData = config.siteUrl ? `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: `${config.siteUrl}/`,
+    name: config.title,
+    alternateName: [...new Set([...(config.alternateNames || []), new URL(config.siteUrl).hostname])],
+  }).replace(/</g, '\\u003c')}</script>` : '';
   html = replaceOnce(html, '<title>자짤 생성툴</title>', `<title>${escapeHtml(config.title)}</title>
   <meta name="description" content="${escapeHtml(config.description)}" />
   <meta name="theme-color" content="#006cff" />
@@ -42,10 +49,11 @@ function buildHtml(original, config) {
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="stylesheet" href="web.css" />
   ${config.siteUrl ? `<link rel="canonical" href="${escapeHtml(config.siteUrl)}/" /><meta property="og:url" content="${escapeHtml(config.siteUrl)}/" />` : ''}
-  ${verificationTags}`);
+  ${verificationTags}
+  ${siteData}`);
   html = replaceOnce(html, "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';",
     "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';");
-  html = replaceOnce(html, '<body>', `<body class="web-edition">\n  ${siteData}\n  <div id="web-startup" role="status"><p>${escapeHtml(config.title)}을 준비하고 있습니다…</p><button type="button">다시 시도</button></div>\n  <noscript><p class="web-noscript">${escapeHtml(config.title)}은 브라우저에서 실행됩니다. JavaScript를 켜면 카드 편집과 이미지 저장을 사용할 수 있습니다.</p></noscript>`);
+  html = replaceOnce(html, '<body>', `<body class="web-edition">\n  <div id="web-startup" role="status"><p>${escapeHtml(config.title)}을 준비하고 있습니다…</p><button type="button">다시 시도</button></div>\n  <noscript><p class="web-noscript">${escapeHtml(config.title)}은 브라우저에서 실행됩니다. JavaScript를 켜면 카드 편집과 이미지 저장을 사용할 수 있습니다.</p></noscript>`);
   html = replaceOnce(html, '<h1>SPEC BENCH</h1>', `<h1>${escapeHtml(config.title)}</h1>`);
   html = replaceOnce(html, '<span class="sub">PC 사양 카드 작업대</span>', '<span class="sub">무료 자짤생성기 · PC 사양 카드</span>');
   html = replaceOnce(html, '<div class="project-state"', `<details class="web-guide">
