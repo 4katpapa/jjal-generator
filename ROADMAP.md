@@ -46,7 +46,7 @@
 - [x] 새 주소의 Google 소유권 확인·사이트맵 읽기 성공·홈페이지 색인 요청 접수
 - [x] 새 주소의 Google 색인·검색 결과 주소 전환 확인
 - [x] 사이트명 `자짤생성툴`의 단일 JSON-LD와 대체 이름·대표 도메인 대안 구현
-- [ ] 사이트명 보완 웹 배포·공개 HTML 확인 및 Google 재크롤링 요청
+- [x] 사이트명 보완 웹 배포·공개 HTML 확인 및 Google 재크롤링 요청
 - [ ] Google 검색결과의 사이트 이름 `내도메인` → `자짤생성툴` 변경 확인
 
 공개 주소는 [jjaltool.kro.kr](https://jjaltool.kro.kr/)입니다. 자동 배포는 GitHub `main`에 push할 때 실행합니다. 프로젝트 내부 `web/`에 소스를 두고 배경 원본은 유지합니다. 기존 pages.dev 주소는 저장된 디자인을 열고 백업할 수 있도록 제공합니다. 배포 설정과 현재 검증 범위는 `docs/WEB_DEPLOYMENT.md`, `docs/WEB_VALIDATION.md`에 정리합니다.
