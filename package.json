@@ -1,0 +1,65 @@
+{
+  "name": "jjal-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "자짤 스튜디오 - 레이어 기반 PC 사양 자짤 편집기",
+  "author": "정신안차려?",
+  "license": "MIT",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "assets:backgrounds": "node scripts/build-backgrounds.mjs",
+    "assets:icons": "node scripts/build-icons.mjs",
+    "desktop": "electron .",
+    "desktop:smoke": "electron . --smoke",
+    "dist": "npm run build && electron-builder --win portable"
+  },
+  "build": {
+    "appId": "io.github.jjalstudio.app",
+    "productName": "자짤 스튜디오",
+    "electronLanguages": [
+      "ko",
+      "en-US"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "jjal-studio-v${version}-portable.exe"
+    }
+  },
+  "dependencies": {
+    "fflate": "^0.8.3",
+    "idb-keyval": "^6.3.0",
+    "immer": "^11.2.10",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "electron": "^45.3.3",
+    "electron-builder": "^26.18.0",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}

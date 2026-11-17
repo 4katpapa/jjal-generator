@@ -1,0 +1,1314 @@
+[
+  {
+    "id": "001",
+    "name": "새벽 안개 침엽수림",
+    "category": "자연 풍경",
+    "tone": "light",
+    "lum": 0.7,
+    "color": "#a9b4b1"
+  },
+  {
+    "id": "002",
+    "name": "햇살을 머금은 들판",
+    "category": "자연 풍경",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#dacea0"
+  },
+  {
+    "id": "003",
+    "name": "달빛 대나무 숲",
+    "category": "자연 풍경",
+    "tone": "dark",
+    "lum": 0.13,
+    "color": "#1b2323"
+  },
+  {
+    "id": "004",
+    "name": "붉은 사막 모래 능선",
+    "category": "자연 풍경",
+    "tone": "light",
+    "lum": 0.6,
+    "color": "#cc8e70"
+  },
+  {
+    "id": "005",
+    "name": "라벤더빛 먼 산맥",
+    "category": "자연 풍경",
+    "tone": "light",
+    "lum": 0.8,
+    "color": "#d0c9d6"
+  },
+  {
+    "id": "006",
+    "name": "검은 현무암 해안",
+    "category": "자연 풍경",
+    "tone": "dark",
+    "lum": 0.22,
+    "color": "#2d3b4a"
+  },
+  {
+    "id": "007",
+    "name": "빙하 위의 오로라",
+    "category": "자연 풍경",
+    "tone": "dark",
+    "lum": 0.25,
+    "color": "#23465a"
+  },
+  {
+    "id": "008",
+    "name": "소나기 뒤의 연못",
+    "category": "자연 풍경",
+    "tone": "dark",
+    "lum": 0.17,
+    "color": "#113231"
+  },
+  {
+    "id": "009",
+    "name": "살구빛 구름 바다",
+    "category": "자연 풍경",
+    "tone": "light",
+    "lum": 0.78,
+    "color": "#ebbfa6"
+  },
+  {
+    "id": "010",
+    "name": "가을 자작나무 길",
+    "category": "자연 풍경",
+    "tone": "light",
+    "lum": 0.61,
+    "color": "#bd9677"
+  },
+  {
+    "id": "011",
+    "name": "은하수 성운 파노라마",
+    "category": "우주 SF",
+    "tone": "dark",
+    "lum": 0.17,
+    "color": "#2f284a"
+  },
+  {
+    "id": "012",
+    "name": "우주정거장 관측창",
+    "category": "우주 SF",
+    "tone": "light",
+    "lum": 0.76,
+    "color": "#b5c3d5"
+  },
+  {
+    "id": "013",
+    "name": "가스 행성과 거대한 고리",
+    "category": "우주 SF",
+    "tone": "dark",
+    "lum": 0.24,
+    "color": "#56353d"
+  },
+  {
+    "id": "014",
+    "name": "달 기지의 분화구",
+    "category": "우주 SF",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#282f37"
+  },
+  {
+    "id": "015",
+    "name": "외계 수정 평원",
+    "category": "우주 SF",
+    "tone": "light",
+    "lum": 0.8,
+    "color": "#cac9e4"
+  },
+  {
+    "id": "016",
+    "name": "우주 화물선 복도",
+    "category": "우주 SF",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#1f1b16"
+  },
+  {
+    "id": "017",
+    "name": "백색 웜홀의 빛",
+    "category": "우주 SF",
+    "tone": "light",
+    "lum": 0.85,
+    "color": "#dadbc4"
+  },
+  {
+    "id": "018",
+    "name": "외계 행성의 쌍일몰",
+    "category": "우주 SF",
+    "tone": "dark",
+    "lum": 0.38,
+    "color": "#9b5154"
+  },
+  {
+    "id": "019",
+    "name": "생체발광 외계 정글",
+    "category": "우주 SF",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#1a3430"
+  },
+  {
+    "id": "020",
+    "name": "떠 있는 행성 테라리움",
+    "category": "우주 SF",
+    "tone": "light",
+    "lum": 0.84,
+    "color": "#d8d7cb"
+  },
+  {
+    "id": "021",
+    "name": "미니멀 공중 도시",
+    "category": "미래 도시",
+    "tone": "light",
+    "lum": 0.82,
+    "color": "#cad1db"
+  },
+  {
+    "id": "022",
+    "name": "비 오는 네온 골목",
+    "category": "미래 도시",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#1c233d"
+  },
+  {
+    "id": "023",
+    "name": "솔라펑크 옥상 정원",
+    "category": "미래 도시",
+    "tone": "light",
+    "lum": 0.79,
+    "color": "#d5caa0"
+  },
+  {
+    "id": "024",
+    "name": "사막의 태양광 도시",
+    "category": "미래 도시",
+    "tone": "mid",
+    "lum": 0.58,
+    "color": "#b28f73"
+  },
+  {
+    "id": "025",
+    "name": "수중 연구 도시",
+    "category": "미래 도시",
+    "tone": "dark",
+    "lum": 0.22,
+    "color": "#0b445a"
+  },
+  {
+    "id": "026",
+    "name": "수직 정원 메가타워",
+    "category": "미래 도시",
+    "tone": "dark",
+    "lum": 0.15,
+    "color": "#1c2920"
+  },
+  {
+    "id": "027",
+    "name": "무중력 주거 공간",
+    "category": "미래 도시",
+    "tone": "light",
+    "lum": 0.73,
+    "color": "#c9b5bb"
+  },
+  {
+    "id": "028",
+    "name": "새벽의 미래 모노레일",
+    "category": "미래 도시",
+    "tone": "mid",
+    "lum": 0.59,
+    "color": "#9297a5"
+  },
+  {
+    "id": "029",
+    "name": "홀로그램 야간 광장",
+    "category": "미래 도시",
+    "tone": "dark",
+    "lum": 0.19,
+    "color": "#2e322d"
+  },
+  {
+    "id": "030",
+    "name": "구름 위의 흰 다리",
+    "category": "미래 도시",
+    "tone": "light",
+    "lum": 0.82,
+    "color": "#d0cee7"
+  },
+  {
+    "id": "031",
+    "name": "분자 모형의 유리 구슬",
+    "category": "과학 연구",
+    "tone": "light",
+    "lum": 0.84,
+    "color": "#c9d8f6"
+  },
+  {
+    "id": "032",
+    "name": "DNA 빛 나선",
+    "category": "과학 연구",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#0f2750"
+  },
+  {
+    "id": "033",
+    "name": "입자 충돌의 궤적",
+    "category": "과학 연구",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#171b1e"
+  },
+  {
+    "id": "034",
+    "name": "현미경 속 규조류",
+    "category": "과학 연구",
+    "tone": "light",
+    "lum": 0.88,
+    "color": "#dfe3d5"
+  },
+  {
+    "id": "035",
+    "name": "신경망 전기 신호",
+    "category": "과학 연구",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#1d1a3e"
+  },
+  {
+    "id": "036",
+    "name": "천체 궤도선",
+    "category": "과학 연구",
+    "tone": "dark",
+    "lum": 0.16,
+    "color": "#172b38"
+  },
+  {
+    "id": "037",
+    "name": "결정 격자의 프리즘",
+    "category": "과학 연구",
+    "tone": "light",
+    "lum": 0.89,
+    "color": "#dce5ec"
+  },
+  {
+    "id": "038",
+    "name": "유체 와류의 잉크",
+    "category": "과학 연구",
+    "tone": "dark",
+    "lum": 0.08,
+    "color": "#021823"
+  },
+  {
+    "id": "039",
+    "name": "종이 위 지형 등고선",
+    "category": "과학 연구",
+    "tone": "light",
+    "lum": 0.87,
+    "color": "#deddd2"
+  },
+  {
+    "id": "040",
+    "name": "광학 렌즈의 빛 분산",
+    "category": "과학 연구",
+    "tone": "mid",
+    "lum": 0.43,
+    "color": "#4b7784"
+  },
+  {
+    "id": "041",
+    "name": "금빛 미세 회로 기판",
+    "category": "공학 기술",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#101f11"
+  },
+  {
+    "id": "042",
+    "name": "백색 로봇 관절",
+    "category": "공학 기술",
+    "tone": "light",
+    "lum": 0.83,
+    "color": "#ced6d5"
+  },
+  {
+    "id": "043",
+    "name": "냉각핀 금속 매크로",
+    "category": "공학 기술",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#13212f"
+  },
+  {
+    "id": "044",
+    "name": "광섬유 빛의 커튼",
+    "category": "공학 기술",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#061c31"
+  },
+  {
+    "id": "045",
+    "name": "스마트 센서 네트워크",
+    "category": "공학 기술",
+    "tone": "light",
+    "lum": 0.85,
+    "color": "#dad8cb"
+  },
+  {
+    "id": "046",
+    "name": "CNC 금속 곡면",
+    "category": "공학 기술",
+    "tone": "dark",
+    "lum": 0.33,
+    "color": "#4f555e"
+  },
+  {
+    "id": "047",
+    "name": "투명 기계 부품",
+    "category": "공학 기술",
+    "tone": "light",
+    "lum": 0.86,
+    "color": "#d3daf1"
+  },
+  {
+    "id": "048",
+    "name": "배터리 셀 단면",
+    "category": "공학 기술",
+    "tone": "dark",
+    "lum": 0.16,
+    "color": "#1a2a33"
+  },
+  {
+    "id": "049",
+    "name": "위성 안테나 청사진",
+    "category": "공학 기술",
+    "tone": "light",
+    "lum": 0.77,
+    "color": "#b1c9de"
+  },
+  {
+    "id": "050",
+    "name": "산업 로봇 실루엣",
+    "category": "공학 기술",
+    "tone": "dark",
+    "lum": 0.27,
+    "color": "#464445"
+  },
+  {
+    "id": "051",
+    "name": "서버랙의 작은 LED",
+    "category": "컴퓨터 디지털",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#121f2a"
+  },
+  {
+    "id": "052",
+    "name": "흰 키보드 매크로",
+    "category": "컴퓨터 디지털",
+    "tone": "light",
+    "lum": 0.76,
+    "color": "#d0c0b9"
+  },
+  {
+    "id": "053",
+    "name": "CPU 다이의 정밀 패턴",
+    "category": "컴퓨터 디지털",
+    "tone": "dark",
+    "lum": 0.13,
+    "color": "#2a1f20"
+  },
+  {
+    "id": "054",
+    "name": "파스텔 PCB 기하도형",
+    "category": "컴퓨터 디지털",
+    "tone": "light",
+    "lum": 0.93,
+    "color": "#f1eee5"
+  },
+  {
+    "id": "055",
+    "name": "투명 데스크 셋업",
+    "category": "컴퓨터 디지털",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#cfcdd4"
+  },
+  {
+    "id": "056",
+    "name": "레트로 CRT 책상",
+    "category": "컴퓨터 디지털",
+    "tone": "dark",
+    "lum": 0.28,
+    "color": "#644120"
+  },
+  {
+    "id": "057",
+    "name": "GPU 팬의 곡선",
+    "category": "컴퓨터 디지털",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#191c39"
+  },
+  {
+    "id": "058",
+    "name": "추상 코드 입자",
+    "category": "컴퓨터 디지털",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#091e17"
+  },
+  {
+    "id": "059",
+    "name": "소프트 UI 창형 도형",
+    "category": "컴퓨터 디지털",
+    "tone": "light",
+    "lum": 0.9,
+    "color": "#d7e9f6"
+  },
+  {
+    "id": "060",
+    "name": "수랭 튜브 네온 루프",
+    "category": "컴퓨터 디지털",
+    "tone": "mid",
+    "lum": 0.43,
+    "color": "#626d89"
+  },
+  {
+    "id": "061",
+    "name": "종이접기 구름 숲",
+    "category": "일러스트",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#ccd0c1"
+  },
+  {
+    "id": "062",
+    "name": "수채화 작은 바다 마을",
+    "category": "일러스트",
+    "tone": "light",
+    "lum": 0.86,
+    "color": "#d3dfd5"
+  },
+  {
+    "id": "063",
+    "name": "야간 마법 도서관",
+    "category": "일러스트",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#272236"
+  },
+  {
+    "id": "064",
+    "name": "픽셀 밤 호수",
+    "category": "일러스트",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#0f2549"
+  },
+  {
+    "id": "065",
+    "name": "잉크선 도시 스케치",
+    "category": "일러스트",
+    "tone": "light",
+    "lum": 0.82,
+    "color": "#dbcfc1"
+  },
+  {
+    "id": "066",
+    "name": "미니어처 우주 정원",
+    "category": "일러스트",
+    "tone": "mid",
+    "lum": 0.54,
+    "color": "#79907c"
+  },
+  {
+    "id": "067",
+    "name": "스테인드글라스 숲",
+    "category": "일러스트",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#192110"
+  },
+  {
+    "id": "068",
+    "name": "파스텔 종이층 산맥",
+    "category": "일러스트",
+    "tone": "light",
+    "lum": 0.79,
+    "color": "#d0c5d4"
+  },
+  {
+    "id": "069",
+    "name": "애니풍 별빛 언덕",
+    "category": "일러스트",
+    "tone": "dark",
+    "lum": 0.21,
+    "color": "#333360"
+  },
+  {
+    "id": "070",
+    "name": "판화풍 파도와 해",
+    "category": "일러스트",
+    "tone": "light",
+    "lum": 0.71,
+    "color": "#b6b4aa"
+  },
+  {
+    "id": "071",
+    "name": "흰 고양이의 낮잠",
+    "category": "동물 생물",
+    "tone": "light",
+    "lum": 0.84,
+    "color": "#ecd3be"
+  },
+  {
+    "id": "072",
+    "name": "검은 고양이와 달빛",
+    "category": "동물 생물",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#292c4a"
+  },
+  {
+    "id": "073",
+    "name": "사막여우와 고운 모래",
+    "category": "동물 생물",
+    "tone": "light",
+    "lum": 0.82,
+    "color": "#eecdb8"
+  },
+  {
+    "id": "074",
+    "name": "심해 고래 실루엣",
+    "category": "동물 생물",
+    "tone": "dark",
+    "lum": 0.16,
+    "color": "#043148"
+  },
+  {
+    "id": "075",
+    "name": "붉은 여우와 가을 풀",
+    "category": "동물 생물",
+    "tone": "mid",
+    "lum": 0.51,
+    "color": "#a08054"
+  },
+  {
+    "id": "076",
+    "name": "북극여우와 눈보라",
+    "category": "동물 생물",
+    "tone": "light",
+    "lum": 0.78,
+    "color": "#c4c4dd"
+  },
+  {
+    "id": "077",
+    "name": "해파리 빛 정원",
+    "category": "동물 생물",
+    "tone": "dark",
+    "lum": 0.15,
+    "color": "#0e2947"
+  },
+  {
+    "id": "078",
+    "name": "앵무새와 열대 잎",
+    "category": "동물 생물",
+    "tone": "dark",
+    "lum": 0.3,
+    "color": "#285845"
+  },
+  {
+    "id": "079",
+    "name": "참새와 벚꽃 가지",
+    "category": "동물 생물",
+    "tone": "light",
+    "lum": 0.86,
+    "color": "#ebd8c8"
+  },
+  {
+    "id": "080",
+    "name": "부엉이의 별빛 숲",
+    "category": "동물 생물",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#312e26"
+  },
+  {
+    "id": "081",
+    "name": "유백 유리 그라데이션",
+    "category": "추상 소재",
+    "tone": "light",
+    "lum": 0.9,
+    "color": "#e5e5ee"
+  },
+  {
+    "id": "082",
+    "name": "검은 대리석의 금맥",
+    "category": "추상 소재",
+    "tone": "dark",
+    "lum": 0.08,
+    "color": "#101416"
+  },
+  {
+    "id": "083",
+    "name": "무광 종이 겹침",
+    "category": "추상 소재",
+    "tone": "light",
+    "lum": 0.82,
+    "color": "#dcd0bc"
+  },
+  {
+    "id": "084",
+    "name": "액체 금속 리본",
+    "category": "추상 소재",
+    "tone": "mid",
+    "lum": 0.47,
+    "color": "#6f73b1"
+  },
+  {
+    "id": "085",
+    "name": "다크 카본 직조",
+    "category": "추상 소재",
+    "tone": "dark",
+    "lum": 0.09,
+    "color": "#11181c"
+  },
+  {
+    "id": "086",
+    "name": "오팔 세라믹 표면",
+    "category": "추상 소재",
+    "tone": "light",
+    "lum": 0.86,
+    "color": "#e0dcd3"
+  },
+  {
+    "id": "087",
+    "name": "자개빛 곡면",
+    "category": "추상 소재",
+    "tone": "light",
+    "lum": 0.83,
+    "color": "#e3cfd7"
+  },
+  {
+    "id": "088",
+    "name": "홀로그램 간섭막",
+    "category": "추상 소재",
+    "tone": "dark",
+    "lum": 0.17,
+    "color": "#2d265f"
+  },
+  {
+    "id": "089",
+    "name": "번진 잉크 구름",
+    "category": "추상 소재",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#181a36"
+  },
+  {
+    "id": "090",
+    "name": "테라조 색 조각",
+    "category": "추상 소재",
+    "tone": "light",
+    "lum": 0.73,
+    "color": "#cab8a5"
+  },
+  {
+    "id": "091",
+    "name": "봄 새벽 벚꽃 안개",
+    "category": "계절 감성",
+    "tone": "light",
+    "lum": 0.77,
+    "color": "#e1bcb1"
+  },
+  {
+    "id": "092",
+    "name": "여름 정오의 수면 반사",
+    "category": "계절 감성",
+    "tone": "light",
+    "lum": 0.85,
+    "color": "#b9e2d1"
+  },
+  {
+    "id": "093",
+    "name": "늦여름 밤의 반딧불",
+    "category": "계절 감성",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#1f1e0b"
+  },
+  {
+    "id": "094",
+    "name": "가을 노을 억새",
+    "category": "계절 감성",
+    "tone": "mid",
+    "lum": 0.4,
+    "color": "#935c3b"
+  },
+  {
+    "id": "095",
+    "name": "첫눈 내린 창가",
+    "category": "계절 감성",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#d7cdd3"
+  },
+  {
+    "id": "096",
+    "name": "겨울밤 호숫가",
+    "category": "계절 감성",
+    "tone": "dark",
+    "lum": 0.19,
+    "color": "#19344a"
+  },
+  {
+    "id": "097",
+    "name": "비 오는 카페 유리",
+    "category": "계절 감성",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#312016"
+  },
+  {
+    "id": "098",
+    "name": "새벽 역의 안개",
+    "category": "계절 감성",
+    "tone": "dark",
+    "lum": 0.38,
+    "color": "#645e69"
+  },
+  {
+    "id": "099",
+    "name": "아침의 린넨 커튼",
+    "category": "계절 감성",
+    "tone": "light",
+    "lum": 0.84,
+    "color": "#e0d6b2"
+  },
+  {
+    "id": "100",
+    "name": "심야 도시 불빛 보케",
+    "category": "계절 감성",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#1e1e30"
+  },
+  {
+    "id": "101",
+    "name": "붉은 용의 문장",
+    "category": "브랜드 MSI",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#2f1718"
+  },
+  {
+    "id": "102",
+    "name": "금빛 회로의 서명",
+    "category": "브랜드 MSI",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#1f1a15"
+  },
+  {
+    "id": "103",
+    "name": "서리 속 은룡",
+    "category": "브랜드 MSI",
+    "tone": "light",
+    "lum": 0.86,
+    "color": "#d1dce8"
+  },
+  {
+    "id": "104",
+    "name": "기계 용의 격납고",
+    "category": "브랜드 MSI",
+    "tone": "dark",
+    "lum": 0.15,
+    "color": "#292629"
+  },
+  {
+    "id": "105",
+    "name": "Lucky의 봄 소풍",
+    "category": "브랜드 MSI",
+    "tone": "light",
+    "lum": 0.76,
+    "color": "#dfbab1"
+  },
+  {
+    "id": "106",
+    "name": "Lucky의 심야 게임방",
+    "category": "브랜드 MSI",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#24152a"
+  },
+  {
+    "id": "107",
+    "name": "붉은 먹과 용",
+    "category": "브랜드 MSI",
+    "tone": "light",
+    "lum": 0.77,
+    "color": "#d5c2b2"
+  },
+  {
+    "id": "108",
+    "name": "용 비늘의 노을",
+    "category": "브랜드 MSI",
+    "tone": "dark",
+    "lum": 0.24,
+    "color": "#6e3328"
+  },
+  {
+    "id": "109",
+    "name": "주황빛 매의 문장",
+    "category": "브랜드 GIGABYTE",
+    "tone": "dark",
+    "lum": 0.09,
+    "color": "#25140d"
+  },
+  {
+    "id": "110",
+    "name": "금속 날개의 궤적",
+    "category": "브랜드 GIGABYTE",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#30221a"
+  },
+  {
+    "id": "111",
+    "name": "AERO 화이트 갤러리",
+    "category": "브랜드 GIGABYTE",
+    "tone": "light",
+    "lum": 0.85,
+    "color": "#dbd7dc"
+  },
+  {
+    "id": "112",
+    "name": "푸른 기판 도시",
+    "category": "브랜드 GIGABYTE",
+    "tone": "dark",
+    "lum": 0.15,
+    "color": "#102849"
+  },
+  {
+    "id": "113",
+    "name": "CHIBI의 작은 작업대",
+    "category": "브랜드 GIGABYTE",
+    "tone": "light",
+    "lum": 0.76,
+    "color": "#ccbfb2"
+  },
+  {
+    "id": "114",
+    "name": "CHIBI의 우주 유영",
+    "category": "브랜드 GIGABYTE",
+    "tone": "dark",
+    "lum": 0.17,
+    "color": "#2d2a3a"
+  },
+  {
+    "id": "115",
+    "name": "설산 위의 매",
+    "category": "브랜드 GIGABYTE",
+    "tone": "light",
+    "lum": 0.8,
+    "color": "#c0cfdb"
+  },
+  {
+    "id": "116",
+    "name": "황금 하늘의 비상",
+    "category": "브랜드 GIGABYTE",
+    "tone": "mid",
+    "lum": 0.44,
+    "color": "#926952"
+  },
+  {
+    "id": "117",
+    "name": "네온 Fearless Eye",
+    "category": "브랜드 ASUS",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#32112b"
+  },
+  {
+    "id": "118",
+    "name": "TUF 정비 격납고",
+    "category": "브랜드 ASUS",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#251f18"
+  },
+  {
+    "id": "119",
+    "name": "ASUS 푸른 백색 공간",
+    "category": "브랜드 ASUS",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#c1d0e0"
+  },
+  {
+    "id": "120",
+    "name": "ROG 빗속의 도시",
+    "category": "브랜드 ASUS",
+    "tone": "dark",
+    "lum": 0.15,
+    "color": "#351f37"
+  },
+  {
+    "id": "121",
+    "name": "OMNI 스케이트 파크",
+    "category": "브랜드 ASUS",
+    "tone": "light",
+    "lum": 0.76,
+    "color": "#dabbbe"
+  },
+  {
+    "id": "122",
+    "name": "OMNI의 정비 시간",
+    "category": "브랜드 ASUS",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#211724"
+  },
+  {
+    "id": "123",
+    "name": "진주빛 ROG 프리즘",
+    "category": "브랜드 ASUS",
+    "tone": "light",
+    "lum": 0.87,
+    "color": "#e1dbe6"
+  },
+  {
+    "id": "124",
+    "name": "ROG 거리의 색면",
+    "category": "브랜드 ASUS",
+    "tone": "dark",
+    "lum": 0.25,
+    "color": "#4c3c3e"
+  },
+  {
+    "id": "125",
+    "name": "Ryzen 일식",
+    "category": "브랜드 AMD",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#2d1409"
+  },
+  {
+    "id": "126",
+    "name": "Radeon 빛의 터널",
+    "category": "브랜드 AMD",
+    "tone": "dark",
+    "lum": 0.07,
+    "color": "#240e0e"
+  },
+  {
+    "id": "127",
+    "name": "백색 Arrow 조각",
+    "category": "브랜드 AMD",
+    "tone": "light",
+    "lum": 0.8,
+    "color": "#ddcac0"
+  },
+  {
+    "id": "128",
+    "name": "칩렛의 공중 도시",
+    "category": "브랜드 AMD",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#3b1716"
+  },
+  {
+    "id": "129",
+    "name": "Ruby의 설원",
+    "category": "브랜드 AMD",
+    "tone": "light",
+    "lum": 0.71,
+    "color": "#b2b4c6"
+  },
+  {
+    "id": "130",
+    "name": "Ruby의 야간 옥상",
+    "category": "브랜드 AMD",
+    "tone": "dark",
+    "lum": 0.15,
+    "color": "#252732"
+  },
+  {
+    "id": "131",
+    "name": "Ryzen 주황빛 붓원",
+    "category": "브랜드 AMD",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#e2ccb8"
+  },
+  {
+    "id": "132",
+    "name": "실리콘의 스펙트럼",
+    "category": "브랜드 AMD",
+    "tone": "dark",
+    "lum": 0.35,
+    "color": "#884f49"
+  },
+  {
+    "id": "133",
+    "name": "푸른 코어의 빛",
+    "category": "브랜드 Intel",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#081f3a"
+  },
+  {
+    "id": "134",
+    "name": "Arc 성운의 문",
+    "category": "브랜드 Intel",
+    "tone": "dark",
+    "lum": 0.16,
+    "color": "#27255d"
+  },
+  {
+    "id": "135",
+    "name": "Core 세라믹 타일",
+    "category": "브랜드 Intel",
+    "tone": "light",
+    "lum": 0.86,
+    "color": "#c8e0f5"
+  },
+  {
+    "id": "136",
+    "name": "웨이퍼 위의 도시광",
+    "category": "브랜드 Intel",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#222c5a"
+  },
+  {
+    "id": "137",
+    "name": "BunnyPeople 클린룸",
+    "category": "브랜드 Intel",
+    "tone": "light",
+    "lum": 0.81,
+    "color": "#c9d1da"
+  },
+  {
+    "id": "138",
+    "name": "BunnyPeople의 복고 파티",
+    "category": "브랜드 Intel",
+    "tone": "dark",
+    "lum": 0.23,
+    "color": "#3b3482"
+  },
+  {
+    "id": "139",
+    "name": "푸른 유리의 정원",
+    "category": "브랜드 Intel",
+    "tone": "light",
+    "lum": 0.84,
+    "color": "#c0dae9"
+  },
+  {
+    "id": "140",
+    "name": "Intel Inside의 기억",
+    "category": "브랜드 Intel",
+    "tone": "light",
+    "lum": 0.6,
+    "color": "#a39688"
+  },
+  {
+    "id": "141",
+    "name": "에메랄드 Eye",
+    "category": "브랜드 NVIDIA",
+    "tone": "dark",
+    "lum": 0.12,
+    "color": "#14250b"
+  },
+  {
+    "id": "142",
+    "name": "RTX 반사의 방",
+    "category": "브랜드 NVIDIA",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#1f2524"
+  },
+  {
+    "id": "143",
+    "name": "백색 Eye 부조",
+    "category": "브랜드 NVIDIA",
+    "tone": "light",
+    "lum": 0.89,
+    "color": "#dee4dc"
+  },
+  {
+    "id": "144",
+    "name": "계산의 숲",
+    "category": "브랜드 NVIDIA",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#0d2115"
+  },
+  {
+    "id": "145",
+    "name": "Dawn의 아침 숲",
+    "category": "브랜드 NVIDIA",
+    "tone": "light",
+    "lum": 0.64,
+    "color": "#aaa580"
+  },
+  {
+    "id": "146",
+    "name": "에메랄드 AI 코어",
+    "category": "브랜드 NVIDIA",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#24303a"
+  },
+  {
+    "id": "147",
+    "name": "백색 냉각핀 건축",
+    "category": "브랜드 NVIDIA",
+    "tone": "light",
+    "lum": 0.79,
+    "color": "#c6ccc6"
+  },
+  {
+    "id": "148",
+    "name": "초록 인광의 기억",
+    "category": "브랜드 NVIDIA",
+    "tone": "mid",
+    "lum": 0.42,
+    "color": "#666f59"
+  },
+  {
+    "id": "149",
+    "name": "햇살 드는 화이트 셋업",
+    "category": "데스크셋업 방",
+    "tone": "light",
+    "lum": 0.74,
+    "color": "#c9bba7"
+  },
+  {
+    "id": "150",
+    "name": "비 오는 밤의 게임방",
+    "category": "데스크셋업 방",
+    "tone": "dark",
+    "lum": 0.09,
+    "color": "#13162c"
+  },
+  {
+    "id": "151",
+    "name": "식물과 우드 셋업",
+    "category": "데스크셋업 방",
+    "tone": "mid",
+    "lum": 0.54,
+    "color": "#978770"
+  },
+  {
+    "id": "152",
+    "name": "노을빛 다락방 작업실",
+    "category": "데스크셋업 방",
+    "tone": "dark",
+    "lum": 0.31,
+    "color": "#6f483f"
+  },
+  {
+    "id": "153",
+    "name": "우주선의 개인 컴퓨터실",
+    "category": "데스크셋업 방",
+    "tone": "dark",
+    "lum": 0.11,
+    "color": "#111e2f"
+  },
+  {
+    "id": "154",
+    "name": "고양이가 쉬는 컴퓨터 방",
+    "category": "데스크셋업 방",
+    "tone": "light",
+    "lum": 0.76,
+    "color": "#dbbea5"
+  },
+  {
+    "id": "155",
+    "name": "눈 오는 밤의 개발자 방",
+    "category": "데스크셋업 방",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#21181a"
+  },
+  {
+    "id": "156",
+    "name": "1990년대 베이지 PC 방",
+    "category": "데스크셋업 방",
+    "tone": "dark",
+    "lum": 0.34,
+    "color": "#6b5532"
+  },
+  {
+    "id": "157",
+    "name": "벚꽃나무와 낮은 언덕의 봄 들판",
+    "category": "도트풍",
+    "tone": "light",
+    "lum": 0.78,
+    "color": "#cac8bd"
+  },
+  {
+    "id": "158",
+    "name": "고리 행성을 바라보는 달 기지",
+    "category": "도트풍",
+    "tone": "dark",
+    "lum": 0.18,
+    "color": "#242c49"
+  },
+  {
+    "id": "159",
+    "name": "비 내리는 네온 골목과 고가철도",
+    "category": "도트풍",
+    "tone": "dark",
+    "lum": 0.17,
+    "color": "#1c2c47"
+  },
+  {
+    "id": "160",
+    "name": "잠수정 불빛이 비추는 해저 연구소",
+    "category": "도트풍",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#0f2739"
+  },
+  {
+    "id": "161",
+    "name": "사막여우와 선인장이 있는 황혼 사막",
+    "category": "도트풍",
+    "tone": "mid",
+    "lum": 0.43,
+    "color": "#a35e67"
+  },
+  {
+    "id": "162",
+    "name": "비 오는 창가의 작은 PC 방",
+    "category": "도트풍",
+    "tone": "dark",
+    "lum": 0.14,
+    "color": "#1b2435"
+  },
+  {
+    "id": "163",
+    "name": "아케이드 기계와 낮은 네온 불빛",
+    "category": "도트풍",
+    "tone": "dark",
+    "lum": 0.1,
+    "color": "#211631"
+  },
+  {
+    "id": "164",
+    "name": "눈 덮인 마을과 따뜻한 창문 불빛",
+    "category": "도트풍",
+    "tone": "light",
+    "lum": 0.74,
+    "color": "#b7bdd4"
+  }
+]
