@@ -1,7 +1,7 @@
 {
   "name": "jjal-studio",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "자짤 스튜디오 - 레이어 기반 PC 사양 자짤 편집기",
   "author": "정신안차려?",
   "license": "MIT",

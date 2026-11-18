@@ -381,7 +381,8 @@ const effect: Section[] = [
   },
   { title: '배치', props: [...pos, ...size] },
   display,
-  ...styleSections,
+  // 효과에는 발광만 둔다. 그림자·외곽선은 입자와 빛줄기를 지저분하게 만들 뿐이라 뺐다.
+  ...styleSections.filter((s) => s.toggle === 'styles.glow.on'),
 ];
 
 const group: Section[] = [display, ...styleSections];

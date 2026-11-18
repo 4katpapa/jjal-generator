@@ -221,10 +221,20 @@ function drawContent(ctx: CanvasRenderingContext2D, layer: Exclude<Layer, { kind
   ctx.restore();
 }
 
-function needsComposite(layer: Layer): boolean {
+/** 이 레이어에 실제로 적용되는 스타일. 효과 레이어는 발광만 쓴다(속성 패널에도 발광만 나온다). */
+function activeStyles(layer: Layer): { shadow: boolean; glow: boolean; outline: boolean } {
   const s = layer.styles;
-  const genericOutline = s.outline.on && s.outline.width > 0 && layer.kind !== 'text' && layer.kind !== 'spec';
-  return s.shadow.on || s.glow.on || genericOutline || layer.opacity < 1 || layer.blend !== 'source-over';
+  const fx = layer.kind === 'effect';
+  return {
+    shadow: s.shadow.on && !fx,
+    glow: s.glow.on,
+    outline: s.outline.on && s.outline.width > 0 && !fx && layer.kind !== 'text' && layer.kind !== 'spec',
+  };
+}
+
+function needsComposite(layer: Layer): boolean {
+  const on = activeStyles(layer);
+  return on.shadow || on.glow || on.outline || layer.opacity < 1 || layer.blend !== 'source-over';
 }
 
 /** src의 불투명한 부분을 한 색으로 칠한 사본을 만든다. */
@@ -254,9 +264,10 @@ function drawLayer(ctx: CanvasRenderingContext2D, layer: Layer, env: Env): void 
   body.setTransform(1, 0, 0, 1, 0, 0);
 
   const s = layer.styles;
+  const on = activeStyles(layer);
 
   // 2) 글자가 아닌 레이어의 외곽선: 내용을 둘레 방향으로 찍어 넓힌 뒤 색을 입힌다.
-  if (s.outline.on && s.outline.width > 0 && layer.kind !== 'text' && layer.kind !== 'spec') {
+  if (on.outline) {
     const r = s.outline.width * env.scale;
     const steps = Math.max(8, Math.min(36, Math.ceil((Math.PI * 2 * r) / 1.5)));
     const ring = acquire(env.pw, env.ph);
@@ -275,14 +286,14 @@ function drawLayer(ctx: CanvasRenderingContext2D, layer: Layer, env: Env): void 
 
   // 3) 그림자·발광을 깔고 그 위에 내용을 얹는다. 흐림과 이동은 배율만큼 함께 커진다.
   const out = acquire(env.pw, env.ph);
-  if (s.shadow.on) {
+  if (on.shadow) {
     const t = tinted(body.canvas, rgba(s.shadow.color, s.shadow.opacity));
     out.filter = s.shadow.blur > 0 ? `blur(${(s.shadow.blur * env.scale) / 2}px)` : 'none';
     out.drawImage(t.canvas, s.shadow.x * env.scale, s.shadow.y * env.scale);
     out.filter = 'none';
     release(t);
   }
-  if (s.glow.on) {
+  if (on.glow) {
     const t = tinted(body.canvas, s.glow.color);
     out.filter = `blur(${Math.max(0.5, (s.glow.blur * env.scale) / 2)}px)`;
     const full = Math.floor(s.glow.strength);
