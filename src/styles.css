@@ -327,3 +327,5 @@ h2, h3, h4 { margin: 0; font-size: 13px; }
 .theme-row .color .hex { width: 68px; }
 .menu-pop .theme-row button { padding: 0; justify-content: center; }
 .size-info { color: var(--text-2); margin-right: auto; }
+
+.brand em { font-style: normal; color: var(--accent); font-size: 12px; margin-left: 2px; }

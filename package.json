@@ -1,9 +1,9 @@
 {
   "name": "jjal-studio",
   "private": true,
-  "version": "0.6.0",
-  "description": "자짤 스튜디오 - 레이어 기반 PC 사양 자짤 편집기",
-  "author": "정신안차려?",
+  "version": "1.0.0",
+  "description": "자짤생성툴 v2 - 레이어 기반 PC 사양 자짤 편집기",
+  "author": "4katpapa",
   "license": "MIT",
   "type": "module",
   "main": "electron/main.cjs",
@@ -21,8 +21,8 @@
     "assets:appicon": "node scripts/build-app-icon.mjs"
   },
   "build": {
-    "appId": "io.github.jjalstudio.app",
-    "productName": "자짤 스튜디오",
+    "appId": "io.github.4katpapa.jjalgenerator.v2",
+    "productName": "자짤생성툴 v2",
     "electronLanguages": [
       "ko",
       "en-US"
@@ -43,7 +43,7 @@
       "icon": "build/icon.png"
     },
     "portable": {
-      "artifactName": "jjal-studio-v${version}-portable.exe"
+      "artifactName": "jjal-generator-v2-${version}-portable.exe"
     }
   },
   "dependencies": {

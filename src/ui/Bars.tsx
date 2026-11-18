@@ -73,7 +73,7 @@ export function TopBar() {
 
   return (
     <header className="topbar">
-      <div className="brand">자짤 스튜디오</div>
+      <div className="brand" title={`자짤생성툴 v2 · 버전 ${__APP_VERSION__}`}>자짤생성툴 <em>v2</em></div>
       <Menu label="파일 ▾">
         {(close) => (
           <>

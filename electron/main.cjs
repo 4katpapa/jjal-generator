@@ -5,6 +5,19 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { readSpecs, listFonts } = require('./system.cjs');
 
+// 앱 이름이 '자짤 스튜디오'였던 0.x 버전의 저장 데이터를 새 이름의 저장소로 한 번 옮긴다.
+function migrateUserData() {
+  try {
+    const next = app.getPath('userData');
+    const prev = path.join(app.getPath('appData'), '자짤 스튜디오');
+    if (!fs.existsSync(path.join(next, 'IndexedDB')) && fs.existsSync(path.join(prev, 'IndexedDB'))) {
+      fs.cpSync(prev, next, { recursive: true });
+    }
+  } catch (err) {
+    console.error('이전 저장 데이터를 옮기지 못했습니다:', err);
+  }
+}
+
 const args = process.argv.slice(1);
 const smoke = args.includes('--smoke');
 const scriptArg = args.find((a) => a.startsWith('--script='));
@@ -52,7 +65,7 @@ function createWindow() {
     show: !smoke,
     backgroundColor: '#17181c',
     autoHideMenuBar: true,
-    title: '자짤 스튜디오',
+    title: '자짤생성툴 v2',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
@@ -93,6 +106,8 @@ process.on('unhandledRejection', (err) => {
   console.error(err);
   if (checking) app.exit(1);
 });
+
+if (!checking) migrateUserData();
 
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => app.quit());

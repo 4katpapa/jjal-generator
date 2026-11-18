@@ -67,7 +67,7 @@ export function normalizeDoc(raw: unknown): Doc {
   const base = emptyDoc();
   const doc = raw as Partial<Doc> | null;
   if (!doc || typeof doc !== 'object' || !Array.isArray(doc.layers) || !doc.card || !doc.content) {
-    throw new Error('자짤 스튜디오 문서가 아닙니다.');
+    throw new Error('자짤생성툴 v2 문서가 아닙니다.');
   }
   const layers = structuredClone(doc.layers) as Layer[];
   walk(layers, fillDefaults);

@@ -1,5 +1,5 @@
 {
-  "name": "jjal-studio-web",
+  "name": "jjal-generator-v2-web",
   "private": true,
   "description": "Cloudflare Pages용 빌드 진입점. Pages 설정(Root directory: web, Build command: npm run build, Output: dist)을 그대로 쓴다.",
   "scripts": {

@@ -68,10 +68,10 @@ describe('레이어 조작', () => {
 
 describe('사양 입력', () => {
   it('여러 형태의 줄을 읽는다', () => {
-    const rows = parseSpecText('CPU: Ryzen 7 9800X3D\nVGA\tRTX 5090\nRAM DDR5 32GB CL30 30:36:36\nMB   B850 AORUS');
+    const rows = parseSpecText('CPU: Example CPU 8-Core\nVGA\tGPU 12GB\nRAM DDR5 32GB CL30 30:36:36\nMB   X100 BOARD');
     expect(rows).toEqual([
-      { label: 'CPU', value: 'Ryzen 7 9800X3D' }, { label: 'VGA', value: 'RTX 5090' },
-      { label: 'RAM', value: 'DDR5 32GB CL30 30:36:36' }, { label: 'MB', value: 'B850 AORUS' },
+      { label: 'CPU', value: 'Example CPU 8-Core' }, { label: 'VGA', value: 'GPU 12GB' },
+      { label: 'RAM', value: 'DDR5 32GB CL30 30:36:36' }, { label: 'MB', value: 'X100 BOARD' },
     ]);
   });
 
@@ -85,10 +85,10 @@ describe('사양 입력', () => {
   it('읽어 온 사양은 빈 칸만 채우고 직접 적은 값은 지킨다', () => {
     const existing = [makeRow('CPU', '내가 적은 CPU'), makeRow('VGA', ''), makeRow('SSD', ''), makeRow('PSU', '')];
     const { rows, summary } = mergeSpecs(existing, [
-      { label: 'CPU', value: 'AMD Ryzen 7' }, { label: 'VGA', value: 'RTX 5090' },
-      { label: 'NVMe', value: 'T710 4TB' }, { label: 'NVMe', value: 'P5 2TB' },
+      { label: 'CPU', value: 'Example CPU' }, { label: 'VGA', value: 'GPU 12GB' },
+      { label: 'NVMe', value: 'Example SSD 4TB' }, { label: 'NVMe', value: 'Other SSD 2TB' },
     ]);
-    expect(rows.map((r) => `${r.label}=${r.value}`)).toEqual(['CPU=내가 적은 CPU', 'VGA=RTX 5090', 'SSD=T710 4TB', 'NVMe=P5 2TB', 'PSU=']);
+    expect(rows.map((r) => `${r.label}=${r.value}`)).toEqual(['CPU=내가 적은 CPU', 'VGA=GPU 12GB', 'SSD=Example SSD 4TB', 'NVMe=Other SSD 2TB', 'PSU=']);
     expect(summary).toEqual({ filled: 2, added: 1, kept: 1 });
   });
 });
@@ -96,20 +96,20 @@ describe('사양 입력', () => {
 describe('PC 사양 다듬기', () => {
   it('확실한 부품만 행으로 만든다', () => {
     const rows = normalizeSpecs({
-      cpu: [{ Name: 'AMD Ryzen 7 9800X3D 8-Core Processor           ' }],
-      board: { Manufacturer: 'Gigabyte Technology Co., Ltd.', Product: 'B850 AORUS STEALTH ICE' },
+      cpu: [{ Name: 'Example Chip 9 8-Core Processor           ' }],
+      board: { Manufacturer: 'Gigabyte Technology Co., Ltd.', Product: 'X100 EXAMPLE BOARD' },
       memory: [1, 2].map(() => ({ Capacity: 34359738368, Speed: 6000, ConfiguredClockSpeed: 6000, SMBIOSMemoryType: 34 })),
-      gpu: [{ Name: 'NVIDIA GeForce RTX 5090', PNPDeviceID: 'PCI\\VEN_10DE' }, { Name: 'Parsec Virtual Display', PNPDeviceID: 'ROOT\\X' }],
+      gpu: [{ Name: 'Example GPU 12GB', PNPDeviceID: 'PCI\\VEN_10DE' }, { Name: 'Parsec Virtual Display', PNPDeviceID: 'ROOT\\X' }],
       disks: [
         { FriendlyName: 'WD Blue', MediaType: 'HDD', BusType: 'SATA', Size: 4000787030016 },
-        { FriendlyName: 'T710', MediaType: 'SSD', BusType: 'NVMe', Size: 2000398934016 },
+        { FriendlyName: 'Example SSD', MediaType: 'SSD', BusType: 'NVMe', Size: 2000398934016 },
         { FriendlyName: 'USB Stick', MediaType: 'Unspecified', BusType: 'USB', Size: 64000000000 },
       ],
     });
     expect(rows).toEqual([
-      { label: 'CPU', value: 'AMD Ryzen 7 9800X3D' }, { label: 'MB', value: 'Gigabyte B850 AORUS STEALTH ICE' },
-      { label: 'RAM', value: 'DDR5 32GB*2 6000MHz' }, { label: 'VGA', value: 'NVIDIA GeForce RTX 5090' },
-      { label: 'NVMe', value: 'T710 2TB' }, { label: 'HDD', value: 'WD Blue 4TB' },
+      { label: 'CPU', value: 'Example Chip 9' }, { label: 'MB', value: 'Gigabyte X100 EXAMPLE BOARD' },
+      { label: 'RAM', value: 'DDR5 32GB*2 6000MHz' }, { label: 'VGA', value: 'Example GPU 12GB' },
+      { label: 'NVMe', value: 'Example SSD 2TB' }, { label: 'HDD', value: 'WD Blue 4TB' },
     ]);
     expect(sizeText(500107862016)).toBe('500GB');
   });

@@ -55,8 +55,8 @@ module.exports = async function uiCheck(win) {
   check('프리셋 레이어가 들어왔다', (await state('s.doc.layers.length')) >= 5);
 
   // 2) 내용 입력 (닉네임 + 사양 붙여넣기 경로는 함수로 확인)
-  await js(`window.__editor.getState().apply((d) => { d.content.nickname = '정신안차려?';
-    const v = ['AMD Ryzen 7 9800X3D', 'Gigabyte B850 AORUS STEALTH ICE', 'DDR5 24GB*4', 'ZOTAC RTX 5090 SOLID OC', 'CRUCIAL T710 4TB', 'SuperFlower SF-1000F14XG', 'LIANLI O11D MINI V2 FLOW', 'LIANLI Hydroshift II LCD-C'];
+  await js(`window.__editor.getState().apply((d) => { d.content.nickname = '테스트닉';
+    const v = ['Example CPU 8-Core', 'Example B-Series Board', 'DDR5 16GB*2', 'Example GPU 12GB', 'Example NVMe 1TB', 'Example 750W GOLD', 'Example Mid Tower', 'Example Tower Cooler'];
     d.content.specs.forEach((r, i) => { r.value = v[i] || ''; }); })`);
   await shot('02-preset-applied');
 
@@ -201,7 +201,7 @@ module.exports = async function uiCheck(win) {
   await js('document.querySelectorAll(".preset-card")[2].click()');
   await sleep(700);
   const c = await state('s.doc.content');
-  check('다른 프리셋을 적용해도 닉네임·사양·사진이 남는다', c.nickname === '정신안차려?' && c.specs[0].value.includes('9800X3D') && c.photo === 'demo');
+  check('다른 프리셋을 적용해도 닉네임·사양·사진이 남는다', c.nickname === '테스트닉' && c.specs[0].value.includes('Example CPU') && c.photo === 'demo');
   await js('window.__editor.getState().set({ playing: false, t: 0.8 })');
   await shot('13-other-preset');
 

@@ -118,15 +118,15 @@ export function mergeSpecs(existing: SpecRow[], incoming: { label: string; value
 
 /** 값이 하나도 없을 때 프리셋 미리보기에 쓰는 예시. 문서에는 저장하지 않는다. */
 export const SAMPLE_VALUES: Record<string, string> = {
-  cpu: 'AMD Ryzen 7 9800X3D',
-  mb: 'B850 AORUS ELITE',
-  ram: 'DDR5 32GB*2',
-  gpu: 'GeForce RTX 5080',
-  ssd: 'NVMe 2TB',
+  cpu: 'Example CPU 8-Core',
+  mb: 'Example B-Series Board',
+  ram: 'DDR5 16GB*2',
+  gpu: 'Example GPU 12GB',
+  ssd: 'NVMe 1TB',
   hdd: 'HDD 4TB',
-  psu: '1000W 80+ GOLD',
-  case: 'O11D MINI',
-  cooler: 'AIO 360',
+  psu: '750W 80+ GOLD',
+  case: 'Mid Tower',
+  cooler: 'Tower Cooler',
 };
 
 export function withSampleValues(rows: SpecRow[]): SpecRow[] {

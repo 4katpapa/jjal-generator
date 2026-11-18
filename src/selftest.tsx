@@ -40,8 +40,8 @@ function fixtureDoc(): Doc {
   const doc = emptyDoc();
   doc.content.nickname = '닉네임';
   doc.content.specs = [
-    makeRow('CPU', 'Ryzen 7 9800X3D'), makeRow('MB', 'B850 AORUS'), makeRow('RAM', 'DDR5 32GB*2'),
-    makeRow('VGA', 'RTX 5080'), makeRow('SSD', 'NVMe 2TB'), makeRow('PSU', '1000W GOLD'),
+    makeRow('CPU', 'Example CPU 8-Core'), makeRow('MB', 'Example Board'), makeRow('RAM', 'DDR5 16GB*2'),
+    makeRow('VGA', 'Example GPU 12GB'), makeRow('SSD', 'NVMe 2TB'), makeRow('PSU', '1000W GOLD'),
   ];
   doc.assets = {
     A: { id: 'A', name: 'a', src: testImage('a'), builtin: false },

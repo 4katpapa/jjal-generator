@@ -80,7 +80,7 @@ export function SpecEditor() {
         <div className="spec-incoming">
           {panel === 'paste' && (
             <textarea
-              autoFocus rows={5} value={pasted} placeholder={'한 줄에 하나씩 붙여넣으세요.\nCPU: Ryzen 7 9800X3D\nVGA RTX 5080'}
+              autoFocus rows={5} value={pasted} placeholder={'한 줄에 하나씩 붙여넣으세요.\nCPU: 8코어 프로세서\nVGA 그래픽카드 12GB'}
               onChange={(e) => setPasted(e.target.value)}
             />
           )}
