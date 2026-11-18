@@ -21,8 +21,9 @@ export interface Preset {
 const W = 850;
 const H = 300;
 
-function card(patch: Partial<Card> = {}): Card {
-  return { ...defaultCard(), ...patch };
+function card(patch: { radius?: number; border?: Partial<Card['border']> } = {}): Card {
+  const base = defaultCard();
+  return { ...base, radius: patch.radius ?? base.radius, border: { ...base.border, ...patch.border } };
 }
 
 function bgAsset(id: string, name: string): Record<string, Asset> {

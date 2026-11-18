@@ -2,7 +2,7 @@
 
 export type BlendMode =
   | 'source-over' | 'multiply' | 'screen' | 'overlay'
-  | 'soft-light' | 'lighter' | 'darken' | 'lighten';
+  | 'soft-light' | 'lighter' | 'darken' | 'lighten' | 'color-dodge' | 'difference' | 'color';
 
 export interface LayerStyles {
   shadow: { on: boolean; color: string; opacity: number; blur: number; x: number; y: number };
@@ -28,7 +28,10 @@ export interface LayerBase {
   role: 'bg' | null;
 }
 
-export type FillType = 'solid' | 'linear' | 'dots' | 'stripes' | 'grid' | 'checker';
+export type FillType =
+  | 'solid' | 'linear' | 'radial'
+  | 'dots' | 'rings' | 'stripes' | 'cross' | 'grid' | 'checker' | 'plus' | 'zigzag' | 'diamonds'
+  | 'triangles' | 'waves' | 'scales' | 'bricks' | 'hex' | 'stars' | 'hearts';
 
 export interface FillProps {
   type: FillType;
@@ -37,9 +40,13 @@ export interface FillProps {
   angle: number;
   size: number;
   opacity: number;
+  /** 무늬일 때 바탕(color2)을 칠할지. 끄면 무늬만 얹힌다. */
+  base: boolean;
+  /** 무늬의 선 굵기·알갱이 크기 배율. */
+  weight: number;
 }
 
-export type OutlineShape = 'rect' | 'ellipse' | 'slant';
+export type OutlineShape = 'rect' | 'ellipse' | 'slant' | 'bubble' | 'heart' | 'star';
 
 export interface ShapeLayer extends LayerBase {
   kind: 'shape';
@@ -107,8 +114,9 @@ export interface SpecLayer extends LayerBase {
 }
 
 export type EffectType =
-  | 'sparkle' | 'starfield' | 'shine' | 'aurora'
-  | 'scanline' | 'fall' | 'borderRun' | 'borderPulse';
+  | 'sparkle' | 'starfield' | 'shine' | 'aurora' | 'scanline' | 'fall'
+  | 'snow' | 'rain' | 'hearts' | 'bubbles' | 'fireflies' | 'meteor' | 'rays' | 'wave' | 'bars' | 'matrix'
+  | 'borderRun' | 'borderPulse' | 'borderMarquee' | 'borderRainbow' | 'borderCorners';
 
 export interface EffectLayer extends LayerBase {
   kind: 'effect';
@@ -152,11 +160,26 @@ export interface Asset {
   builtin: boolean;
 }
 
+export type LineStyle =
+  | 'solid' | 'gradient' | 'glow' | 'double' | 'triple' | 'dashed' | 'longdash' | 'dotted' | 'dashdot';
+
+export interface FrameLine {
+  on: boolean;
+  style: LineStyle;
+  color: string;
+  color2: string;
+  width: number;
+  /** 카드 가장자리에서 안쪽으로 떨어진 거리. */
+  inset: number;
+}
+
 export interface Card {
   w: number;
   h: number;
   radius: number;
-  border: { on: boolean; color: string; width: number };
+  border: FrameLine;
+  /** 테두리 안쪽에 한 겹 더 두르는 장식 선. */
+  deco: FrameLine;
   /** 둥근 모서리 바깥을 채우는 방식. */
   matte: { type: 'transparent' | 'color'; color: string };
 }

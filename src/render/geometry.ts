@@ -25,7 +25,48 @@ export function shapePath(ctx: CanvasRenderingContext2D, shape: OutlineShape, w:
     ctx.closePath();
     return;
   }
+  if (shape === 'star') {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i += 1) {
+      const rad = (i * Math.PI) / 5 - Math.PI / 2;
+      const k = i % 2 === 0 ? 1 : 0.45;
+      const x = w / 2 + Math.cos(rad) * (w / 2) * k;
+      const y = h / 2 + Math.sin(rad) * (h / 2) * k;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    return;
+  }
+  if (shape === 'heart') {
+    heartPath(ctx, 0, 0, w, h);
+    return;
+  }
+  if (shape === 'bubble') {
+    // 말풍선: 아래 20%를 꼬리 자리로 남긴 둥근 사각형 + 왼쪽 아래 꼬리.
+    const bh = h * 0.8;
+    const r = Math.max(0, Math.min(radius, w / 2, bh / 2));
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.arcTo(w, 0, w, bh, r);
+    ctx.arcTo(w, bh, 0, bh, r);
+    ctx.lineTo(w * 0.36, bh);
+    ctx.lineTo(w * 0.16, h);
+    ctx.lineTo(w * 0.2, bh);
+    ctx.arcTo(0, bh, 0, 0, r);
+    ctx.arcTo(0, 0, w, 0, r);
+    ctx.closePath();
+    return;
+  }
   roundRectPath(ctx, 0, 0, w, h, radius);
+}
+
+/** (x, y)를 왼쪽 위로 하는 w×h 상자에 꽉 차는 하트. 새 경로를 시작한다. */
+export function heartPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
+  ctx.beginPath();
+  ctx.moveTo(x + w / 2, y + h);
+  ctx.bezierCurveTo(x - w * 0.12, y + h * 0.62, x + w * 0.02, y - h * 0.08, x + w / 2, y + h * 0.26);
+  ctx.bezierCurveTo(x + w * 0.98, y - h * 0.08, x + w * 1.12, y + h * 0.62, x + w / 2, y + h);
+  ctx.closePath();
 }
 
 export interface Rect { x: number; y: number; w: number; h: number }

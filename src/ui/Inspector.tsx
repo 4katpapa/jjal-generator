@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   alignSelection, deleteSelection, groupSelection, patchLayer, pickFile, replaceImage, useAsBackground,
   type AlignMode,
 } from '../editor/actions';
+import { blendHasNoEffect } from '../editor/blendCheck';
 import { CARD_SCHEMA, sectionsFor, type PropDef, type Section } from '../editor/schema';
 import { useEditor } from '../editor/store';
 import { findLayer, getPath, setPath } from '../model/ops';
@@ -23,7 +24,14 @@ function read(def: PropDef, target: unknown, doc: Doc): unknown {
 
 function PropRow({ def, target, doc, onSet }: { def: PropDef; target: unknown; doc: Doc; onSet: Setter }) {
   const value = read(def, target, doc);
-  const note = def.note?.(target, doc) ?? null;
+  const t = useEditor((st) => (st.playing ? 0 : st.t));
+  const blendNote = useMemo(() => {
+    if (def.path !== 'blend' || !(target as Layer).id) return null;
+    return blendHasNoEffect(doc, (target as Layer).id, t)
+      ? '지금 색 조합에서는 “보통”과 결과가 같습니다. 이 레이어 아래에 다른 색이 깔려 있어야 차이가 나고, 흰색에 스크린·검정에 곱하기처럼 변화가 없는 조합도 있습니다.'
+      : null;
+  }, [def.path, target, doc, t]);
+  const note = blendNote ?? def.note?.(target, doc) ?? null;
   const areaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (def.control !== 'textarea') return undefined;

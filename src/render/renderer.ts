@@ -1,7 +1,7 @@
-import type { Content, Doc, FillProps, ImageLayer, Layer, ShapeLayer } from '../model/types';
+import type { Content, Doc, FillProps, FrameLine, ImageLayer, Layer, ShapeLayer } from '../model/types';
 import { assetSrc, getImage } from './assets';
 import { drawEffect } from './effects';
-import { layerBox, roundRectPath, shapePath } from './geometry';
+import { heartPath, layerBox, roundRectPath, shapePath } from './geometry';
 import { drawSpecLayer } from './spec';
 import { drawTextLayer, linearGradient } from './text';
 
@@ -53,6 +53,36 @@ function rgba(hex: string, alpha: number): string {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
 }
 
+type Mark = (ctx: CanvasRenderingContext2D, x: number, y: number, s: number, k: number) => void;
+
+const line = (ctx: CanvasRenderingContext2D, pts: number[], width: number) => {
+  ctx.beginPath();
+  ctx.moveTo(pts[0], pts[1]);
+  for (let i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
+  ctx.lineWidth = width;
+  ctx.stroke();
+};
+
+// 무늬 한 칸을 그리는 함수들. (x, y)는 칸의 왼쪽 위, s는 칸 크기, k는 굵기 배율이다.
+const MARKS: Partial<Record<FillProps['type'], { mark: Mark; stepY?: number; stagger?: boolean }>> = {
+  dots: { mark: (c, x, y, s, k) => { c.beginPath(); c.arc(x + s / 2, y + s / 2, s * 0.22 * k, 0, Math.PI * 2); c.fill(); } },
+  rings: { mark: (c, x, y, s, k) => { c.beginPath(); c.arc(x + s / 2, y + s / 2, s * 0.3, 0, Math.PI * 2); c.lineWidth = s * 0.09 * k; c.stroke(); } },
+  stripes: { mark: (c, x, y, s, k) => c.fillRect(x, y, Math.min(s, (s / 2) * k), s + 0.5) },
+  cross: { mark: (c, x, y, s, k) => { line(c, [x, y, x + s, y + s], s * 0.09 * k); line(c, [x + s, y, x, y + s], s * 0.09 * k); } },
+  grid: { mark: (c, x, y, s, k) => { const t = Math.max(1, s * 0.08 * k); c.fillRect(x, y, t, s + 0.5); c.fillRect(x, y, s + 0.5, t); } },
+  checker: { mark: (c, x, y, s) => { c.fillRect(x, y, s / 2, s / 2); c.fillRect(x + s / 2, y + s / 2, s / 2, s / 2); } },
+  plus: { mark: (c, x, y, s, k) => { const t = s * 0.1 * k; c.fillRect(x + s / 2 - t / 2, y + s * 0.25, t, s * 0.5); c.fillRect(x + s * 0.25, y + s / 2 - t / 2, s * 0.5, t); } },
+  zigzag: { mark: (c, x, y, s, k) => line(c, [x, y + s * 0.7, x + s / 2, y + s * 0.3, x + s, y + s * 0.7], s * 0.1 * k) },
+  diamonds: { mark: (c, x, y, s, k) => { const r = s * 0.3 * Math.min(1.6, k); c.beginPath(); c.moveTo(x + s / 2, y + s / 2 - r); c.lineTo(x + s / 2 + r, y + s / 2); c.lineTo(x + s / 2, y + s / 2 + r); c.lineTo(x + s / 2 - r, y + s / 2); c.fill(); }, stagger: true },
+  triangles: { mark: (c, x, y, s, k) => { const r = s * 0.32 * Math.min(1.5, k); c.beginPath(); c.moveTo(x + s / 2, y + s / 2 - r); c.lineTo(x + s / 2 + r, y + s / 2 + r); c.lineTo(x + s / 2 - r, y + s / 2 + r); c.fill(); }, stagger: true },
+  waves: { mark: (c, x, y, s, k) => { c.beginPath(); c.moveTo(x, y + s / 2); c.quadraticCurveTo(x + s / 4, y + s * 0.15, x + s / 2, y + s / 2); c.quadraticCurveTo(x + s * 0.75, y + s * 0.85, x + s, y + s / 2); c.lineWidth = s * 0.09 * k; c.stroke(); }, stepY: 0.6 },
+  scales: { mark: (c, x, y, s, k) => { c.beginPath(); c.arc(x + s / 2, y, s / 2, 0, Math.PI); c.lineWidth = s * 0.08 * k; c.stroke(); }, stepY: 0.5, stagger: true },
+  bricks: { mark: (c, x, y, s, k) => { const t = Math.max(1, s * 0.08 * k); c.fillRect(x, y, s + 0.5, t); c.fillRect(x, y, t, s / 2 + 0.5); }, stepY: 0.5, stagger: true },
+  hex: { mark: (c, x, y, s, k) => { c.beginPath(); for (let i = 0; i < 6; i += 1) { const a = (i * Math.PI) / 3 + Math.PI / 6; const px = x + s / 2 + Math.cos(a) * s * 0.56; const py = y + s / 2 + Math.sin(a) * s * 0.56; if (i === 0) c.moveTo(px, py); else c.lineTo(px, py); } c.closePath(); c.lineWidth = s * 0.07 * k; c.stroke(); }, stepY: 0.86, stagger: true },
+  stars: { mark: (c, x, y, s, k) => { const r = s * 0.3 * Math.min(1.5, k); c.beginPath(); for (let i = 0; i < 8; i += 1) { const a = (i * Math.PI) / 4; const d = i % 2 === 0 ? r : r * 0.28; c.lineTo(x + s / 2 + Math.cos(a) * d, y + s / 2 + Math.sin(a) * d); } c.fill(); }, stagger: true },
+  hearts: { mark: (c, x, y, s, k) => { const r = s * 0.5 * Math.min(1.5, k); heartPath(c, x + s / 2 - r / 2, y + s / 2 - r / 2, r, r); c.fill(); }, stagger: true },
+};
+
 function paintFill(ctx: CanvasRenderingContext2D, fill: FillProps, w: number, h: number): void {
   ctx.globalAlpha *= fill.opacity;
   if (fill.type === 'solid') {
@@ -65,36 +95,69 @@ function paintFill(ctx: CanvasRenderingContext2D, fill: FillProps, w: number, h:
     ctx.fill();
     return;
   }
-  // 무늬: color2를 바탕으로 깔고 color로 무늬를 그린다.
-  ctx.fillStyle = fill.color2;
-  ctx.fill();
+  if (fill.type === 'radial') {
+    const g = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.hypot(w, h) / 2);
+    g.addColorStop(0, fill.color);
+    g.addColorStop(1, fill.color2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    return;
+  }
+  // 무늬: (바탕을 켰으면) color2를 깔고 color로 무늬를 그린다.
+  if (fill.base) {
+    ctx.fillStyle = fill.color2;
+    ctx.fill();
+  }
   ctx.clip();
   ctx.fillStyle = fill.color;
-  const s = Math.max(2, fill.size);
+  ctx.strokeStyle = fill.color;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  const def = MARKS[fill.type];
+  if (!def) return;
+  const s = Math.max(4, fill.size);
+  const stepY = s * (def.stepY ?? 1);
   const reach = Math.hypot(w, h) / 2 + s * 2;
   ctx.translate(w / 2, h / 2);
   ctx.rotate((fill.angle * Math.PI) / 180);
-  if (fill.type === 'dots') {
-    for (let y = -reach; y <= reach; y += s) {
-      for (let x = -reach; x <= reach; x += s) {
-        ctx.beginPath();
-        ctx.arc(x, y, s * 0.22, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  } else if (fill.type === 'stripes') {
-    for (let x = -reach; x <= reach; x += s) ctx.fillRect(x, -reach, s / 2, reach * 2);
-  } else if (fill.type === 'grid') {
-    const t = Math.max(1, s * 0.08);
-    for (let x = -reach; x <= reach; x += s) ctx.fillRect(x, -reach, t, reach * 2);
-    for (let y = -reach; y <= reach; y += s) ctx.fillRect(-reach, y, reach * 2, t);
-  } else {
-    for (let yi = Math.floor(-reach / s); yi * s <= reach; yi += 1) {
-      for (let xi = Math.floor(-reach / s); xi * s <= reach; xi += 1) {
-        if ((xi + yi) % 2 === 0) ctx.fillRect(xi * s, yi * s, s, s);
-      }
-    }
+  const n = Math.ceil(reach / s);
+  const m = Math.ceil(reach / stepY);
+  for (let yi = -m; yi <= m; yi += 1) {
+    const shift = def.stagger && yi % 2 !== 0 ? s / 2 : 0;
+    for (let xi = -n - 1; xi <= n; xi += 1) def.mark(ctx, xi * s + shift, yi * stepY, s, fill.weight);
   }
+}
+
+/** 카드 둘레에 선을 긋는다. 카드 테두리와 장식 선이 함께 쓴다. */
+function strokeFrame(ctx: CanvasRenderingContext2D, card: Doc['card'], f: FrameLine, px: number): void {
+  if (!f.on || f.width <= 0) return;
+  const lw = f.width;
+  const ring = (offset: number, width: number) => {
+    const d = f.inset + offset;
+    roundRectPath(ctx, d, d, card.w - d * 2, card.h - d * 2, card.radius - d);
+    ctx.lineWidth = width;
+    ctx.stroke();
+  };
+  ctx.save();
+  ctx.strokeStyle = f.style === 'gradient' ? linearGradient(ctx, card.w, card.h, 20, f.color, f.color2) : f.color;
+  ctx.lineCap = 'butt';
+  if (f.style === 'double') {
+    ring(lw * 0.2, lw * 0.4);
+    ring(lw * 1.4, lw * 0.4);
+  } else if (f.style === 'triple') {
+    ring(lw * 0.15, lw * 0.3);
+    ring(lw * 0.95, lw * 0.3);
+    ring(lw * 1.75, lw * 0.3);
+  } else {
+    if (f.style === 'dashed') ctx.setLineDash([lw * 3, lw * 2]);
+    else if (f.style === 'longdash') ctx.setLineDash([lw * 7, lw * 3]);
+    else if (f.style === 'dashdot') ctx.setLineDash([lw * 5, lw * 2, lw, lw * 2]);
+    else if (f.style === 'dotted') { ctx.setLineDash([0.01, lw * 2]); ctx.lineCap = 'round'; }
+    else if (f.style === 'glow') { ctx.shadowColor = f.color2; ctx.shadowBlur = lw * 4 * px; }
+    ring(lw / 2, lw);
+    if (f.style === 'glow') ring(lw / 2, lw);
+  }
+  ctx.restore();
 }
 
 function drawShape(ctx: CanvasRenderingContext2D, layer: ShapeLayer): void {
@@ -280,12 +343,7 @@ export function renderDoc(ctx: CanvasRenderingContext2D, doc: Doc, opts: RenderO
   roundRectPath(ctx, 0, 0, card.w, card.h, card.radius);
   ctx.clip();
   for (const layer of doc.layers) drawLayer(ctx, layer, env);
-  if (card.border.on && card.border.width > 0) {
-    const bw = card.border.width;
-    roundRectPath(ctx, bw / 2, bw / 2, card.w - bw, card.h - bw, card.radius - bw / 2);
-    ctx.strokeStyle = card.border.color;
-    ctx.lineWidth = bw;
-    ctx.stroke();
-  }
+  strokeFrame(ctx, card, card.border, opts.scale);
+  strokeFrame(ctx, card, card.deco, opts.scale);
   ctx.restore();
 }

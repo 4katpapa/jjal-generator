@@ -10,7 +10,7 @@ function measureCtx(): CanvasRenderingContext2D | null {
 }
 
 export function fontCss(font: string, size: number, bold: boolean, italic = false): string {
-  return `${italic ? 'italic ' : ''}${bold ? 700 : 400} ${size}px "${font}", "Nanum Gothic", "Malgun Gothic", sans-serif`;
+  return `${italic ? 'italic ' : ''}${bold ? 700 : 400} ${size}px "${font}", "Nanum Gothic", "Malgun Gothic", "Segoe UI Emoji", sans-serif`;
 }
 
 export function setSpacing(ctx: CanvasRenderingContext2D, px: number): void {

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { addEffect, addImageFromFile, addShape, addSpec, addText, pickFile } from '../editor/actions';
+import { addEffect, addEmoji, addImageFromFile, addShapeKit, addSpec, addText, pickFile, SHAPE_KITS } from '../editor/actions';
 import { exportFile, importFile, newDesign, saveCurrent } from '../editor/session';
 import { isDirty, useEditor } from '../editor/store';
-import { EFFECT_LABELS } from '../model/factory';
+import { EFFECTS } from '../model/factory';
 import { hasMotion } from '../model/ops';
 import type { EffectType } from '../model/types';
 
@@ -86,7 +86,19 @@ export function TopBar() {
   );
 }
 
+const EMOJI: { name: string; items: string }[] = [
+  { name: '표정', items: '😀 😁 😂 🤣 😊 😍 🥰 😎 🤔 😴 😭 😡 🥺 😱 🤯 😇 🤗 😏 🙃 😋 🤤 🥹 😤 🫠 💀 👻 🤖 👽 😺 😻' },
+  { name: '손·사람', items: '👍 👎 👏 🙏 ✌️ 🤞 🤘 👌 💪 👀 🫶 🤝 ✋ 👉 👈 🙌 🧑‍💻 🎮 🕹️ 🎧' },
+  { name: '하트·별', items: '❤️ 🧡 💛 💚 💙 💜 🖤 🤍 💖 💕 💘 💔 ⭐ 🌟 ✨ 💫 🔥 ⚡ 💥 🌈 ☀️ 🌙 ❄️ 🌸 🍀 🎀 🎉 🎊 💎 👑' },
+  { name: '동물·음식', items: '🐱 🐶 🐰 🦊 🐻 🐼 🐧 🐥 🦄 🐉 🐟 🦋 🍰 🍩 🍪 🍕 🍔 🍜 ☕ 🍺' },
+  { name: 'PC·사물', items: '💻 🖥️ ⌨️ 🖱️ 💾 📱 🔋 🔌 💡 🔧 ⚙️ 🧊 🚀 🏆 🎯 📌 🔒 ⏰ 📷 🎵' },
+  { name: '기호 (색 적용)', items: '★ ☆ ♥ ♡ ♪ ♬ ✿ ❀ ✦ ✧ ◆ ◇ ● ○ ■ □ ▲ ▼ ◀ ▶ → ← ↑ ↓ ※ ♨ ☾ ☁ ✚ ✔ ✖ ∞ ♠ ♣' },
+];
+
 export function AddBar() {
+  const [emojiTab, setEmojiTab] = useState(0);
+  const areaFx = (Object.entries(EFFECTS) as [EffectType, (typeof EFFECTS)[EffectType]][]).filter(([, m]) => !m.border);
+  const borderFx = (Object.entries(EFFECTS) as [EffectType, (typeof EFFECTS)[EffectType]][]).filter(([, m]) => m.border);
   return (
     <aside className="addbar">
       <span className="addbar-title">추가</span>
@@ -96,22 +108,48 @@ export function AddBar() {
         onClick={async () => { const f = await pickFile('image/*'); if (f) await addImageFromFile(f); }}
       ><b>🖼</b><span>이미지</span></button>
       <button type="button" onClick={addSpec} title="사양 목록 레이어 추가"><b>☰</b><span>사양</span></button>
-      <Menu label={<><b>▭</b><span>도형</span></>} title="도형 레이어 추가" className="flyout">
+      <Menu label={<><b>▢</b><span>패널·도형</span></>} title="패널, 띠, 무늬, 도형 추가" className="flyout">
         {(close) => (
-          <>
-            <button type="button" onClick={() => { close(); addShape('rect'); }}>사각형</button>
-            <button type="button" onClick={() => { close(); addShape('ellipse'); }}>원</button>
-            <button type="button" onClick={() => { close(); addShape('slant'); }}>기울인 사각형</button>
-          </>
+          <div className="kit-list">
+            {SHAPE_KITS.map((k) => (
+              <button type="button" key={k.id} onClick={() => { close(); addShapeKit(k.id); }}>
+                <i>{k.icon}</i><span>{k.name}</span>{k.hint && <small>{k.hint}</small>}
+              </button>
+            ))}
+            <p className="note">추가한 뒤 속성의 “모양·채움”에서 모양과 무늬를 바꿀 수 있습니다.</p>
+          </div>
+        )}
+      </Menu>
+      <Menu label={<><b>😊</b><span>이모티콘</span></>} title="이모티콘·기호 추가" className="flyout">
+        {(close) => (
+          <div className="emoji-pop">
+            <div className="chips">
+              {EMOJI.map((g, i) => (
+                <button type="button" key={g.name} className={i === emojiTab ? 'on' : ''} onClick={() => setEmojiTab(i)}>{g.name}</button>
+              ))}
+            </div>
+            <div className="emoji-grid">
+              {EMOJI[emojiTab].items.split(' ').map((ch) => (
+                <button type="button" key={ch} onClick={() => { close(); addEmoji(ch); }}>{ch}</button>
+              ))}
+            </div>
+            <p className="note">텍스트 레이어로 들어갑니다. 닉네임 같은 문구 안에 직접 입력해도 됩니다(Win + . 키).</p>
+          </div>
         )}
       </Menu>
       <Menu label={<><b>✦</b><span>효과</span></>} title="움직이는 효과 레이어 추가" className="flyout">
         {(close) => (
-          <>
-            {(Object.entries(EFFECT_LABELS) as [EffectType, string][]).map(([type, label]) => (
-              <button type="button" key={type} onClick={() => { close(); addEffect(type); }}>{label}</button>
-            ))}
-          </>
+          <div className="fx-pop">
+            <h5>배경 효과</h5>
+            <div className="fx-grid">
+              {areaFx.map(([type, m]) => <button type="button" key={type} onClick={() => { close(); addEffect(type); }}>{m.label}</button>)}
+            </div>
+            <h5>테두리 효과</h5>
+            <div className="fx-grid">
+              {borderFx.map(([type, m]) => <button type="button" key={type} onClick={() => { close(); addEffect(type); }}>{m.label}</button>)}
+            </div>
+            <p className="note">효과도 레이어입니다. 레이어 패널에서 끌어 사진 앞뒤로 옮길 수 있습니다.</p>
+          </div>
         )}
       </Menu>
     </aside>

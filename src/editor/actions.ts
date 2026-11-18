@@ -1,5 +1,6 @@
-import type { Doc, EffectType, ImageLayer, Layer, OutlineShape } from '../model/types';
-import { defaultContent, emptyDoc, makeEffect, makeImage, makeShape, makeSpec, makeText, uid } from '../model/factory';
+import type { Card, Doc, EffectType, ImageLayer, Layer } from '../model/types';
+import { fillDefaults } from '../io/file';
+import { defaultCard, defaultContent, emptyDoc, makeEffect, makeImage, makeShape, makeSpec, makeText, uid } from '../model/factory';
 import {
   cloneLayer, duplicateLayer, findLayer, flatten, groupLayers, insertLayer, pruneAssets, removeLayer,
   shiftLayer, toEdge, translateLayer, ungroupLayer, walk,
@@ -37,11 +38,45 @@ export function addText(): void {
   addLayer(makeText({ x: Math.round(doc.card.w / 2 - 60), y: Math.round(doc.card.h / 2 - 18) }));
 }
 
-export function addShape(shape: OutlineShape): void {
+export type ShapeKit = 'panel' | 'band' | 'slantBand' | 'pattern' | 'divider' | 'circle' | 'bubble' | 'heart' | 'star';
+
+export const SHAPE_KITS: { id: ShapeKit; icon: string; name: string; hint: string }[] = [
+  { id: 'panel', icon: '▢', name: '반투명 패널', hint: '글자 뒤에 깔아 읽기 쉽게' },
+  { id: 'band', icon: '▬', name: '가로 띠', hint: '카드 폭 전체를 가로지르는 띠' },
+  { id: 'slantBand', icon: '▰', name: '기울인 띠', hint: '사진과 사양 사이 경계' },
+  { id: 'pattern', icon: '▦', name: '무늬 덮개', hint: '카드 전체에 무늬만 얹기' },
+  { id: 'divider', icon: '─', name: '구분선', hint: '얇은 선' },
+  { id: 'circle', icon: '●', name: '원', hint: '' },
+  { id: 'bubble', icon: '🗨', name: '말풍선', hint: '' },
+  { id: 'heart', icon: '♥', name: '하트', hint: '' },
+  { id: 'star', icon: '★', name: '별', hint: '' },
+];
+
+/** 자주 쓰는 용도별로 미리 맞춰 둔 도형을 추가한다. 추가한 뒤에는 평범한 도형 레이어다. */
+export function addShapeKit(kit: ShapeKit): void {
+  const { w, h } = S().doc.card;
+  const cx = Math.round(w / 2);
+  const cy = Math.round(h / 2);
+  const make = {
+    panel: () => makeShape({ name: '패널', x: cx - 170, y: cy - 100, w: 340, h: 200, radius: 14, fill: { color: '#0b1020', opacity: 0.55 } }),
+    band: () => makeShape({ name: '가로 띠', x: 0, y: cy - 28, w, h: 56, radius: 0, fill: { type: 'linear', color: '#4f8cff', color2: '#b06cff', angle: 0, opacity: 0.9 } }),
+    slantBand: () => makeShape({ name: '기울인 띠', shape: 'slant', x: cx - 100, y: -10, w: 220, h: h + 20, slant: 110, fill: { type: 'linear', color: '#ff3d81', color2: '#7a5cff', angle: 90, opacity: 0.9 } }),
+    pattern: () => makeShape({ name: '무늬 덮개', x: 0, y: 0, w, h, radius: 0, fill: { type: 'dots', color: '#ffffff', size: 22, angle: 20, opacity: 0.35, base: false } }),
+    divider: () => makeShape({ name: '구분선', x: cx - 150, y: cy - 1, w: 300, h: 3, radius: 2, fill: { color: '#ffffff', opacity: 0.8 } }),
+    circle: () => makeShape({ name: '원', shape: 'ellipse', x: cx - 60, y: cy - 60, w: 120, h: 120 }),
+    bubble: () => makeShape({ name: '말풍선', shape: 'bubble', x: cx - 90, y: cy - 60, w: 180, h: 120, radius: 18, fill: { color: '#ffffff' } }),
+    heart: () => makeShape({ name: '하트', shape: 'heart', x: cx - 45, y: cy - 42, w: 90, h: 84, fill: { color: '#ff6fa5' } }),
+    star: () => makeShape({ name: '별', shape: 'star', x: cx - 45, y: cy - 45, w: 90, h: 90, fill: { color: '#ffd166' } }),
+  };
+  addLayer(make[kit]());
+}
+
+/** 이모티콘·기호를 텍스트 레이어로 추가한다. 크기·회전·외곽선은 다른 텍스트와 똑같이 다룬다. */
+export function addEmoji(char: string): void {
   const { doc } = S();
-  addLayer(makeShape({
-    name: shape === 'rect' ? '사각형' : shape === 'ellipse' ? '원' : '기울인 사각형',
-    shape, x: Math.round(doc.card.w / 2 - 110), y: Math.round(doc.card.h / 2 - 60),
+  addLayer(makeText({
+    name: `이모티콘 ${char}`, text: char, size: 44, bold: false,
+    x: Math.round(doc.card.w / 2 - 22), y: Math.round(doc.card.h / 2 - 28),
   }));
 }
 
@@ -310,8 +345,12 @@ export function applyBackground(bg: BgMeta, adjustColors: boolean): void {
 /** 프리셋을 적용한다. 사양·닉네임·사진은 그대로 두고 디자인만 바꾼다. 실행 취소 한 번으로 돌아간다. */
 export function applyPreset(data: PresetData): void {
   S().apply((d) => {
-    d.card = structuredClone(data.card);
+    // 옛 버전에서 저장한 내 프리셋에도 지금 기본값을 채워 넣는다.
+    const base = defaultCard();
+    const card = structuredClone(data.card) as Card;
+    d.card = { ...base, ...card, border: { ...base.border, ...card.border }, deco: { ...base.deco, ...card.deco }, matte: { ...base.matte, ...card.matte } };
     d.layers = data.layers.map((l) => cloneLayer(l));
+    walk(d.layers, fillDefaults);
     if (data.anim) d.anim = { ...data.anim };
     Object.assign(d.assets, structuredClone(data.assets));
     pruneAssets(d);

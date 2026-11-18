@@ -267,3 +267,21 @@ h2, h3, h4 { margin: 0; font-size: 13px; }
 
 .selftest { padding: 20px; overflow: auto; height: 100%; user-select: text; }
 .selftest li.fail { color: var(--danger); font-weight: 700; }
+
+/* 추가 막대의 펼침 창 */
+.addbar { width: 70px; }
+.addbar .menu-pop { min-width: 0; }
+.kit-list { display: flex; flex-direction: column; width: 290px; }
+.addbar .kit-list button { display: grid; grid-template-columns: 26px auto 1fr; align-items: center; gap: 6px; text-align: left; padding: 6px 8px; }
+.kit-list i { font-style: normal; font-size: 16px; text-align: center; }
+.kit-list small { color: var(--text-3); font-size: 11px; text-align: right; }
+.kit-list .note, .emoji-pop .note, .fx-pop .note { margin: 6px 8px 2px; white-space: normal; }
+.emoji-pop { width: 372px; padding: 4px; }
+.emoji-pop .chips { margin-bottom: 6px; }
+.addbar .emoji-pop .chips button { width: auto; flex-direction: row; padding: 2px 9px; }
+.emoji-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; }
+.addbar .emoji-grid button { padding: 3px 0; font-size: 20px; line-height: 1.2; font-family: 'Segoe UI Emoji', 'Nanum Gothic', sans-serif; }
+.fx-pop { width: 330px; padding: 4px; }
+.fx-pop h5 { margin: 6px 8px 4px; font-size: 11px; color: var(--text-3); }
+.fx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.addbar .fx-grid button { padding: 6px 8px; text-align: left; }

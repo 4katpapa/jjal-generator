@@ -1,6 +1,27 @@
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
-import type { Doc } from '../model/types';
-import { emptyDoc } from '../model/factory';
+import type { Doc, Layer } from '../model/types';
+import { defaultCard, emptyDoc, makeEffect, makeGroup, makeImage, makeShape, makeSpec, makeText } from '../model/factory';
+import { walk } from '../model/ops';
+
+/** 옛 버전에서 저장한 레이어에 없는 항목을 지금 기본값으로 채운다(두 단계 깊이까지). */
+export function fillDefaults(layer: Layer): void {
+  const model: Layer = layer.kind === 'shape' ? makeShape()
+    : layer.kind === 'image' ? makeImage()
+      : layer.kind === 'text' ? makeText()
+        : layer.kind === 'spec' ? makeSpec()
+          : layer.kind === 'effect' ? makeEffect('sparkle', defaultCard())
+            : makeGroup([]);
+  const fill = (target: Record<string, unknown>, source: Record<string, unknown>, depth: number) => {
+    for (const [key, value] of Object.entries(source)) {
+      if (key === 'id' || key === 'children') continue;
+      if (target[key] === undefined) target[key] = structuredClone(value);
+      else if (depth < 2 && value && typeof value === 'object' && !Array.isArray(value) && target[key] && typeof target[key] === 'object') {
+        fill(target[key] as Record<string, unknown>, value as Record<string, unknown>, depth + 1);
+      }
+    }
+  };
+  fill(layer as unknown as Record<string, unknown>, model as unknown as Record<string, unknown>, 0);
+}
 
 // 저장 파일(.jjal)은 zip 한 개다: doc.json + 사용자가 넣은 이미지 파일들.
 // 이미지를 JSON 안에 문자열로 넣지 않아서 파일이 가볍고, 일부가 깨져도 나머지를 살릴 수 있다.
@@ -48,12 +69,16 @@ export function normalizeDoc(raw: unknown): Doc {
   if (!doc || typeof doc !== 'object' || !Array.isArray(doc.layers) || !doc.card || !doc.content) {
     throw new Error('자짤 스튜디오 문서가 아닙니다.');
   }
+  const layers = structuredClone(doc.layers) as Layer[];
+  walk(layers, fillDefaults);
+  const frame = (key: 'border' | 'deco') => ({ ...base.card[key], ...(doc.card as Partial<Doc['card']>)[key] });
   return {
     ...base,
     ...doc,
+    layers,
     version: 1,
     name: typeof doc.name === 'string' ? doc.name : '',
-    card: { ...base.card, ...doc.card, border: { ...base.card.border, ...doc.card.border }, matte: { ...base.card.matte, ...doc.card.matte } },
+    card: { ...base.card, ...doc.card, border: frame('border'), deco: frame('deco'), matte: { ...base.card.matte, ...doc.card.matte } },
     content: { ...base.content, ...doc.content, specs: Array.isArray(doc.content.specs) ? doc.content.specs : base.content.specs },
     assets: doc.assets ?? {},
     anim: { ...base.anim, ...doc.anim },

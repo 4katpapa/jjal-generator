@@ -51,7 +51,7 @@ function merge<T extends Layer>(layer: T, patch?: Omit<Patch<T>, 'styles'> & { s
 export function makeShape(patch?: Parameters<typeof merge<ShapeLayer>>[1]): ShapeLayer {
   return merge<ShapeLayer>({
     ...base('도형', 60, 60, 220, 120), kind: 'shape', shape: 'rect', radius: 12, slant: 40,
-    fill: { type: 'solid', color: '#4f8cff', color2: '#b06cff', angle: 90, size: 14, opacity: 1 },
+    fill: { type: 'solid', color: '#4f8cff', color2: '#b06cff', angle: 90, size: 14, opacity: 1, base: true, weight: 1 },
   }, patch);
 }
 
@@ -82,23 +82,69 @@ export function makeSpec(patch?: Parameters<typeof merge<SpecLayer>>[1]): SpecLa
   }, patch);
 }
 
-export const EFFECT_LABELS: Record<EffectType, string> = {
-  sparkle: '반짝임',
-  starfield: '흐르는 별',
-  shine: '광택 스윕',
-  aurora: '오로라',
-  scanline: '스캔라인',
-  fall: '흩날림',
-  borderRun: '테두리 빛 순환',
-  borderPulse: '테두리 맥동',
+export interface EffectMeta {
+  label: string;
+  /** 테두리를 따라 그리는 효과인지(아니면 영역을 채우는 효과). */
+  border: boolean;
+  /** 각 속성이 이 효과의 그림에 영향을 주는지. 영향이 없는 속성은 패널에서 감춘다. */
+  color: boolean;
+  color2: boolean;
+  seed: boolean;
+  radius: boolean;
+}
+
+const fx = (label: string, flags: string): EffectMeta => ({
+  label, border: flags.includes('b'), color: !flags.includes('n'),
+  color2: flags.includes('2'), seed: flags.includes('s'), radius: flags.includes('r'),
+});
+
+// 표기: 2=두 번째 색 사용, s=배치 바꾸기 사용, r=모서리 둥글기 사용, b=테두리 효과, n=색 미사용
+export const EFFECTS: Record<EffectType, EffectMeta> = {
+  sparkle: fx('반짝임', '2s'),
+  starfield: fx('흐르는 별', '2s'),
+  shine: fx('광택 스윕', 'r'),
+  aurora: fx('오로라', '2r'),
+  scanline: fx('스캔라인', '2r'),
+  fall: fx('꽃잎 흩날림', '2s'),
+  snow: fx('눈 내림', '2s'),
+  rain: fx('비 내림', '2s'),
+  hearts: fx('하트 둥둥', '2s'),
+  bubbles: fx('비눗방울', '2s'),
+  fireflies: fx('반딧불', '2s'),
+  meteor: fx('유성', '2s'),
+  rays: fx('회전 광선', 'r'),
+  wave: fx('시그널 파형', '2'),
+  bars: fx('이퀄라이저 막대', '2s'),
+  matrix: fx('매트릭스 문자', '2s'),
+  borderRun: fx('테두리 빛 순환', 'b2r'),
+  borderPulse: fx('테두리 맥동', 'b2r'),
+  borderMarquee: fx('테두리 행진', 'b2r'),
+  borderRainbow: fx('무지개 테두리', 'bnr'),
+  borderCorners: fx('모서리 브래킷', 'b2r'),
+};
+
+export const EFFECT_LABELS = Object.fromEntries(
+  Object.entries(EFFECTS).map(([k, v]) => [k, v.label]),
+) as Record<EffectType, string>;
+
+const EFFECT_COLORS: Partial<Record<EffectType, [string, string]>> = {
+  aurora: ['#58e6ff', '#b06cff'],
+  hearts: ['#ff6fa5', '#ffc2d8'],
+  rain: ['#bfe3ff', '#ffffff'],
+  fireflies: ['#fff59a', '#b8ff8a'],
+  meteor: ['#ffffff', '#8fd3ff'],
+  wave: ['#42e8ff', '#ff6fd8'],
+  bars: ['#42e8ff', '#b06cff'],
+  matrix: ['#39ff88', '#eaffef'],
+  borderMarquee: ['#ffffff', '#ffd166'],
+  borderCorners: ['#42e8ff', '#ffffff'],
 };
 
 export function makeEffect(effect: EffectType, card: Card, patch?: Parameters<typeof merge<EffectLayer>>[1]): EffectLayer {
-  const twoTone = effect === 'aurora';
   return merge<EffectLayer>({
     ...base(EFFECT_LABELS[effect], 0, 0, card.w, card.h), kind: 'effect', effect,
-    color: effect === 'aurora' ? '#58e6ff' : '#ffffff',
-    color2: twoTone ? '#b06cff' : '#ffd6f0',
+    color: EFFECT_COLORS[effect]?.[0] ?? '#ffffff',
+    color2: EFFECT_COLORS[effect]?.[1] ?? '#ffd6f0',
     density: 0.5, speed: 1, size: 1, radius: card.radius, seed: 7,
   }, patch);
 }
@@ -122,7 +168,8 @@ export function defaultContent(): Content {
 export function defaultCard(): Card {
   return {
     w: 850, h: 300, radius: 16,
-    border: { on: false, color: '#ffffff', width: 3 },
+    border: { on: false, style: 'solid', color: '#ffffff', color2: '#ffd166', width: 3, inset: 0 },
+    deco: { on: false, style: 'dashed', color: '#ffffff', color2: '#ffd166', width: 1.5, inset: 10 },
     matte: { type: 'transparent', color: '#ffffff' },
   };
 }

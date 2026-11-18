@@ -1,5 +1,5 @@
 import type { Doc, EffectLayer, ImageLayer, Layer, LayerKind, ShapeLayer, SpecLayer, TextLayer } from '../model/types';
-import { EFFECT_LABELS } from '../model/factory';
+import { EFFECTS } from '../model/factory';
 import { hasMotion } from '../model/ops';
 import { layerBox } from '../render/geometry';
 import { layoutSpec } from '../render/spec';
@@ -44,20 +44,26 @@ export interface Section {
 }
 
 const BLENDS = [
-  { value: 'source-over', label: '보통' },
-  { value: 'multiply', label: '곱하기' },
-  { value: 'screen', label: '스크린' },
-  { value: 'overlay', label: '오버레이' },
-  { value: 'soft-light', label: '소프트 라이트' },
-  { value: 'lighter', label: '더하기(발광)' },
-  { value: 'darken', label: '어둡게' },
-  { value: 'lighten', label: '밝게' },
+  { value: 'source-over', label: '보통 — 그대로 덮기' },
+  { value: 'multiply', label: '곱하기 — 어둡게 물들임 (흰색은 사라짐)' },
+  { value: 'screen', label: '스크린 — 밝게 물들임 (검정은 사라짐)' },
+  { value: 'overlay', label: '오버레이 — 대비를 키우며 색 입힘' },
+  { value: 'soft-light', label: '소프트 라이트 — 은은하게 색 입힘' },
+  { value: 'lighter', label: '더하기 — 빛처럼 밝아짐' },
+  { value: 'darken', label: '어두운 쪽만 — 더 어두운 색을 남김' },
+  { value: 'lighten', label: '밝은 쪽만 — 더 밝은 색을 남김' },
+  { value: 'color-dodge', label: '닷지 — 강하게 밝아짐' },
+  { value: 'difference', label: '차이 — 색 반전 느낌' },
+  { value: 'color', label: '색상만 — 아래 밝기에 이 색을 입힘' },
 ];
 
 const SHAPES = [
   { value: 'rect', label: '사각' },
   { value: 'ellipse', label: '원' },
   { value: 'slant', label: '기울임' },
+  { value: 'bubble', label: '말풍선' },
+  { value: 'heart', label: '하트' },
+  { value: 'star', label: '별' },
 ];
 
 const pos: PropDef[] = [
@@ -107,10 +113,10 @@ const styleSections: Section[] = [
 ];
 
 const shapeOutline = (prefix: 'shape' | 'mask'): PropDef[] => [
-  { path: prefix, label: '모양', control: 'segment', options: SHAPES, alt: 'ellipse' },
+  { path: prefix, label: '모양', control: 'select', options: SHAPES, alt: 'ellipse' },
   {
     path: 'radius', label: '모서리 둥글기', control: 'number', min: 0, max: 150, step: 1, alt: 60,
-    visible: (l) => l[prefix] === 'rect', prep: (l) => { l[prefix] = 'rect'; },
+    visible: (l) => l[prefix] === 'rect' || l[prefix] === 'bubble', prep: (l) => { l[prefix] = 'rect'; },
   },
   {
     path: 'slant', label: '기울기', control: 'number', min: -200, max: 200, step: 1, alt: -90,
@@ -118,7 +124,18 @@ const shapeOutline = (prefix: 'shape' | 'mask'): PropDef[] => [
   },
 ];
 
-const isPattern = (l: ShapeLayer) => l.fill.type !== 'solid' && l.fill.type !== 'linear';
+const isPattern = (l: ShapeLayer) => !['solid', 'linear', 'radial'].includes(l.fill.type);
+
+const FILLS = [
+  { value: 'solid', label: '단색' }, { value: 'linear', label: '그라디언트' }, { value: 'radial', label: '원형 그라디언트' },
+  { value: 'dots', label: '무늬 · 도트' }, { value: 'rings', label: '무늬 · 동그라미' },
+  { value: 'stripes', label: '무늬 · 줄 (각도로 가로·세로·사선)' }, { value: 'cross', label: '무늬 · 교차 사선' },
+  { value: 'grid', label: '무늬 · 격자' }, { value: 'checker', label: '무늬 · 체크' }, { value: 'plus', label: '무늬 · 플러스' },
+  { value: 'zigzag', label: '무늬 · 지그재그' }, { value: 'diamonds', label: '무늬 · 마름모' },
+  { value: 'triangles', label: '무늬 · 삼각형' }, { value: 'waves', label: '무늬 · 물결' }, { value: 'scales', label: '무늬 · 비늘' },
+  { value: 'bricks', label: '무늬 · 벽돌' }, { value: 'hex', label: '무늬 · 벌집' }, { value: 'stars', label: '무늬 · 반짝별' },
+  { value: 'hearts', label: '무늬 · 하트' },
+];
 
 const shape: Section[] = [
   { title: '배치', props: [...pos, ...size, rot] },
@@ -127,25 +144,31 @@ const shape: Section[] = [
     title: '채움',
     props: [
       {
-        path: 'fill.type', label: '종류', control: 'select', alt: 'stripes',
-        options: [
-          { value: 'solid', label: '단색' }, { value: 'linear', label: '그라디언트' },
-          { value: 'dots', label: '점 무늬' }, { value: 'stripes', label: '줄무늬' },
-          { value: 'grid', label: '격자' }, { value: 'checker', label: '체커' },
-        ],
+        path: 'fill.type', label: '종류', control: 'select', alt: 'stripes', options: FILLS,
       },
       { path: 'fill.color', label: '색', control: 'color' },
       {
+        path: 'fill.base', label: '바탕 칠하기', control: 'toggle', visible: isPattern,
+        prep: (l: ShapeLayer) => { l.fill.type = 'dots'; },
+      },
+      {
         path: 'fill.color2', label: '두 번째 색', control: 'color',
-        visible: (l: ShapeLayer) => l.fill.type !== 'solid', prep: (l: ShapeLayer) => { l.fill.type = 'linear'; },
+        visible: (l: ShapeLayer) => l.fill.type !== 'solid' && (!isPattern(l) || l.fill.base),
+        prep: (l: ShapeLayer) => { l.fill.type = 'linear'; },
       },
       {
         path: 'fill.angle', label: '각도', control: 'number', min: 0, max: 360, step: 1, unit: '°', alt: 20,
-        visible: (l: ShapeLayer) => l.fill.type !== 'solid', prep: (l: ShapeLayer) => { l.fill.type = 'linear'; },
+        visible: (l: ShapeLayer) => l.fill.type !== 'solid' && l.fill.type !== 'radial',
+        prep: (l: ShapeLayer) => { l.fill.type = 'linear'; },
       },
       {
         path: 'fill.size', label: '무늬 크기', control: 'number', min: 4, max: 80, step: 1, alt: 37,
         visible: isPattern, prep: (l: ShapeLayer) => { l.fill.type = 'stripes'; },
+      },
+      {
+        path: 'fill.weight', label: '무늬 굵기', control: 'number', min: 0.3, max: 3, step: 0.05, alt: 2.4,
+        visible: (l: ShapeLayer) => isPattern(l) && l.fill.type !== 'checker',
+        prep: (l: ShapeLayer) => { l.fill.type = 'rings'; },
       },
       { path: 'fill.opacity', label: '채움 불투명도', control: 'number', min: 0, max: 1, step: 0.01, percent: true, alt: 0.3 },
     ],
@@ -219,7 +242,11 @@ const text: Section[] = [
       { path: 'size', label: '크기', control: 'number', min: 8, max: 160, step: 1, unit: 'px', alt: 61 },
       { path: 'bold', label: '굵게', control: 'toggle' },
       { path: 'italic', label: '기울임', control: 'toggle' },
-      { path: 'color', label: '색', control: 'color' },
+      {
+        path: 'color', label: '색', control: 'color',
+        note: (l: TextLayer, doc) => (/^[\p{Extended_Pictographic}\p{Emoji_Component}\s]+$/u.test(l.slot === 'nickname' ? doc.content.nickname : l.text)
+          ? '컬러 이모티콘은 글자색이 적용되지 않습니다. 외곽선·그림자·발광은 적용됩니다.' : null),
+      },
       {
         path: 'align', label: '정렬', control: 'segment', alt: 'right',
         options: [{ value: 'left', label: '왼쪽' }, { value: 'center', label: '가운데' }, { value: 'right', label: '오른쪽' }],
@@ -330,7 +357,6 @@ const spec: Section[] = [
   ...styleSections,
 ];
 
-const particle = (l: EffectLayer) => l.effect === 'sparkle' || l.effect === 'starfield' || l.effect === 'fall';
 
 const effect: Section[] = [
   {
@@ -338,19 +364,19 @@ const effect: Section[] = [
     props: [
       {
         path: 'effect', label: '종류', control: 'select', alt: 'aurora',
-        options: Object.entries(EFFECT_LABELS).map(([value, label]) => ({ value, label })),
+        options: Object.entries(EFFECTS).map(([value, m]) => ({ value, label: `${m.border ? '테두리' : '배경'} · ${m.label}` })),
       },
-      { path: 'color', label: '색', control: 'color' },
-      { path: 'color2', label: '두 번째 색', control: 'color', visible: (l: EffectLayer) => l.effect !== 'shine' },
+      { path: 'color', label: '색', control: 'color', visible: (l: EffectLayer) => EFFECTS[l.effect].color },
+      { path: 'color2', label: '두 번째 색', control: 'color', visible: (l: EffectLayer) => EFFECTS[l.effect].color2 },
       { path: 'density', label: '양', control: 'number', min: 0, max: 1, step: 0.01, percent: true, alt: 1 },
       { path: 'speed', label: '빠르기', control: 'number', min: 1, max: 4, step: 1, alt: 3 },
       { path: 'size', label: '크기', control: 'number', min: 0.3, max: 3, step: 0.05, alt: 2.6 },
       {
         path: 'radius', label: '모서리 둥글기', control: 'number', min: 0, max: 150, step: 1, alt: 95,
-        visible: (l: EffectLayer) => !particle(l),
+        visible: (l: EffectLayer) => EFFECTS[l.effect].radius,
         prep: (l: EffectLayer) => { if (l.effect === 'shine') { l.density = 1; l.size = 3; } },
       },
-      { path: 'seed', label: '배치 바꾸기', control: 'number', min: 1, max: 99, step: 1, alt: 42, visible: particle },
+      { path: 'seed', label: '배치 바꾸기', control: 'number', min: 1, max: 99, step: 1, alt: 42, visible: (l: EffectLayer) => EFFECTS[l.effect].seed },
     ],
   },
   { title: '배치', props: [...pos, ...size] },
@@ -361,6 +387,12 @@ const effect: Section[] = [
 const group: Section[] = [display, ...styleSections];
 
 export const SCHEMA: Record<LayerKind, Section[]> = { shape, image, text, spec, effect, group };
+
+const LINES = [
+  { value: 'solid', label: '실선' }, { value: 'gradient', label: '그라디언트' }, { value: 'glow', label: '빛나는 선' },
+  { value: 'double', label: '이중선' }, { value: 'triple', label: '삼중선' }, { value: 'dashed', label: '파선' },
+  { value: 'longdash', label: '긴 파선' }, { value: 'dotted', label: '점선' }, { value: 'dashdot', label: '일점쇄선' },
+];
 
 /** 아무것도 선택하지 않았을 때 나오는 카드 설정. 대상은 문서 전체다. */
 export const CARD_SCHEMA: Section[] = [
@@ -375,8 +407,29 @@ export const CARD_SCHEMA: Section[] = [
   {
     title: '카드 테두리', toggle: 'card.border.on',
     props: [
+      { path: 'card.border.style', label: '선 종류', control: 'select', options: LINES, alt: 'double' },
       { path: 'card.border.color', label: '색', control: 'color' },
-      { path: 'card.border.width', label: '두께', control: 'number', min: 1, max: 24, step: 0.5, alt: 16 },
+      {
+        path: 'card.border.color2', label: '두 번째 색', control: 'color',
+        visible: (doc: Doc) => doc.card.border.style === 'gradient' || doc.card.border.style === 'glow',
+        prep: (doc: Doc) => { doc.card.border.style = 'gradient'; },
+      },
+      { path: 'card.border.width', label: '두께', control: 'number', min: 0.5, max: 24, step: 0.5, alt: 16 },
+      { path: 'card.border.inset', label: '안쪽 간격', control: 'number', min: 0, max: 60, step: 0.5, alt: 33 },
+    ],
+  },
+  {
+    title: '장식 선 (테두리 안쪽에 한 겹 더)', toggle: 'card.deco.on',
+    props: [
+      { path: 'card.deco.style', label: '선 종류', control: 'select', options: LINES, alt: 'double' },
+      { path: 'card.deco.color', label: '색', control: 'color' },
+      {
+        path: 'card.deco.color2', label: '두 번째 색', control: 'color',
+        visible: (doc: Doc) => doc.card.deco.style === 'gradient' || doc.card.deco.style === 'glow',
+        prep: (doc: Doc) => { doc.card.deco.style = 'gradient'; },
+      },
+      { path: 'card.deco.width', label: '두께', control: 'number', min: 0.5, max: 24, step: 0.5, alt: 16 },
+      { path: 'card.deco.inset', label: '안쪽 간격', control: 'number', min: 0, max: 60, step: 0.5, alt: 33 },
     ],
   },
   {

@@ -191,6 +191,38 @@ module.exports = async function uiCheck(win) {
   await js('window.__editor.getState().set({ playing: false, t: 0.8 })');
   await shot('13-other-preset');
 
+  // 14-2) 새 추가 메뉴: 패널·도형, 이모티콘, 효과
+  await js('window.__editor.getState().select([])');
+  await clickText('.addbar .menu > button', '패널·도형');
+  await shot('14-shape-kits');
+  await clickText('.kit-list button', '무늬 덮개');
+  await sleep(200);
+  const kit = await state('s.doc.layers[s.doc.layers.length - 1]');
+  check('무늬 덮개가 바탕 없는 무늬 도형으로 추가된다', kit.kind === 'shape' && kit.fill.type === 'dots' && kit.fill.base === false);
+  await js(`window.__editor.getState().apply((d) => { const l = d.layers.find((x) => x.id === '${kit.id}'); l.fill.type = 'hearts'; l.fill.size = 30; l.fill.color = '#ff8fc0'; l.fill.opacity = 0.5; })`);
+  await clickText('.addbar .menu > button', '이모티콘');
+  await sleep(150);
+  await shot('15-emoji-picker');
+  await clickText('.emoji-grid button', '😎');
+  await sleep(200);
+  const emo = await state('s.doc.layers[s.doc.layers.length - 1]');
+  check('이모티콘이 텍스트 레이어로 추가된다', emo.kind === 'text' && emo.text === '😎');
+  await clickText('.addbar .menu > button', '효과');
+  await sleep(150);
+  await shot('16-effect-menu');
+  await clickText('.fx-grid button', '하트 둥둥');
+  await sleep(200);
+  await js(`window.__editor.getState().apply((d) => { d.card.border = { ...d.card.border, on: true, style: 'double', color: '#ffffff', width: 5 }; d.card.deco = { ...d.card.deco, on: true, style: 'dotted', color: '#ffd166', width: 2.5, inset: 14 }; })`);
+  await js('window.__editor.getState().select([]); window.__editor.getState().set({ playing: false, t: 1.3 })');
+  await shot('17-border-pattern-emoji-hearts');
+  // 혼합 안내: 흰 도형에 스크린은 변화가 없다는 안내가 떠야 한다.
+  await js(`window.__editor.getState().apply((d) => { const l = d.layers.find((x) => x.id === '${emo.id}'); l.blend = 'screen'; l.text = '★'; l.color = '#ffffff'; }); window.__editor.getState().select(['${emo.id}'])`);
+  await sleep(300);
+  check('효과 없는 혼합에는 안내가 뜬다', await js('[...document.querySelectorAll(".inspector .note.warn")].some((n) => n.textContent.includes("보통"))'));
+  await js(`window.__editor.getState().apply((d) => { const l = d.layers.find((x) => x.id === '${emo.id}'); l.blend = 'multiply'; l.color = '#ff3d81'; })`);
+  await sleep(300);
+  check('효과 있는 혼합에는 안내가 없다', !(await js('[...document.querySelectorAll(".inspector .note.warn")].some((n) => n.textContent.includes("보통"))')));
+
   // 15) 저장 → 다시 열기
   await js('window.__editor.getState().apply((d) => { d.name = "검사용 디자인"; })');
   wc.sendInputEvent({ type: 'keyDown', keyCode: 'S', modifiers: ['control'] }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'S', modifiers: ['control'] });
