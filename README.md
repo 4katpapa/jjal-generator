@@ -75,3 +75,8 @@ scripts/       자산 변환, 조작 검사
 - 배경 164장·부품 아이콘 48개: 기존 "자짤 생성툴"의 이미지를 변환한 것(`public/backgrounds`, `public/icons`).
 - 나눔고딕: SIL Open Font License (`public/fonts/nanum-gothic/OFL.txt`).
 - 코드: MIT.
+
+## 웹판과 이전 버전
+
+- 웹판: https://jjaltool.kro.kr — `main`에 push하면 Cloudflare Pages가 `web/`의 빌드 스크립트로 자동 배포한다(Root directory `web`, Build command `npm run build`, Output `dist`). 웹판은 "이 PC에서 읽기"만 빠지고 나머지는 Windows 앱과 같다.
+- 이 저장소의 이전 앱 "자짤 생성툴"(v1~v4)은 태그 `v4.0.0`과 그 이전 커밋에 그대로 남아 있다. 이전 앱에서 저장한 디자인(`.speccard`, 브라우저 저장본)은 새 앱에서 열리지 않으며, 이전 주소 https://jjal-generator.pages.dev 의 배포본에서 계속 열 수 있다.

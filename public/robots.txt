@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jjaltool.kro.kr/sitemap.xml
