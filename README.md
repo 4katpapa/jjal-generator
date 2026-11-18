@@ -2,6 +2,9 @@
 
 커뮤니티에 올리는 PC 사양 자짤(기본 850×300)을 레이어 방식으로 만드는 편집기. Windows 앱(Electron)과 브라우저에서 같은 코드로 동작한다.
 
+- **웹에서 바로 쓰기**: https://jjaltool.kro.kr (설치 없음. PC 사양 자동 읽기만 빠진다)
+- **Windows 포터블 다운로드**: [최신 릴리스](https://github.com/4katpapa/jjal-generator/releases/latest) (설치 없이 실행, PC 사양 자동 읽기 지원)
+
 ## 쓰는 법
 
 1. 처음 실행하면 **프리셋 고르기**가 열린다. 하나를 고른다.
@@ -79,4 +82,4 @@ scripts/       자산 변환, 조작 검사
 ## 웹판과 이전 버전
 
 - 웹판: https://jjaltool.kro.kr — `main`에 push하면 Cloudflare Pages가 `web/`의 빌드 스크립트로 자동 배포한다(Root directory `web`, Build command `npm run build`, Output `dist`). 웹판은 "이 PC에서 읽기"만 빠지고 나머지는 Windows 앱과 같다.
-- 이 저장소의 이전 앱 "자짤 생성툴"(v1~v4)은 태그 `v4.0.0`과 그 이전 커밋에 그대로 남아 있다. 이전 앱에서 저장한 디자인(`.speccard`, 브라우저 저장본)은 새 앱에서 열리지 않으며, 이전 주소 https://jjal-generator.pages.dev 의 배포본에서 계속 열 수 있다.
+- 이 저장소의 이전 앱 "자짤 생성툴"(v1~v4)은 태그 `v4.0.0`과 그 이전 커밋에 그대로 남아 있다. 이전 앱에서 저장한 디자인(`.speccard`, 브라우저 저장본)은 새 앱에서 열리지 않는다. `.speccard` 파일은 [v4.0.0 릴리스](https://github.com/4katpapa/jjal-generator/releases/tag/v4.0.0)의 Windows 앱에서 열 수 있다.
