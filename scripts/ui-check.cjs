@@ -65,6 +65,14 @@ module.exports = async function uiCheck(win) {
   check('캔버스 클릭으로 사양 목록이 선택된다', sel.length === 1 && sel[0] === spec0.id, JSON.stringify(sel));
   check('속성 패널이 사양 목록 속성을 보여준다', await js('document.querySelector(".inspector .panel-head .sub")?.textContent === "사양 목록"'));
   await shot('03-spec-selected');
+  check('빠른 도구모음이 사양 목록용으로 바뀐다', await js('document.querySelector(".quick-title")?.textContent === "사양 목록" && !!document.querySelector(".quickbar .quick-font")'));
+  await js(`(() => { const item = [...document.querySelectorAll('.quickbar .quick-item')].find((p) => p.querySelector('span')?.textContent === '크기');
+    const input = item.querySelector('.num-box'); const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    input.focus(); set.call(input, '13'); input.dispatchEvent(new Event('input', { bubbles: true })); input.blur(); })()`);
+  await sleep(150);
+  check('빠른 도구모음에서 바꾼 값이 문서와 속성 패널에 같이 반영된다', (await layer('spec')).size === 13
+    && await js('[...document.querySelectorAll(".inspector .prop")].find((p) => p.querySelector("label")?.textContent === "크기").querySelector(".num-box").value === "13"'));
+  await js('window.__editor.getState().undo()');
 
   // 4) 끌어서 이동 → 실행 취소 한 번으로 복귀
   const past0 = await state('s.past.length');

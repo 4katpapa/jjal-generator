@@ -114,7 +114,7 @@ export function Segment<T extends string | number>({ value, options, onChange }:
   );
 }
 
-export function FontControl({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+export function FontControl({ value, onChange, compact }: { value: string; onChange: (v: string) => void; compact?: boolean }) {
   const fonts = useFonts();
   const known = BUILTIN_FONTS.some((f) => f.family === value) || fonts.system.includes(value);
   return (
@@ -130,12 +130,12 @@ export function FontControl({ value, onChange }: { value: string; onChange: (v: 
           </optgroup>
         )}
       </select>
-      {fonts.status !== 'ready' && (
+      {!compact && fonts.status !== 'ready' && (
         <button type="button" className="mini" disabled={fonts.status === 'loading'} onClick={() => { void loadSystemFonts(); }}>
           {fonts.status === 'loading' ? '불러오는 중…' : '내 PC 글꼴 불러오기'}
         </button>
       )}
-      {fonts.message && fonts.status === 'unavailable' && <p className="note">{fonts.message}</p>}
+      {!compact && fonts.message && fonts.status === 'unavailable' && <p className="note">{fonts.message}</p>}
     </div>
   );
 }

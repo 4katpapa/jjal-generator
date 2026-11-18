@@ -285,3 +285,27 @@ h2, h3, h4 { margin: 0; font-size: 13px; }
 .fx-pop h5 { margin: 6px 8px 4px; font-size: 11px; color: var(--text-3); }
 .fx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
 .addbar .fx-grid button { padding: 6px 8px; text-align: left; }
+
+/* 캔버스 위 빠른 도구모음 */
+.center { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.center .stage { flex: 1; min-height: 0; }
+.quickbar {
+  flex: none; display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; min-height: 40px;
+  padding: 5px 12px; background: var(--bg-2); border-bottom: 1px solid var(--line);
+}
+.quick-title { color: var(--accent); min-width: 52px; }
+.quick-item { display: flex; align-items: center; gap: 5px; }
+.quick-item > span { color: var(--text-3); font-size: 11px; white-space: nowrap; }
+.quick-item .num { width: auto; }
+.quick-item .num .num-box { width: 52px; }
+.quick-item .color .hex { display: none; }
+.quick-item select { max-width: 150px; padding: 3px 5px; }
+.quick-item .font { width: 150px; }
+.quickbar button { padding: 3px 9px; }
+.quickbar .switch { padding: 0; }
+
+/* 좁은 속성 패널에서 사양 행이 옆으로 넘치지 않게 한다 */
+.spec-line > * { flex-shrink: 0; }
+.spec-line .label-input, .spec-line .value-input { flex: 1 1 0; width: 0; min-width: 0; }
+.insp-body { overflow-x: hidden; }
+.prop { grid-template-columns: 108px 1fr; }

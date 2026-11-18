@@ -10,6 +10,7 @@ import { ContentDialog } from './ui/Content';
 import { Dialogs } from './ui/Dialogs';
 import { Inspector } from './ui/Inspector';
 import { LayerPanel } from './ui/LayerPanel';
+import { QuickBar } from './ui/QuickBar';
 import { Stage } from './ui/Stage';
 
 function isTyping(target: EventTarget | null): boolean {
@@ -90,7 +91,10 @@ export function App() {
       <TopBar />
       <div className="work">
         <AddBar />
-        <Stage />
+        <div className="center">
+          <QuickBar />
+          <Stage />
+        </div>
         <div className="side">
           <LayerPanel />
           <Inspector />
