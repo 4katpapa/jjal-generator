@@ -43,6 +43,9 @@ module.exports = async function uiCheck(win) {
   await js('new Promise((r) => { const t = setInterval(() => { if (window.__editor && document.querySelector(".canvas-wrap canvas")) { clearInterval(t); r(); } }, 50); })');
   await sleep(900);
 
+  for (let i = 0; i < 40 && !(await js('document.fonts && window.__fontsReady === true')); i += 1) await sleep(250);
+  check('앱 시작 시 내 PC 글꼴이 자동으로 불러와진다', await js('window.__fontsReady === true'), await js('String(window.__fontCount)'));
+
   // 1) 첫 실행: 프리셋 고르기 창
   check('첫 실행에 프리셋 창이 열린다', await js('!!document.querySelector(".preset-grid")'));
   await shot('01-first-run-presets');

@@ -44,6 +44,7 @@ export async function loadSystemFonts(): Promise<void> {
       return;
     }
     useFonts.setState({ system: unique, status: 'ready', message: `${unique.length}개 글꼴을 불러왔습니다.` });
+    Object.assign(window, { __fontsReady: true, __fontCount: unique.length });
   } catch (err) {
     useFonts.setState({ status: 'unavailable', message: `글꼴 목록을 불러오지 못했습니다: ${(err as Error).message}` });
   }

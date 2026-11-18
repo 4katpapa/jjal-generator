@@ -114,12 +114,20 @@ export function Segment<T extends string | number>({ value, options, onChange }:
   );
 }
 
+const LOAD_FONTS = '__load_system_fonts__';
+
 export function FontControl({ value, onChange, compact }: { value: string; onChange: (v: string) => void; compact?: boolean }) {
   const fonts = useFonts();
   const known = BUILTIN_FONTS.some((f) => f.family === value) || fonts.system.includes(value);
   return (
     <div className="font">
-      <select value={value} onChange={(e) => onChange(e.target.value)} style={{ fontFamily: `"${value}"` }}>
+      <select
+        value={value} style={{ fontFamily: `"${value}"` }}
+        onChange={(e) => {
+          if (e.target.value === LOAD_FONTS) void loadSystemFonts();
+          else onChange(e.target.value);
+        }}
+      >
         {!known && <option value={value}>{value}</option>}
         <optgroup label="기본">
           {BUILTIN_FONTS.map((f) => <option key={f.family} value={f.family}>{f.label}</option>)}
@@ -128,6 +136,9 @@ export function FontControl({ value, onChange, compact }: { value: string; onCha
           <optgroup label="내 PC 글꼴">
             {fonts.system.map((f) => <option key={f} value={f}>{f}</option>)}
           </optgroup>
+        )}
+        {fonts.status !== 'ready' && (
+          <option value={LOAD_FONTS}>{fonts.status === 'loading' ? '내 PC 글꼴 불러오는 중…' : '＋ 내 PC 글꼴 불러오기…'}</option>
         )}
       </select>
       {!compact && fonts.status !== 'ready' && (
