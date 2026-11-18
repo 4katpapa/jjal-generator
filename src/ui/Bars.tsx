@@ -68,7 +68,6 @@ export function TopBar() {
       <button type="button" title="카드 크기·모서리·테두리·장식 선 (아무것도 선택하지 않으면 오른쪽에 나옵니다)" onClick={() => { st().select([]); st().set({ cropId: null }); }}>카드·테두리</button>
       <button type="button" onClick={() => open('content')}>내용</button>
       <button type="button" onClick={() => open('presets')}>프리셋</button>
-      <button type="button" onClick={() => open('backgrounds')}>배경</button>
       <div className="sep" />
       {motion && (
         <button type="button" title="움직임 미리보기 재생/정지" onClick={() => st().set({ playing: !playing })}>
@@ -108,6 +107,7 @@ export function AddBar() {
         type="button" title="이미지 레이어 추가 (파일을 창에 끌어다 놓아도 됩니다)"
         onClick={async () => { const f = await pickFile('image/*'); if (f) await addImageFromFile(f); }}
       ><b>🖼</b><span>이미지</span></button>
+      <button type="button" title="내장 배경 164장에서 골라 바탕 레이어에 적용" onClick={() => useEditor.getState().set({ dialog: 'backgrounds' })}><b>🌄</b><span>배경</span></button>
       <button type="button" onClick={addSpec} title="사양 목록 레이어 추가"><b>☰</b><span>사양</span></button>
       <Menu label={<><b>▢</b><span>패널·도형</span></>} title="패널, 띠, 무늬, 도형 추가" className="flyout">
         {(close) => (

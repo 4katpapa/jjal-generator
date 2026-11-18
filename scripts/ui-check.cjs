@@ -142,7 +142,7 @@ module.exports = async function uiCheck(win) {
   check('Enter로 자르기 종료', (await state('s.cropId')) === null);
 
   // 10) 배경 갤러리
-  await clickText('.topbar button', '배경');
+  await clickText('.addbar > button', '배경');
   await sleep(1200);
   const bgCount = await js('document.querySelectorAll(".bg-card").length');
   check('배경 갤러리에 164장이 나온다', bgCount === 164, bgCount);
