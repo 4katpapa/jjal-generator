@@ -7,6 +7,7 @@ import { saveCurrent } from './editor/session';
 import { useEditor } from './editor/store';
 import { AddBar, TopBar } from './ui/Bars';
 import { ContentDialog } from './ui/Content';
+import { RecentColorList } from './ui/controls';
 import { Dialogs } from './ui/Dialogs';
 import { Inspector } from './ui/Inspector';
 import { LayerPanel } from './ui/LayerPanel';
@@ -101,6 +102,7 @@ export function App() {
         </div>
       </div>
       {dialog === 'content' ? <ContentDialog /> : <Dialogs />}
+      <RecentColorList />
       {toast && <div className="toast" role="status">{toast}</div>}
     </div>
   );

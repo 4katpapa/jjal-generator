@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { canPickFromScreen, pickFromScreen, rememberColor, useRecentColors } from '../editor/colors';
 import { BUILTIN_FONTS, loadSystemFonts, useFonts } from '../editor/fonts';
 
 interface NumberProps {
@@ -73,20 +74,47 @@ export function NumberControl({ value, onChange, min, max, step = 1, unit, perce
 
 export function ColorControl({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [text, setText] = useState(value);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => setText(value), [value]);
+  // 색 고르기 창을 닫을 때(확정) 최근 색에 넣는다. 끄는 동안의 중간 색은 넣지 않는다.
+  useEffect(() => {
+    const el = inputRef.current!;
+    const commit = () => rememberColor(el.value);
+    el.addEventListener('change', commit);
+    return () => el.removeEventListener('change', commit);
+  }, []);
   return (
     <div className="color">
-      <input type="color" value={value} onChange={(e) => onChange(e.target.value)} />
+      <input ref={inputRef} type="color" value={value} list="jjal-recent-colors" onChange={(e) => onChange(e.target.value)} />
+      {canPickFromScreen && (
+        <button
+          type="button" className="dropper" title="스포이드: 화면에서 색 찍기 (사진·배경·다른 창 어디든)"
+          onClick={async () => {
+            const picked = await pickFromScreen();
+            if (picked) { onChange(picked); rememberColor(picked); }
+          }}
+        >
+          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+            <path d="M11.2 1.3a2.2 2.2 0 0 1 3.5 2.6l-2 2 .6.6-1.2 1.2-.6-.6-5.6 5.6-2.6.9-.9-.9.9-2.6 5.6-5.6-.6-.6 1.2-1.2.6.6z" fill="currentColor" />
+          </svg>
+        </button>
+      )}
       <input
         type="text" className="hex" value={text} spellCheck={false} maxLength={7}
         onChange={(e) => {
           setText(e.target.value);
-          if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) onChange(e.target.value.toLowerCase());
+          if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) { onChange(e.target.value.toLowerCase()); rememberColor(e.target.value); }
         }}
         onBlur={() => setText(value)}
       />
     </div>
   );
+}
+
+/** 색 고르기 창에 추천 색으로 뜨는 최근 색 목록. 앱에 한 번만 둔다. */
+export function RecentColorList() {
+  const colors = useRecentColors((s) => s.colors);
+  return <datalist id="jjal-recent-colors">{colors.map((c) => <option key={c} value={c} />)}</datalist>;
 }
 
 export function Toggle({ value, onChange, label }: { value: boolean; onChange: (v: boolean) => void; label?: string }) {

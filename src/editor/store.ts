@@ -24,6 +24,8 @@ export interface EditorState {
   cropId: string | null;
   dialog: DialogName;
   toast: string | null;
+  /** 캔버스 뒤 바탕. 'checker'는 투명 표시, 그 밖에는 게시판 배경색(#rrggbb). */
+  backdrop: string;
   /** 끌기처럼 여러 번의 변경을 실행 취소 한 번으로 묶는 동안의 시작 문서. */
   tx: Doc | null;
   lastKey: string | null;
@@ -38,7 +40,7 @@ export interface EditorState {
   select: (ids: string[]) => void;
   setDoc: (doc: Doc, opts?: { saved?: boolean; designId?: string | null }) => void;
   markSaved: (designId?: string | null) => void;
-  set: (patch: Partial<Pick<EditorState, 't' | 'playing' | 'zoom' | 'cropId' | 'dialog' | 'toast'>>) => void;
+  set: (patch: Partial<Pick<EditorState, 't' | 'playing' | 'zoom' | 'cropId' | 'dialog' | 'toast' | 'backdrop'>>) => void;
 }
 
 function keepExisting(doc: Doc, ids: string[]): string[] {
@@ -58,6 +60,7 @@ export const useEditor = create<EditorState>((set, get) => ({
   cropId: null,
   dialog: null,
   toast: null,
+  backdrop: 'checker',
   tx: null,
   lastKey: null,
   lastTime: 0,

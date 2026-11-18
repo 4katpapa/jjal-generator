@@ -234,6 +234,19 @@ module.exports = async function uiCheck(win) {
   await sleep(300);
   check('효과 있는 혼합에는 안내가 없다', !(await js('[...document.querySelectorAll(".inspector .note.warn")].some((n) => n.textContent.includes("보통"))')));
 
+  // 14-3) 스포이드와 게시판 미리보기
+  check('스포이드를 쓸 수 있다', await js('"EyeDropper" in window && !!document.querySelector(".color .dropper")'));
+  await js('window.__editor.getState().select([])');
+  const beforeBg = await js('document.querySelector(".canvas-wrap canvas").toDataURL()');
+  await clickText('.backdrop button', '어두운');
+  await sleep(200);
+  check('게시판 미리보기: 어두운 바탕으로 바뀐다', await js('getComputedStyle(document.querySelector(".stage")).backgroundColor === "rgb(28, 28, 30)"'));
+  check('게시판 미리보기는 그림(출력)을 바꾸지 않는다', beforeBg === await js('document.querySelector(".canvas-wrap canvas").toDataURL()'));
+  await shot('18-board-dark');
+  await clickText('.backdrop button', '밝은');
+  await shot('19-board-light');
+  await clickText('.backdrop button', '▦');
+
   // 15) 저장 → 다시 열기
   await js('window.__editor.getState().apply((d) => { d.name = "검사용 디자인"; })');
   wc.sendInputEvent({ type: 'keyDown', keyCode: 'S', modifiers: ['control'] }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'S', modifiers: ['control'] });

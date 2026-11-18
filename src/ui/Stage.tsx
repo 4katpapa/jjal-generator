@@ -39,6 +39,8 @@ export function Stage() {
   const zoom = useEditor((s) => s.zoom);
   const cropId = useEditor((s) => s.cropId);
   const playing = useEditor((s) => s.playing);
+  const backdrop = useEditor((s) => s.backdrop);
+  const board = backdrop === 'checker' ? null : backdrop;
 
   const viewRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -456,7 +458,7 @@ export function Stage() {
   }
 
   return (
-    <div className="stage" ref={viewRef}>
+    <div className="stage" ref={viewRef} style={board ? { background: board } : undefined}>
       <div
         className="stage-inner"
         style={{ width: innerW, height: innerH }}
@@ -466,7 +468,7 @@ export function Stage() {
         onPointerCancel={onPointerUp}
         onDoubleClick={onDoubleClick}
       >
-        <div className="canvas-wrap" style={{ left: ox, top: oy, width: cw, height: ch }}>
+        <div className={`canvas-wrap${board ? ' board' : ''}`} style={{ left: ox, top: oy, width: cw, height: ch, ...(board ? { background: board } : {}) }}>
           <canvas ref={canvasRef} style={{ width: cw, height: ch }} />
         </div>
         <svg className="overlay" width={innerW} height={innerH}>

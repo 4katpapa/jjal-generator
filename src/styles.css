@@ -309,3 +309,12 @@ h2, h3, h4 { margin: 0; font-size: 13px; }
 .spec-line .label-input, .spec-line .value-input { flex: 1 1 0; width: 0; min-width: 0; }
 .insp-body { overflow-x: hidden; }
 .prop { grid-template-columns: 108px 1fr; }
+
+/* 스포이드, 게시판 미리보기 바탕 */
+.color .dropper { padding: 0; width: 24px; height: 24px; display: grid; place-items: center; color: var(--text-2); }
+.backdrop { display: flex; align-items: center; gap: 2px; }
+.backdrop .sub { margin-right: 3px; }
+.backdrop button { padding: 4px 7px; font-size: 12px; }
+.backdrop input[type='color'] { width: 26px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 5px; background: none; cursor: pointer; }
+.backdrop input[type='color'].on { box-shadow: 0 0 0 2px var(--accent); }
+.canvas-wrap.board { background-image: none; box-shadow: none; }

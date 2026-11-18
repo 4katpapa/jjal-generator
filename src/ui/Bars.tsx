@@ -31,7 +31,13 @@ export function TopBar() {
   const zoom = useEditor((s) => s.zoom);
   const playing = useEditor((s) => s.playing);
   const motion = useEditor((s) => hasMotion(s.doc));
+  const backdrop = useEditor((s) => s.backdrop);
+  const custom = !['checker', '#ffffff', '#1c1c1e'].includes(backdrop);
   const st = useEditor.getState;
+  const setBackdrop = (value: string) => {
+    st().set({ backdrop: value });
+    try { localStorage.setItem('jjal-backdrop', value); } catch { /* 이번 실행 동안만 유지 */ }
+  };
   const open = (dialog: 'presets' | 'backgrounds' | 'content' | 'designs' | 'export' | 'savePreset') => st().set({ dialog });
 
   const zoomBy = (k: number) => {
@@ -74,6 +80,16 @@ export function TopBar() {
           {playing ? '❚❚ 정지' : '▶ 재생'}
         </button>
       )}
+      <div className="backdrop" title="게시판 미리보기: 올릴 곳의 배경색 위에서 어떻게 보이는지 확인합니다 (출력에는 영향 없음)">
+        <span className="sub">바탕</span>
+        <button type="button" className={backdrop === 'checker' ? 'on' : ''} onClick={() => setBackdrop('checker')} title="투명 표시(체크 무늬)">▦</button>
+        <button type="button" className={backdrop === '#ffffff' ? 'on' : ''} onClick={() => setBackdrop('#ffffff')} title="밝은 게시판(흰색)">밝은</button>
+        <button type="button" className={backdrop === '#1c1c1e' ? 'on' : ''} onClick={() => setBackdrop('#1c1c1e')} title="어두운 게시판(다크 모드)">어두운</button>
+        <input
+          type="color" className={custom ? 'on' : ''} value={custom ? backdrop : '#29367c'} list="jjal-recent-colors"
+          title="게시판 배경색 직접 지정" onChange={(e) => setBackdrop(e.target.value)}
+        />
+      </div>
       <div className="zoom">
         <button type="button" className="icon-btn" title="축소" onClick={() => zoomBy(1 / 1.25)}>−</button>
         <button type="button" title="화면에 맞춤" className={zoom === 'fit' ? 'on' : ''} onClick={() => st().set({ zoom: 'fit' })}>
