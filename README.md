@@ -18,6 +18,8 @@
 | 순서 | 레이어 패널에서 끌기, Ctrl+] / Ctrl+[ |
 | 복제 / 묶기 / 삭제 | Ctrl+D / Ctrl+G (풀기 Ctrl+Shift+G) / Delete |
 | 실행 취소 / 다시 실행 | Ctrl+Z / Ctrl+Y |
+| 레이어 복사 / 잘라내기 / 붙여넣기 | Ctrl+C / Ctrl+X / Ctrl+V |
+| 스타일 복사 / 붙여넣기 | Ctrl+Alt+C / Ctrl+Alt+V |
 | 저장 / 내보내기 | Ctrl+S / Ctrl+E |
 | 화면 확대 | Ctrl+휠 |
 | 이미지 추가 | 왼쪽 **이미지**, 파일을 창에 끌어다 놓기, Ctrl+V |

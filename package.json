@@ -1,7 +1,7 @@
 {
   "name": "jjal-studio",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "자짤 스튜디오 - 레이어 기반 PC 사양 자짤 편집기",
   "author": "정신안차려?",
   "license": "MIT",
@@ -17,7 +17,8 @@
     "assets:icons": "node scripts/build-icons.mjs",
     "desktop": "electron .",
     "desktop:smoke": "electron . --smoke",
-    "dist": "npm run build && electron-builder --win portable"
+    "dist": "npm run build && electron-builder --win portable",
+    "assets:appicon": "node scripts/build-app-icon.mjs"
   },
   "build": {
     "appId": "io.github.jjalstudio.app",
@@ -32,12 +33,14 @@
     "files": [
       "dist/**",
       "electron/**",
+      "build/icon.png",
       "package.json"
     ],
     "win": {
       "target": [
         "portable"
-      ]
+      ],
+      "icon": "build/icon.png"
     },
     "portable": {
       "artifactName": "jjal-studio-v${version}-portable.exe"

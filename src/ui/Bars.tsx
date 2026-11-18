@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { replaceColor, themeColors } from '../editor/actions';
+import { ColorControl } from './controls';
 import { addEffect, addEmoji, addImageFromFile, addShapeKit, addSpec, addText, pickFile, SHAPE_KITS } from '../editor/actions';
 import { exportFile, importFile, newDesign, saveCurrent } from '../editor/session';
 import { isDirty, useEditor } from '../editor/store';
@@ -19,6 +21,30 @@ function Menu({ label, title, children, className }: { label: React.ReactNode; t
     <div className={`menu ${className ?? ''}`} ref={ref}>
       <button type="button" className={open ? 'on' : ''} title={title} onClick={() => setOpen(!open)}>{label}</button>
       {open && <div className="menu-pop">{children(() => setOpen(false))}</div>}
+    </div>
+  );
+}
+
+/** 디자인에 쓰인 색 목록. 한 칸을 바꾸면 그 색을 쓰는 모든 곳이 함께 바뀐다. */
+function ThemePanel() {
+  // 열었을 때의 색 목록을 기준으로 삼아, 바꾸는 동안 칸이 뒤섞이지 않게 한다.
+  const [rows, setRows] = useState(() => themeColors(useEditor.getState().doc).slice(0, 14));
+  const change = (index: number, to: string) => {
+    replaceColor(rows[index].color, to);
+    setRows((prev) => prev.map((r, i) => (i === index ? { ...r, color: to } : r)));
+  };
+  return (
+    <div className="theme-pop">
+      <p className="note">이 디자인에 쓰인 색입니다. 한 칸을 바꾸면 그 색을 쓰는 모든 곳이 함께 바뀝니다. (Ctrl+Z로 되돌리기)</p>
+      {rows.length === 0 && <p className="empty">색을 쓰는 레이어가 없습니다.</p>}
+      <div className="theme-grid">
+        {rows.map((r, i) => (
+          <div className="theme-row" key={i}>
+            <ColorControl value={r.color} onChange={(v) => change(i, v)} />
+            <span className="sub">{r.count}곳</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -74,6 +100,9 @@ export function TopBar() {
       <button type="button" title="카드 크기·모서리·테두리·장식 선 (아무것도 선택하지 않으면 오른쪽에 나옵니다)" onClick={() => { st().select([]); st().set({ cropId: null }); }}>카드·테두리</button>
       <button type="button" onClick={() => open('content')}>내용</button>
       <button type="button" onClick={() => open('presets')}>프리셋</button>
+      <Menu label="색 테마 ▾" title="이 디자인에 쓰인 색을 한꺼번에 바꾸기" className="right">
+        {() => <ThemePanel />}
+      </Menu>
       <div className="sep" />
       {motion && (
         <button type="button" title="움직임 미리보기 재생/정지" onClick={() => st().set({ playing: !playing })}>

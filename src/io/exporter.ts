@@ -1,6 +1,7 @@
 import type { Doc } from '../model/types';
 import { ensureDocAssets } from '../render/assets';
 import { canvasSize, renderDoc } from '../render/renderer';
+import { encodeGif, type GifFrame } from './gif';
 import { muxAnimatedWebp, type WebpFrame } from './webpAnim';
 
 function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
@@ -75,4 +76,24 @@ export function download(blob: Blob, filename: string): void {
 export function safeName(name: string, fallback = '자짤'): string {
   const cleaned = name.trim().replace(/[\\/:*?"<>|]+/g, '_').slice(0, 60);
   return cleaned || fallback;
+}
+
+/** 움직이는 GIF. WebP를 받지 않는 곳에 올릴 때 쓴다(256색이라 그라디언트가 거칠어질 수 있다). */
+export async function exportGif(doc: Doc, opts: Omit<AnimOptions, 'quality'>): Promise<Blob> {
+  const total = frameCount(doc, opts.fps);
+  const canvas = document.createElement('canvas');
+  const frames: GifFrame[] = [];
+  const totalMs = doc.anim.duration * 1000;
+  for (let i = 0; i < total; i += 1) {
+    await renderFrame(doc, opts.scale, (i / total) * doc.anim.duration, canvas);
+    const ctx = canvas.getContext('2d')!;
+    frames.push({ data: ctx.getImageData(0, 0, canvas.width, canvas.height).data, duration: totalMs / total });
+    opts.onProgress?.(i + 1, total);
+    if (i % 4 === 3) await new Promise((r) => setTimeout(r, 0));
+  }
+  return new Blob([encodeGif(frames, canvas.width, canvas.height) as BlobPart], { type: 'image/gif' });
+}
+
+export function sizeText(bytes: number): string {
+  return bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(2)}MB` : `${Math.max(1, Math.round(bytes / 1024))}KB`;
 }

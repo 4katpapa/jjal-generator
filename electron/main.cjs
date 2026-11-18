@@ -53,6 +53,7 @@ function createWindow() {
     backgroundColor: '#17181c',
     autoHideMenuBar: true,
     title: '자짤 스튜디오',
+    icon: path.join(__dirname, '..', 'build', 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,

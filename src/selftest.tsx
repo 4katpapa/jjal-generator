@@ -1,10 +1,10 @@
 // 실제 캔버스에서 도는 자동 검사. 주소에 ?selftest 를 붙이면 실행된다.
 // 핵심은 "속성 반영 검사": 속성 패널에 나오는 모든 속성에 대해 값을 바꾸면 그림이 실제로 바뀌는지 확인한다.
 
-import { applyPreset } from './editor/actions';
+import { applyPreset, copySelection, copyStyle, pasteClipboard, pasteStyle, replaceColor, themeColors } from './editor/actions';
 import { CARD_SCHEMA, SCHEMA, type PropDef, type Section } from './editor/schema';
 import { useEditor } from './editor/store';
-import { exportAnimatedWebp, exportPng } from './io/exporter';
+import { exportAnimatedWebp, exportGif, exportPng } from './io/exporter';
 import { packDoc, unpackDoc } from './io/file';
 import {
   EFFECT_LABELS, emptyDoc, makeEffect, makeGroup, makeImage, makeRow, makeShape, makeSpec, makeText,
@@ -52,6 +52,13 @@ function fixtureDoc(): Doc {
     name: '배경', x: 0, y: 0, w: 850, h: 300, radius: 0,
     fill: { type: 'linear', color: '#26324d', color2: '#8d5a7c', angle: 30 },
   })];
+  return doc;
+}
+
+function fixtureDocWithoutAssets(): Doc {
+  const doc = fixtureDoc();
+  doc.assets = {};
+  doc.content.photo = null;
   return doc;
 }
 
@@ -215,6 +222,71 @@ async function extraChecks(): Promise<TestResult[]> {
     await decoder.tracks.ready;
     const n = decoder.tracks.selectedTrack.frameCount;
     return n === 8 ? null : `프레임이 ${n}개 (기대 8)`;
+  });
+
+  await run('움직이는 GIF: 프레임 수와 크기가 맞고 색이 크게 틀어지지 않는다', async () => {
+    const doc = fixtureDoc();
+    doc.anim = { duration: 1, fps: 8 };
+    doc.layers.push(makeEffect('sparkle', doc.card));
+    const blob = await exportGif(doc, { scale: 1, fps: 8 });
+    const bmp = await createImageBitmap(blob);
+    if (bmp.width !== 850 || bmp.height !== 300) return `크기가 ${bmp.width}×${bmp.height}`;
+    const c = document.createElement('canvas');
+    c.width = 850; c.height = 300;
+    const g = c.getContext('2d', { willReadFrequently: true })!;
+    g.drawImage(bmp, 0, 0);
+    const got = g.getImageData(0, 0, 850, 300).data;
+    const want = (await pixels(doc, 0)).data;
+    let sum = 0;
+    for (let i = 0; i < got.length; i += 4) sum += Math.abs(got[i] - want[i]) + Math.abs(got[i + 1] - want[i + 1]) + Math.abs(got[i + 2] - want[i + 2]);
+    const mean = sum / (got.length / 4) / 3;
+    if (mean > 6) return `원본과 평균 색 차이 ${mean.toFixed(1)} (기준 6)`;
+    const Decoder = (window as unknown as { ImageDecoder?: new (init: object) => { tracks: { ready: Promise<void>; selectedTrack: { frameCount: number } } } }).ImageDecoder;
+    if (!Decoder) return null;
+    const decoder = new Decoder({ data: await blob.arrayBuffer(), type: 'image/gif' });
+    await decoder.tracks.ready;
+    const n = decoder.tracks.selectedTrack.frameCount;
+    return n === 8 ? null : `프레임이 ${n}개 (기대 8)`;
+  });
+
+  await run('색 테마: 한 색을 바꾸면 그 색을 쓰는 모든 곳이 바뀌고 한 번에 되돌아온다', async () => {
+    const doc = fixtureDoc();
+    doc.layers.push(makeShape({ fill: { color: '#123456' } }), makeText({ color: '#123456' }), makeText({ color: '#abcdef' }));
+    useEditor.getState().setDoc(doc);
+    const before = themeColors(doc).find((c) => c.color === '#123456');
+    if (!before || before.count !== 2) return `쓰인 횟수가 ${before?.count}`;
+    replaceColor('#123456', '#ff0000');
+    const next = useEditor.getState().doc;
+    const s1 = next.layers[1] as { fill: { color: string } };
+    const t1 = next.layers[2] as { color: string };
+    const t2 = next.layers[3] as { color: string };
+    if (s1.fill.color !== '#ff0000' || t1.color !== '#ff0000' || t2.color !== '#abcdef') return '바뀐 범위가 틀림';
+    useEditor.getState().undo();
+    return useEditor.getState().doc === doc ? null : '실행 취소 한 번으로 돌아오지 않음';
+  });
+
+  await run('레이어 복사·붙여넣기와 스타일 복사', async () => {
+    const doc = fixtureDoc();
+    const a = makeText({ text: '가', color: '#ff00ff', styles: { outline: { on: true, color: '#00ff00', width: 4 } } });
+    const b = makeText({ text: '나' });
+    const img = makeImage({ asset: 'A' });
+    doc.layers.push(a, b, img);
+    const st = useEditor.getState();
+    st.setDoc(doc);
+    st.select([img.id]);
+    copySelection();
+    useEditor.getState().setDoc(fixtureDocWithoutAssets());
+    pasteClipboard();
+    const pasted = useEditor.getState().doc;
+    if (pasted.layers.length !== 2 || pasted.layers[1].kind !== 'image' || pasted.layers[1].id === img.id) return '붙여넣은 레이어가 틀림';
+    if (!pasted.assets.A) return '붙여넣은 이미지의 원본이 따라오지 않음';
+    useEditor.getState().setDoc(doc);
+    useEditor.getState().select([a.id]);
+    copyStyle();
+    useEditor.getState().select([b.id]);
+    pasteStyle();
+    const nb = useEditor.getState().doc.layers[2] as typeof b;
+    return nb.color === '#ff00ff' && nb.styles.outline.on && nb.styles.outline.color === '#00ff00' && nb.text === '나' ? null : '스타일이 옮겨지지 않음';
   });
 
   await run('프리셋을 적용해도 내용은 그대로이고, 실행 취소 한 번으로 돌아온다', async () => {

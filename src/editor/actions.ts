@@ -381,3 +381,142 @@ export function newDocFromPreset(presetId = 'clean-light'): Doc {
   const data = preset.build();
   return { ...emptyDoc(), card: data.card, layers: data.layers, assets: data.assets, content: defaultContent() };
 }
+
+// ── 레이어 복사·붙여넣기 ─────────────────────────────────────────────
+
+let clipboard: { layers: Layer[]; assets: Doc['assets'] } | null = null;
+
+export function hasClipboard(): boolean {
+  return !!clipboard;
+}
+
+export function copySelection(): boolean {
+  const { selection, doc } = S();
+  const order = flatten(doc.layers).map((l) => l.id);
+  const layers = selection
+    .map((id) => findLayer(doc.layers, id)?.layer)
+    .filter((l): l is Layer => !!l)
+    .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+  if (!layers.length) return false;
+  const assets: Doc['assets'] = {};
+  layers.forEach((layer) => walk([layer], (l) => {
+    if (l.kind === 'image' && l.asset && doc.assets[l.asset]) assets[l.asset] = doc.assets[l.asset];
+  }));
+  clipboard = { layers: layers.map((l) => cloneLayer(l)), assets };
+  toast(`${layers.length}개 레이어 복사 — Ctrl+V로 붙여넣기`);
+  return true;
+}
+
+export function cutSelection(): void {
+  if (copySelection()) deleteSelection();
+}
+
+/** 복사해 둔 레이어를 붙여넣는다. 다른 디자인을 연 뒤에도 붙여넣을 수 있다. */
+export function pasteClipboard(): boolean {
+  if (!clipboard) return false;
+  const copies = clipboard.layers.map((l) => {
+    const c = cloneLayer(l);
+    translateLayer(c, 14, 14);
+    return c;
+  });
+  const assets = clipboard.assets;
+  const above = topSelected();
+  S().apply((d) => {
+    Object.assign(d.assets, assets);
+    let anchor = above;
+    for (const c of copies) { insertLayer(d, c, anchor); anchor = c.id; }
+  });
+  S().select(copies.map((c) => c.id));
+  // 한 번 더 붙여넣으면 또 옆으로 비켜 놓이도록 기준을 옮긴다.
+  clipboard = { layers: copies.map((c) => cloneLayer(c)), assets };
+  return true;
+}
+
+// ── 스타일 복사 ──────────────────────────────────────────────────────
+
+const LOOK_KEYS: Partial<Record<Layer['kind'], string[]>> = {
+  text: ['font', 'size', 'bold', 'italic', 'color', 'gradient', 'letterSpacing', 'lineHeight'],
+  spec: ['font', 'size', 'lineHeight', 'labelColor', 'valueColor', 'labelBold', 'valueBold', 'icons'],
+  shape: ['fill', 'radius'],
+  image: ['mask', 'radius', 'slant', 'brightness', 'contrast', 'saturation', 'blur'],
+  effect: ['color', 'color2', 'density', 'speed', 'size'],
+};
+
+let styleClip: { kind: Layer['kind']; common: Pick<Layer, 'styles' | 'opacity' | 'blend'>; look: Record<string, unknown> } | null = null;
+
+export function hasStyleClip(): boolean {
+  return !!styleClip;
+}
+
+/** 고른 레이어의 꾸밈(그림자·외곽선·발광·불투명도·혼합 + 같은 종류끼리는 글꼴·색 등)을 기억한다. */
+export function copyStyle(): void {
+  const id = topSelected();
+  const layer = id ? findLayer(S().doc.layers, id)?.layer : null;
+  if (!layer) return;
+  const look: Record<string, unknown> = {};
+  for (const key of LOOK_KEYS[layer.kind] ?? []) look[key] = (layer as unknown as Record<string, unknown>)[key];
+  styleClip = JSON.parse(JSON.stringify({ kind: layer.kind, common: { styles: layer.styles, opacity: layer.opacity, blend: layer.blend }, look }));
+  toast('스타일 복사 — 다른 레이어를 고르고 “스타일 붙여넣기”');
+}
+
+export function pasteStyle(): void {
+  const clip = styleClip;
+  const { selection } = S();
+  if (!clip || !selection.length) return;
+  S().apply((d) => {
+    for (const id of selection) {
+      const hit = findLayer(d.layers, id);
+      if (!hit) continue;
+      const layer = hit.layer as unknown as Record<string, unknown>;
+      Object.assign(layer, JSON.parse(JSON.stringify(clip.common)));
+      // 글꼴·채움 같은 종류별 꾸밈은 같은 종류 레이어에만 옮긴다.
+      if (hit.layer.kind === clip.kind) Object.assign(layer, JSON.parse(JSON.stringify(clip.look)));
+    }
+  });
+  toast('스타일을 붙여넣었습니다.');
+}
+
+// ── 색 테마 ─────────────────────────────────────────────────────────
+
+const HEX = /^#[0-9a-f]{6}$/i;
+
+function eachColor(node: unknown, fn: (holder: Record<string, unknown>, key: string) => void): void {
+  if (!node || typeof node !== 'object') return;
+  for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+    if (typeof value === 'string') {
+      if (/color/i.test(key) && HEX.test(value)) fn(node as Record<string, unknown>, key);
+    } else if (value && typeof value === 'object') {
+      // 꺼져 있는 꾸밈(그림자 등)의 색은 그림에 안 보이므로 테마 색에서 뺀다.
+      if ((value as { on?: boolean }).on === false) continue;
+      eachColor(value, fn);
+    }
+  }
+}
+
+/** 이 디자인에 실제로 쓰인 색과 쓰인 횟수(많이 쓰인 순). */
+export function themeColors(doc: Doc): { color: string; count: number }[] {
+  const counts = new Map<string, number>();
+  const add = (holder: Record<string, unknown>, key: string) => {
+    const c = String(holder[key]).toLowerCase();
+    counts.set(c, (counts.get(c) ?? 0) + 1);
+  };
+  eachColor(doc.layers, add);
+  eachColor({ border: doc.card.border, deco: doc.card.deco }, add);
+  eachColor(doc.content.specs, add);
+  return [...counts.entries()].map(([color, count]) => ({ color, count })).sort((a, b) => b.count - a.count);
+}
+
+/** 디자인 전체에서 한 색을 다른 색으로 바꾼다. */
+export function replaceColor(from: string, to: string): void {
+  const a = from.toLowerCase();
+  const b = to.toLowerCase();
+  if (a === b || !HEX.test(b)) return;
+  S().apply((d) => {
+    const swap = (holder: Record<string, unknown>, key: string) => {
+      if (String(holder[key]).toLowerCase() === a) holder[key] = b;
+    };
+    eachColor(d.layers, swap);
+    eachColor({ border: d.card.border, deco: d.card.deco }, swap);
+    eachColor(d.content.specs, swap);
+  }, `theme:${a.length}`);
+}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { applyBackground, applyPreset, presetFromDoc, type BgMeta } from '../editor/actions';
 import { makeThumb, openDesign, saveCurrent } from '../editor/session';
 import { toast, useEditor } from '../editor/store';
-import { download, exportAnimatedWebp, exportPng, exportWebp, frameCount, renderFrame, safeName } from '../io/exporter';
+import { download, exportAnimatedWebp, exportGif, exportPng, exportWebp, frameCount, renderFrame, safeName, sizeText } from '../io/exporter';
 import {
   deleteDesign, deletePreset, getSetting, listDesigns, listPresets, savePreset, setSetting,
   type SavedDesign, type SavedPreset,
@@ -243,7 +243,10 @@ export function DesignsDialog() {
   );
 }
 
-type Format = 'png' | 'webp' | 'anim';
+type Format = 'png' | 'webp' | 'anim' | 'gif';
+
+const EXT: Record<Format, string> = { png: 'png', webp: 'webp', anim: 'webp', gif: 'gif' };
+const SAVE_LABEL: Record<Format, string> = { png: 'PNG 저장', webp: 'WebP 저장', anim: '움직이는 WebP 저장', gif: 'GIF 저장' };
 
 export function ExportDialog() {
   const doc = useEditor((s) => s.doc);
@@ -254,34 +257,47 @@ export function ExportDialog() {
   const [quality, setQuality] = useState(0.9);
   const [frameT, setFrameT] = useState(useEditor.getState().t);
   const [busy, setBusy] = useState<string | null>(null);
+  /** 지금 설정으로 만들어 둔 결과물. 설정이 바뀌면 버린다. */
+  const [made, setMade] = useState<Blob | null>(null);
   const previewRef = useRef<HTMLCanvasElement>(null);
+  const moving = format === 'anim' || format === 'gif';
 
   useEffect(() => {
     void renderFrame(doc, Math.min(1, 560 / doc.card.w) * (window.devicePixelRatio || 1), frameT, previewRef.current!);
   }, [doc, frameT]);
 
+  const build = async (): Promise<Blob> => {
+    if (format === 'png') return exportPng(doc, scale, frameT);
+    if (format === 'webp') return exportWebp(doc, scale, frameT, 1);
+    const onProgress = (done: number, total: number) => setBusy(`프레임 ${done} / ${total}`);
+    if (format === 'gif') return exportGif(doc, { scale, fps, onProgress });
+    return exportAnimatedWebp(doc, { scale, fps, quality, onProgress });
+  };
+
+  // 정지 이미지는 금방 만들어지므로 설정을 바꿀 때마다 용량을 바로 보여 준다.
+  useEffect(() => {
+    setMade(null);
+    if (moving) return undefined;
+    let alive = true;
+    const timer = setTimeout(() => { void build().then((blob) => { if (alive) setMade(blob); }).catch(() => undefined); }, 250);
+    return () => { alive = false; clearTimeout(timer); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc, format, scale, fps, quality, frameT]);
+
   const size = canvasSize(doc, scale);
   const frames = frameCount(doc, fps);
 
-  const run = async () => {
-    const name = safeName(doc.name);
+  const run = async (save: boolean) => {
     try {
-      let blob: Blob;
-      let ext = format === 'png' ? 'png' : 'webp';
-      if (format === 'png') {
-        setBusy('PNG 만드는 중…');
-        blob = await exportPng(doc, scale, frameT);
-      } else if (format === 'webp') {
-        setBusy('WebP 만드는 중…');
-        blob = await exportWebp(doc, scale, frameT, 1);
-      } else {
-        blob = await exportAnimatedWebp(doc, {
-          scale, fps, quality, onProgress: (done, total) => setBusy(`프레임 ${done} / ${total}`),
-        });
-        ext = 'webp';
+      let blob = made;
+      if (!blob) {
+        setBusy('만드는 중…');
+        blob = await build();
+        setMade(blob);
       }
-      download(blob, `${name}.${ext}`);
-      toast(`저장: ${size.w}×${size.h}px · ${(blob.size / 1024).toFixed(0)}KB`);
+      if (!save) return;
+      download(blob, `${safeName(doc.name)}.${EXT[format]}`);
+      toast(`저장: ${size.w}×${size.h}px · ${sizeText(blob.size)}`);
       close();
     } catch (err) {
       toast(`내보내지 못했습니다: ${(err as Error).message}`);
@@ -296,9 +312,9 @@ export function ExportDialog() {
       footer={(
         <>
           {busy && <span className="busy">{busy}</span>}
-          <button type="button" className="primary" disabled={!!busy} onClick={() => { void run(); }}>
-            {format === 'anim' ? '움직이는 WebP 저장' : format === 'png' ? 'PNG 저장' : 'WebP 저장'}
-          </button>
+          {!busy && <span className="size-info">{made ? `용량 ${sizeText(made.size)}` : moving ? '용량은 만들어 봐야 알 수 있습니다' : '용량 계산 중…'}</span>}
+          {moving && !made && <button type="button" disabled={!!busy} onClick={() => { void run(false); }}>용량 확인</button>}
+          <button type="button" className="primary" disabled={!!busy} onClick={() => { void run(true); }}>{SAVE_LABEL[format]}</button>
         </>
       )}
     >
@@ -307,10 +323,16 @@ export function ExportDialog() {
         <label>형식</label>
         <Segment
           value={format} onChange={setFormat}
-          options={[{ value: 'png', label: 'PNG' }, { value: 'webp', label: 'WebP (정지)' }, { value: 'anim', label: 'WebP (움직임)' }]}
+          options={[
+            { value: 'png', label: 'PNG' }, { value: 'webp', label: 'WebP' },
+            { value: 'anim', label: '움직이는 WebP' }, { value: 'gif', label: '움직이는 GIF' },
+          ]}
         />
-        {format === 'anim' && !motion && (
+        {moving && !motion && (
           <p className="note warn">움직이는 효과 레이어가 없어서 모든 프레임이 같은 그림입니다. 왼쪽 막대의 “효과”로 추가할 수 있습니다.</p>
+        )}
+        {format === 'gif' && (
+          <p className="note">GIF는 256색이라 그라디언트·사진이 거칠어지고 용량이 큽니다. WebP를 받지 않는 게시판에만 쓰세요. 반투명은 완전 투명/불투명으로만 저장됩니다.</p>
         )}
       </div>
       <div className="prop stacked">
@@ -320,22 +342,24 @@ export function ExportDialog() {
           options={[1, 2, 3].map((n) => ({ value: n, label: `${n}배 · ${doc.card.w * n}×${doc.card.h * n}` }))}
         />
       </div>
-      {format !== 'anim' && motion && (
+      {!moving && motion && (
         <div className="prop stacked">
           <label>어느 순간을 저장할지 ({frameT.toFixed(2)}초)</label>
           <input type="range" min={0} max={doc.anim.duration} step={0.01} value={frameT} onChange={(e) => setFrameT(Number(e.target.value))} />
         </div>
       )}
-      {format === 'anim' && (
+      {moving && (
         <>
           <div className="prop stacked">
-            <label>초당 프레임</label>
+            <label>초당 프레임 (낮출수록 용량이 줄어듭니다)</label>
             <Segment value={fps} onChange={setFps} options={[10, 15, 20, 24, 30].map((n) => ({ value: n, label: String(n) }))} />
           </div>
-          <div className="prop stacked">
-            <label>화질 ({Math.round(quality * 100)}{quality >= 1 ? ' · 무손실' : ''})</label>
-            <input type="range" min={0.5} max={1} step={0.05} value={quality} onChange={(e) => setQuality(Number(e.target.value))} />
-          </div>
+          {format === 'anim' && (
+            <div className="prop stacked">
+              <label>화질 ({Math.round(quality * 100)}{quality >= 1 ? ' · 무손실' : ''})</label>
+              <input type="range" min={0.5} max={1} step={0.05} value={quality} onChange={(e) => setQuality(Number(e.target.value))} />
+            </div>
+          )}
           <p className="note">{doc.anim.duration}초 반복 · {frames}프레임. 끝과 처음이 이어지게 만들어집니다.</p>
         </>
       )}

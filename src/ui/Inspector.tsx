@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  alignSelection, deleteSelection, fitToCard, groupSelection, patchLayer, pickFile, replaceImage, useAsBackground,
+  alignSelection, copyStyle, deleteSelection, fitToCard, hasStyleClip, pasteStyle, groupSelection, patchLayer, pickFile, replaceImage, useAsBackground,
   type AlignMode,
 } from '../editor/actions';
 import { blendHasNoEffect } from '../editor/blendCheck';
@@ -133,6 +133,7 @@ function AlignBar({ scope }: { scope: string }) {
 
 function LayerInspector({ layer, doc }: { layer: Layer; doc: Doc }) {
   const cropId = useEditor((s) => s.cropId);
+  const [, bump] = useState(0);
   const onSet: Setter = (def, value) => {
     patchLayer(layer.id, (l, d) => {
       if (def.set) def.set(l, value, d);
@@ -168,6 +169,8 @@ function LayerInspector({ layer, doc }: { layer: Layer; doc: Doc }) {
               <button type="button" title="위치 0,0 · 카드 크기 · 회전 0으로 되돌립니다" onClick={() => fitToCard(layer.id)}>카드에 꽉 채우기</button>
             )}
             <button type="button" disabled={layer.rot === 0} onClick={() => patchLayer(layer.id, (l) => { l.rot = 0; })}>회전 0°</button>
+            <button type="button" title="이 레이어의 꾸밈을 기억합니다 (Ctrl+Alt+C)" onClick={() => { copyStyle(); bump((n) => n + 1); }}>스타일 복사</button>
+            <button type="button" disabled={!hasStyleClip()} title="기억한 꾸밈을 이 레이어에 입힙니다 (Ctrl+Alt+V)" onClick={pasteStyle}>스타일 붙여넣기</button>
           </div>
         )}
 

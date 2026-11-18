@@ -318,3 +318,12 @@ h2, h3, h4 { margin: 0; font-size: 13px; }
 .backdrop input[type='color'] { width: 26px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 5px; background: none; cursor: pointer; }
 .backdrop input[type='color'].on { box-shadow: 0 0 0 2px var(--accent); }
 .canvas-wrap.board { background-image: none; box-shadow: none; }
+
+/* 색 테마, 내보내기 용량 */
+.menu.right .menu-pop { left: auto; right: 0; }
+.theme-pop { width: 420px; padding: 6px 8px; }
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.theme-row { display: flex; align-items: center; gap: 6px; }
+.theme-row .color .hex { width: 68px; }
+.menu-pop .theme-row button { padding: 0; justify-content: center; }
+.size-info { color: var(--text-2); margin-right: auto; }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import {
-  addImageFromFile, deleteSelection, duplicateSelection, groupSelection, nudgeSelection, pickFile,
+  addImageFromFile, copySelection, copyStyle, cutSelection, deleteSelection, pasteClipboard, pasteStyle, duplicateSelection, groupSelection, nudgeSelection, pickFile,
   reorderSelection, replaceImage, ungroupSelection,
 } from './editor/actions';
 import { saveCurrent } from './editor/session';
@@ -44,6 +44,10 @@ export function App() {
       }
       if (e.key === 'Enter' && state.cropId) { state.set({ cropId: null }); return; }
       if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelection(); return; }
+      if (mod && e.altKey && key === 'c') { e.preventDefault(); copyStyle(); return; }
+      if (mod && e.altKey && key === 'v') { e.preventDefault(); pasteStyle(); return; }
+      if (mod && key === 'c') { if (copySelection()) e.preventDefault(); return; }
+      if (mod && key === 'x') { e.preventDefault(); cutSelection(); return; }
       if (mod && key === 'd') { e.preventDefault(); duplicateSelection(); return; }
       if (mod && key === 'g') { e.preventDefault(); if (e.shiftKey) ungroupSelection(); else groupSelection(); return; }
       if (mod && e.key === ']') { e.preventDefault(); reorderSelection(e.shiftKey ? 'top' : 1); return; }
@@ -71,7 +75,9 @@ export function App() {
     const onPaste = (e: ClipboardEvent) => {
       if (isTyping(e.target)) return;
       const file = [...(e.clipboardData?.files ?? [])].find((f) => f.type.startsWith('image/'));
-      if (file) { e.preventDefault(); void addImageFromFile(file); }
+      if (file) { e.preventDefault(); void addImageFromFile(file); return; }
+      // 클립보드에 그림이 없으면 앱 안에서 복사해 둔 레이어를 붙여넣는다.
+      if (!useEditor.getState().dialog && pasteClipboard()) e.preventDefault();
     };
     window.addEventListener('keydown', onKey);
     window.addEventListener('jjal:pick-image', onPick);

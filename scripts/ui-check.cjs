@@ -247,6 +247,31 @@ module.exports = async function uiCheck(win) {
   await shot('19-board-light');
   await clickText('.backdrop button', '▦');
 
+  // 14-4) 색 테마, Ctrl+C / Ctrl+V, GIF 내보내기 창
+  await clickText('.topbar .menu > button', '색 테마');
+  await sleep(250);
+  check('색 테마에 이 디자인의 색이 나온다', (await js('document.querySelectorAll(".theme-row").length')) >= 3);
+  await shot('20-theme-colors');
+  await clickText('.topbar .menu > button', '색 테마');
+  const nickId = await state(`s.doc.layers.find((l) => l.kind === 'text' && l.slot === 'nickname').id`);
+  await js(`window.__editor.getState().select(['${nickId}'])`);
+  const countBefore = await state('s.doc.layers.length');
+  wc.sendInputEvent({ type: 'keyDown', keyCode: 'C', modifiers: ['control'] }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'C', modifiers: ['control'] });
+  await sleep(150);
+  wc.paste();
+  await sleep(300);
+  check('Ctrl+C / Ctrl+V로 레이어가 복제된다', (await state('s.doc.layers.length')) === countBefore + 1, `${countBefore} → ${await state('s.doc.layers.length')}`);
+  await js('window.__editor.getState().undo()');
+  await clickText('.topbar button', '내보내기');
+  await sleep(300);
+  await clickText('.modal .segment button', '움직이는 GIF');
+  await sleep(200);
+  await clickText('.modal footer button', '용량 확인');
+  for (let i = 0; i < 80 && !(await js('document.querySelector(".size-info")?.textContent.startsWith("용량 ") && !document.querySelector(".busy")')); i += 1) await sleep(250);
+  check('GIF 용량 확인이 용량을 보여준다', await js('/용량 [0-9.]+(KB|MB)/.test(document.querySelector(".size-info")?.textContent || "")'), await js('document.querySelector(".size-info")?.textContent'));
+  await shot('21-export-gif');
+  await js('document.querySelector(".modal .icon-btn").click()');
+
   // 15) 저장 → 다시 열기
   await js('window.__editor.getState().apply((d) => { d.name = "검사용 디자인"; })');
   wc.sendInputEvent({ type: 'keyDown', keyCode: 'S', modifiers: ['control'] }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'S', modifiers: ['control'] });
