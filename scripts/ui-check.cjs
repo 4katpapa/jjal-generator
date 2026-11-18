@@ -195,6 +195,9 @@ module.exports = async function uiCheck(win) {
   await clickText('.topbar button', '프리셋');
   await sleep(1500);
   await shot('12-preset-gallery-with-content');
+  await js('document.querySelector(".modal-body").scrollTop = 99999');
+  await sleep(900);
+  await shot('12b-preset-gallery-more');
   await js('document.querySelectorAll(".preset-card")[2].click()');
   await sleep(700);
   const c = await state('s.doc.content');

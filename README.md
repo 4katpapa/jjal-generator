@@ -58,7 +58,7 @@ src/render/    렌더러: renderDoc(문서, 시간, 배율) 하나가 편집 화
 src/editor/    편집 상태(실행 취소), 편집 동작, 속성 정의(schema.ts), 저장·열기
 src/ui/        화면: 캔버스 조작(Stage), 레이어 패널, 속성 패널, 창들
 src/io/        내보내기, 움직이는 WebP 묶기, .jjal 파일, 저장소
-src/presets/   기본 프리셋 8개
+src/presets/   기본 프리셋 16개
 src/selftest.tsx  자동 검사(주소에 ?selftest)
 electron/      Windows 앱 껍데기, PC 사양·글꼴 읽기
 scripts/       자산 변환, 조작 검사
