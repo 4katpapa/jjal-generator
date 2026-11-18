@@ -131,7 +131,7 @@ export function TopBar() {
   );
 }
 
-const EMOJI: { name: string; items: string }[] = [
+export const EMOJI: { name: string; items: string }[] = [
   { name: '표정', items: '😀 😁 😂 🤣 😊 😍 🥰 😎 🤔 😴 😭 😡 🥺 😱 🤯 😇 🤗 😏 🙃 😋 🤤 🥹 😤 🫠 💀 👻 🤖 👽 😺 😻' },
   { name: '손·사람', items: '👍 👎 👏 🙏 ✌️ 🤞 🤘 👌 💪 👀 🫶 🤝 ✋ 👉 👈 🙌 🧑‍💻 🎮 🕹️ 🎧' },
   { name: '하트·별', items: '❤️ 🧡 💛 💚 💙 💜 🖤 🤍 💖 💕 💘 💔 ⭐ 🌟 ✨ 💫 🔥 ⚡ 💥 🌈 ☀️ 🌙 ❄️ 🌸 🍀 🎀 🎉 🎊 💎 👑' },

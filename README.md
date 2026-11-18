@@ -51,7 +51,7 @@ npm run desktop
 | `npm run dist` | 포터블 exe 빌드 → `release/` |
 | `npm run assets:backgrounds` / `assets:icons` | 기존 앱의 원본에서 배경·아이콘 변환 |
 
-실제 창에서 마우스 조작까지 확인하는 검사: `JJAL_SHOT_DIR=<폴더> npx electron . --script=scripts/ui-check.cjs`
+실제 창에서 마우스 조작까지 확인하는 검사: `JJAL_SHOT_DIR=<폴더> npx electron . --script=scripts/ui-check.cjs` (폰 크기 간편 모드는 `scripts/mobile-check.cjs`)
 
 ## 구조
 

@@ -11,6 +11,7 @@ import { RecentColorList } from './ui/controls';
 import { Dialogs } from './ui/Dialogs';
 import { Inspector } from './ui/Inspector';
 import { LayerPanel } from './ui/LayerPanel';
+import { MobileLayout, useIsMobile } from './ui/Mobile';
 import { QuickBar } from './ui/QuickBar';
 import { Stage } from './ui/Stage';
 
@@ -92,6 +93,18 @@ export function App() {
       window.removeEventListener('paste', onPaste);
     };
   }, []);
+
+  const mobile = useIsMobile();
+  if (mobile) {
+    return (
+      <div className="app mobile">
+        <MobileLayout />
+        {dialog === 'content' ? <ContentDialog /> : <Dialogs />}
+        <RecentColorList />
+        {toast && <div className="toast" role="status">{toast}</div>}
+      </div>
+    );
+  }
 
   return (
     <div className="app">

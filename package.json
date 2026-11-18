@@ -1,7 +1,7 @@
 {
   "name": "jjal-studio",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "자짤생성툴 v2 - 레이어 기반 PC 사양 자짤 편집기",
   "author": "4katpapa",
   "license": "MIT",

@@ -32,7 +32,8 @@ function normAngle(deg: number): number {
   return a;
 }
 
-export function Stage() {
+/** margin: 카드 둘레에 남기는 여백. grip: 손잡이 크기(터치 화면에서는 크게). */
+export function Stage({ margin = MARGIN, grip = 10 }: { margin?: number; grip?: number } = {}) {
   const doc = useEditor((s) => s.doc);
   const selection = useEditor((s) => s.selection);
   const t = useEditor((s) => s.t);
@@ -64,12 +65,12 @@ export function Stage() {
     return () => { off(); document.fonts?.removeEventListener('loadingdone', bump); };
   }, []);
 
-  const fit = Math.max(0.2, Math.min((view.w - MARGIN) / doc.card.w, (view.h - MARGIN) / doc.card.h, 3));
+  const fit = Math.max(0.2, Math.min((view.w - margin) / doc.card.w, (view.h - margin) / doc.card.h, 3));
   const z = zoom === 'fit' ? fit : zoom;
   const cw = doc.card.w * z;
   const ch = doc.card.h * z;
-  const innerW = Math.max(view.w, cw + MARGIN);
-  const innerH = Math.max(view.h, ch + MARGIN);
+  const innerW = Math.max(view.w, cw + margin);
+  const innerH = Math.max(view.h, ch + margin);
   const ox = (innerW - cw) / 2;
   const oy = (innerH - ch) / 2;
 
@@ -424,7 +425,7 @@ export function Stage() {
     }
     const top = mid(pts[0], pts[1]);
     const rad = (singleBox.rot * Math.PI) / 180;
-    const knob: [number, number] = [top[0] + Math.sin(rad) * 24, top[1] - Math.cos(rad) * 24];
+    const knob: [number, number] = [top[0] + Math.sin(rad) * (14 + grip), top[1] - Math.cos(rad) * (14 + grip)];
     gizmo = (
       <g>
         <polygon
@@ -434,12 +435,12 @@ export function Stage() {
         {!locked && !crop && (
           <>
             <line x1={top[0]} y1={top[1]} x2={knob[0]} y2={knob[1]} className="sel-stem" />
-            <circle cx={knob[0]} cy={knob[1]} r={6} className="sel-rotate" onPointerDown={(e) => startHandle(e, 'rotate')}>
+            <circle cx={knob[0]} cy={knob[1]} r={grip * 0.6} className="sel-rotate" onPointerDown={(e) => startHandle(e, 'rotate')}>
               <title>끌어서 회전 (Shift: 15°씩)</title>
             </circle>
             {handles.map(({ h, at }) => (
               <rect
-                key={`${h.hx}${h.hy}`} x={at[0] - 5} y={at[1] - 5} width={10} height={10} className="sel-handle"
+                key={`${h.hx}${h.hy}`} x={at[0] - grip / 2} y={at[1] - grip / 2} width={grip} height={grip} className="sel-handle"
                 style={{ cursor: h.hx === 0 ? 'ns-resize' : h.hy === 0 ? 'ew-resize' : h.hx === h.hy ? 'nwse-resize' : 'nesw-resize' }}
                 onPointerDown={(e) => startHandle(e, h)}
               />

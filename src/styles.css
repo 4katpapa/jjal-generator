@@ -329,3 +329,57 @@ h2, h3, h4 { margin: 0; font-size: 13px; }
 .size-info { color: var(--text-2); margin-right: auto; }
 
 .brand em { font-style: normal; color: var(--accent); font-size: 12px; margin-left: 2px; }
+
+/* ── 폰용 간편 모드 ───────────────────────────────────────────── */
+.app.mobile { height: 100dvh; }
+.m-top { display: flex; align-items: center; gap: 4px; padding: 6px 8px; background: var(--bg-2); border-bottom: 1px solid var(--line); flex: none; }
+.m-top .brand { margin-right: 4px; font-size: 13px; }
+.m-top button { padding: 6px 10px; }
+.m-stage { flex: none; height: min(calc(100vw * 0.36 + 96px), 44dvh); position: relative; display: flex; }
+.m-stage .stage { flex: 1; }
+.m-stage .stage-hint { display: none; }
+.m-crop-done { position: absolute; right: 8px; bottom: 8px; }
+.m-tabs { display: flex; flex: none; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.m-tabs button { flex: 1; border: 0; border-radius: 0; background: none; padding: 10px 0; font-weight: 700; color: var(--text-2); }
+.m-tabs button.on { color: #fff; box-shadow: inset 0 -3px 0 var(--accent); background: var(--bg-3); }
+.m-pane { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 12px 28px; background: var(--bg-2); }
+.m-pane h4 { margin: 12px 0 6px; }
+.m-pane { overflow-x: hidden; }
+.m-pane > .field > select, .m-pane > .field > input[type='text'] { width: 100%; padding: 8px; }
+.m-pane .icon-select { width: 76px; min-width: 76px; padding: 6px 3px; }
+.m-pane .quick-item select { min-width: 0; padding: 7px; }
+.m-pane .spec-tools select { min-width: 0; padding: 7px; }
+.m-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 0; }
+.m-actions button { padding: 9px 4px; }
+.m-pane .quickbar { flex-direction: column; align-items: stretch; gap: 8px; padding: 8px 0; background: none; border: 0; }
+.m-pane .quick-title { display: none; }
+.m-pane .quick-item { justify-content: space-between; gap: 10px; min-height: 34px; }
+.m-pane .quick-item > span { font-size: 13px; color: var(--text-2); min-width: 72px; }
+.m-pane .quick-item .num { flex: 1; }
+.m-pane .quick-item .num input[type='range'] { height: 28px; }
+.m-pane .quick-item select, .m-pane .quick-item .font { max-width: none; width: auto; flex: 1; }
+.m-pane .quick-item .color input[type='color'] { width: 44px; height: 32px; }
+.m-pane .quickbar > button { padding: 9px; }
+.m-pane .switch { width: 44px; height: 24px; border-radius: 12px; }
+.m-pane .switch span { width: 18px; height: 18px; }
+.m-pane .switch.on span { left: 22px; }
+.m-pane .emoji-grid { grid-template-columns: repeat(8, 1fr); }
+.m-pane .emoji-grid button { padding: 6px 0; font-size: 22px; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; }
+.m-pane .spec-row .mini { padding: 5px 9px; }
+.m-pane .value-input, .m-pane .label-input { padding: 7px; font-size: 14px; }
+
+@media (max-width: 760px) {
+  .modal-back { padding: 0; align-items: stretch; }
+  .modal, .modal.wide { width: 100%; max-height: none; border-radius: 0; border: 0; }
+  .modal-body { flex: 1; }
+  .preset-grid { grid-template-columns: 1fr; }
+  .bg-grid { grid-template-columns: repeat(2, 1fr); }
+  .content-grid { grid-template-columns: 1fr; }
+  .gallery-head .note { min-width: 0; }
+  .segment button { padding: 8px 2px; }
+  .toast { left: 8px; right: 8px; transform: none; bottom: 12px; border-radius: 12px; text-align: center; white-space: normal; }
+  input, select, textarea { font-size: 16px; }
+}
+.m-pane .quick-item, .m-pane .quick-item .font, .m-pane .quick-item .num { min-width: 0; }
+.m-pane .quick-item .font select { min-width: 0; width: 100%; }
+.m-pane .quick-item .num input[type='range'] { min-width: 60px; }

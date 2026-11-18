@@ -13,7 +13,7 @@ const QUICK: Record<LayerKind, string[]> = {
   text: ['font', 'size', 'color', 'bold', 'italic', 'styles.outline.on', 'styles.outline.color', 'styles.outline.width', 'opacity'],
   spec: ['font', 'size', 'labelColor', 'valueColor', 'icons.on', 'styles.outline.on', 'styles.outline.color', 'opacity'],
   shape: ['fill.type', 'fill.color', 'fill.color2', 'fill.opacity', 'radius', 'opacity'],
-  image: ['fit', 'mask', 'radius', 'opacity'],
+  image: ['zoom', 'fit', 'mask', 'radius', 'opacity'],
   effect: ['effect', 'color', 'color2', 'density', 'speed', 'opacity'],
   group: ['opacity'],
 };
@@ -63,14 +63,14 @@ function collect(sections: Section[], paths: string[], target: unknown, doc: Doc
   return out.filter((i) => i.shown);
 }
 
-function Control({ def, target, doc, onSet }: { def: PropDef; target: unknown; doc: Doc; onSet: (def: PropDef, v: unknown) => void }) {
+function Control({ def, target, doc, onSet, sliders }: { def: PropDef; target: unknown; doc: Doc; onSet: (def: PropDef, v: unknown) => void; sliders?: boolean }) {
   const value = def.get ? def.get(target, doc) : getPath(target, def.path);
   let control: React.ReactNode;
   if (def.control === 'number') {
     control = (
       <NumberControl
         value={Number(value)} min={def.min} max={def.max} step={def.step} unit={def.unit}
-        percent={def.percent} slider={false} onChange={(v) => onSet(def, v)}
+        percent={def.percent} slider={!!sliders && def.slider !== false} onChange={(v) => onSet(def, v)}
       />
     );
   } else if (def.control === 'color') {
@@ -104,7 +104,8 @@ const KIND_NAME: Record<LayerKind, string> = {
   shape: '도형', image: '이미지', text: '텍스트', spec: '사양 목록', effect: '효과', group: '그룹',
 };
 
-export function QuickBar() {
+/** sliders: 숫자 칸 옆에 슬라이더도 보여 준다(터치 화면용). */
+export function QuickBar({ sliders }: { sliders?: boolean } = {}) {
   const doc = useEditor((s) => s.doc);
   const selection = useEditor((s) => s.selection);
   const cropId = useEditor((s) => s.cropId);
@@ -122,7 +123,7 @@ export function QuickBar() {
     return (
       <div className="quickbar">
         <b className="quick-title">카드</b>
-        {collect(CARD_SCHEMA, CARD_QUICK, doc, doc).map(({ def }) => <Control key={def.path} def={def} target={doc} doc={doc} onSet={onSet} />)}
+        {collect(CARD_SCHEMA, CARD_QUICK, doc, doc).map(({ def }) => <Control key={def.path} def={def} target={doc} doc={doc} onSet={onSet} sliders={sliders} />)}
       </div>
     );
   }
@@ -149,7 +150,7 @@ export function QuickBar() {
         </>
       )}
       {collect(sectionsFor(layer), QUICK[layer.kind], layer, doc).map(({ def }) => (
-        <Control key={def.path} def={def} target={layer} doc={doc} onSet={onSet} />
+        <Control key={def.path} def={def} target={layer} doc={doc} onSet={onSet} sliders={sliders} />
       ))}
     </div>
   );
