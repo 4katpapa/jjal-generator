@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import {
-  alignSelection, deleteSelection, groupSelection, patchLayer, pickFile, replaceImage, useAsBackground,
+  alignSelection, deleteSelection, fitToCard, groupSelection, patchLayer, pickFile, replaceImage, useAsBackground,
   type AlignMode,
 } from '../editor/actions';
 import { blendHasNoEffect } from '../editor/blendCheck';
@@ -162,6 +162,14 @@ function LayerInspector({ layer, doc }: { layer: Layer; doc: Doc }) {
           </p>
         )}
         {layer.kind !== 'group' && <AlignBar scope="카드 기준 맞춤" />}
+        {layer.kind !== 'group' && (
+          <div className="insp-actions">
+            {layer.kind !== 'text' && (
+              <button type="button" title="위치 0,0 · 카드 크기 · 회전 0으로 되돌립니다" onClick={() => fitToCard(layer.id)}>카드에 꽉 채우기</button>
+            )}
+            <button type="button" disabled={layer.rot === 0} onClick={() => patchLayer(layer.id, (l) => { l.rot = 0; })}>회전 0°</button>
+          </div>
+        )}
 
         {layer.kind === 'image' && (
           <div className="insp-actions">

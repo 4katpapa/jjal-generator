@@ -65,6 +65,7 @@ export function TopBar() {
       />
       <span className={`save-state${dirty ? ' dirty' : ''}`}>{dirty ? '● 저장 안 됨' : '저장됨'}</span>
       <div className="spacer" />
+      <button type="button" title="카드 크기·모서리·테두리·장식 선 (아무것도 선택하지 않으면 오른쪽에 나옵니다)" onClick={() => { st().select([]); st().set({ cropId: null }); }}>카드·테두리</button>
       <button type="button" onClick={() => open('content')}>내용</button>
       <button type="button" onClick={() => open('presets')}>프리셋</button>
       <button type="button" onClick={() => open('backgrounds')}>배경</button>

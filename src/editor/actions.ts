@@ -285,6 +285,16 @@ export function alignSelection(mode: AlignMode): void {
   });
 }
 
+/** 레이어를 카드 크기에 딱 맞춘다(위치 0,0 · 카드 크기 · 회전 0). 배경·패널·효과를 원래 자리로 되돌릴 때 쓴다. */
+export function fitToCard(layerId: string): void {
+  S().apply((d) => {
+    const hit = findLayer(d.layers, layerId);
+    if (!hit || hit.layer.kind === 'group' || hit.layer.kind === 'text') return;
+    Object.assign(hit.layer, { x: 0, y: 0, w: d.card.w, h: d.card.h, rot: 0 });
+    if (hit.layer.kind === 'image') Object.assign(hit.layer, { panX: 0, panY: 0, zoom: 1 });
+  });
+}
+
 /** 이미지 레이어를 카드 전체를 덮는 바탕으로 만든다. */
 export function useAsBackground(layerId: string): void {
   S().apply((d) => {
